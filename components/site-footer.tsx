@@ -11,7 +11,9 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-xs">
-            <Logo dark />
+            <div className="inline-flex rounded-2xl bg-white px-4 py-3 shadow-sm">
+              <Logo />
+            </div>
             <p className="mt-4 text-sm leading-relaxed text-white/60">
               {t.footer.tagline}
             </p>
@@ -28,11 +30,11 @@ export function SiteFooter() {
                 {"(305) 967-9756"}
               </a>
               <a
-                href="mailto:info@us1trade.com"
+                href="mailto:info@us1miami.com"
                 className="flex items-center gap-2 text-sm text-white/80 transition-colors hover:text-white"
               >
                 <Mail className="h-4 w-4 text-sky" />
-                info@us1trade.com
+                info@us1miami.com
               </a>
             </div>
 
@@ -48,7 +50,7 @@ export function SiteFooter() {
 
         <div className="mt-12 border-t border-white/10 pt-6">
           <p className="text-xs text-white/50">
-            © {new Date().getFullYear()} US1 Trade — {t.footer.rights}
+            © {new Date().getFullYear()} {t.footer.rights}
           </p>
         </div>
       </div>

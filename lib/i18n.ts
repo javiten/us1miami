@@ -52,7 +52,7 @@ const en = {
     title: "From your cart to your door in six simple steps",
     steps: [
       { title: "Buy anywhere", desc: "Shop from any online store around the world." },
-      { title: "Ship to your Miami address", desc: "Use your free US1 Trade address at checkout." },
+      { title: "Ship to your Miami address", desc: "Use your free US1 Miami address at checkout." },
       { title: "We receive your packages", desc: "Everything arrives safely at our warehouse." },
       { title: "We consolidate everything", desc: "Multiple boxes combined into one shipment." },
       { title: "Air courier shipment", desc: "Your consolidated package flies to Argentina." },
@@ -103,7 +103,7 @@ const en = {
     description:
       "Our Miami warehouse receives, stores and consolidates your purchases at no additional cost before shipping them to Argentina.",
     points: ["Secure, monitored facility", "Fast intake & processing", "Prime Miami location"],
-    imageAlt: "Bright, organized US1 Trade logistics warehouse in Miami with neatly shelved packages",
+    imageAlt: "Bright, organized US1 Miami logistics warehouse in Miami with neatly shelved packages",
     overlayLabel: "Miami Warehouse",
     overlayValue: "Receiving · Storage · Consolidation",
   },
@@ -151,7 +151,7 @@ const en = {
     contact: "Contact",
     location: "Location",
     locationValue: "Miami Warehouse, Florida",
-    rights: "US1 Trade — International Courier. All rights reserved.",
+    rights: "US1 Miami — International Courier. All rights reserved.",
   },
 }
 
@@ -197,7 +197,7 @@ const es: Dictionary = {
     title: "De tu carrito a tu puerta en seis pasos simples",
     steps: [
       { title: "Comprá donde quieras", desc: "Comprá en cualquier tienda online del mundo." },
-      { title: "Enviá a tu dirección en Miami", desc: "Usá tu dirección gratuita de US1 Trade al pagar." },
+      { title: "Enviá a tu dirección en Miami", desc: "Usá tu dirección gratuita de US1 Miami al pagar." },
       { title: "Recibimos tus paquetes", desc: "Todo llega seguro a nuestro depósito." },
       { title: "Consolidamos todo", desc: "Combinamos varias cajas en un solo envío." },
       { title: "Envío por courier aéreo", desc: "Tu paquete consolidado viaja a Argentina." },
@@ -248,7 +248,7 @@ const es: Dictionary = {
     description:
       "Nuestro depósito en Miami recibe, almacena y consolida tus compras sin costo adicional antes de enviarlas a Argentina.",
     points: ["Instalación segura y monitoreada", "Recepción y procesamiento rápidos", "Ubicación privilegiada en Miami"],
-    imageAlt: "Depósito logístico de US1 Trade en Miami, luminoso y organizado, con paquetes prolijamente ubicados",
+    imageAlt: "Depósito logístico de US1 Miami en Miami, luminoso y organizado, con paquetes prolijamente ubicados",
     overlayLabel: "Depósito en Miami",
     overlayValue: "Recepción · Almacenamiento · Consolidación",
   },
@@ -296,7 +296,7 @@ const es: Dictionary = {
     contact: "Contacto",
     location: "Ubicación",
     locationValue: "Depósito en Miami, Florida",
-    rights: "US1 Trade — Courier Internacional. Todos los derechos reservados.",
+    rights: "US1 Miami — Courier Internacional. Todos los derechos reservados.",
   },
 }
 

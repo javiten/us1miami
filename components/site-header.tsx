@@ -43,7 +43,7 @@ export function SiteHeader() {
             : "border border-transparent bg-transparent",
         )}
       >
-        <a href="#top" aria-label="US1 Trade home">
+        <a href="#top" aria-label="US1 Miami home">
           <Logo />
         </a>
 

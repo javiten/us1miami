@@ -9,13 +9,13 @@ const geist = Geist({
   variable: "--font-geist-sans",
 })
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://us1trade.com"
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://us1miami.com"
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "US1 Trade — Buy Anywhere, Receive in Argentina",
+  title: "US1 Miami — Buy Anywhere, Receive in Argentina",
   description:
-    "US1 Trade is an international courier. Shop from anywhere in the world, ship to our Miami warehouse, and we consolidate and deliver everything to Argentina by air in approximately 7 days. From USD $55/kg.",
+    "US1 Miami is an international courier. Shop from anywhere in the world, ship to our Miami warehouse, and we consolidate and deliver everything to Argentina by air in approximately 7 days. From USD $55/kg.",
   keywords: [
     "international courier",
     "Miami to Argentina shipping",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "package consolidation",
     "Miami warehouse",
     "air courier",
-    "US1 Trade",
+    "US1 Miami",
   ],
   alternates: {
     canonical: "/",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "US1 Trade — Buy Anywhere, Receive in Argentina",
+    title: "US1 Miami — Buy Anywhere, Receive in Argentina",
     description:
       "Shop worldwide, ship to Miami, and we deliver to Argentina in ~7 days. Free receiving, storage and consolidation.",
     type: "website",

@@ -48,3 +48,17 @@ export const STATUS_ORDER: PackageStatus[] = [
   "IN_TRANSIT",
   "DELIVERED",
 ]
+
+export const CONSOLIDATION_STATUS = {
+  REQUESTED: "Solicitada",
+  IN_PROGRESS: "En proceso",
+  COMPLETED: "Completada",
+  SHIPPED: "Enviada",
+  CANCELLED: "Cancelada",
+} as const
+
+export const PREALERT_STATUS = {
+  PENDING: "Pendiente",
+  MATCHED: "Vinculada",
+  EXPIRED: "Vencida",
+} as const

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { and, eq, inArray } from "drizzle-orm"
 import { db } from "@/lib/db"
-import { prealerts, packages, consolidations } from "@/lib/db/schema"
+import { prealerts, packages, consolidations, customerProfile, user as userTable } from "@/lib/db/schema"
 import { requireCustomer } from "@/lib/session"
 import { creditWallet } from "@/lib/wallet"
 import { recordAudit } from "@/lib/audit"
@@ -125,4 +125,48 @@ export async function simulateDeposit(_prev: ActionState, formData: FormData): P
   revalidatePath("/panel/billetera")
   revalidatePath("/panel")
   return { ok: true, message: `Se acreditaron USD ${amount.toFixed(2)} a tu billetera.` }
+}
+
+export async function updateProfile(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const user = await requireCustomer()
+  const phone = String(formData.get("phone") ?? "").trim()
+  const street = String(formData.get("street") ?? "").trim()
+  const streetNumber = String(formData.get("streetNumber") ?? "").trim()
+  const floor = String(formData.get("floor") ?? "").trim()
+  const apartment = String(formData.get("apartment") ?? "").trim()
+  const city = String(formData.get("city") ?? "").trim()
+  const province = String(formData.get("province") ?? "").trim()
+  const postalCode = String(formData.get("postalCode") ?? "").trim()
+  const refs = String(formData.get("references") ?? "").trim()
+
+  if (!street || !streetNumber || !city || !province || !postalCode) {
+    return { error: "Completá los campos obligatorios de tu dirección." }
+  }
+
+  await db.update(userTable).set({ phone: phone || null, updatedAt: new Date() }).where(eq(userTable.id, user.id))
+  await db
+    .update(customerProfile)
+    .set({
+      street,
+      streetNumber,
+      floor: floor || null,
+      apartment: apartment || null,
+      city,
+      province,
+      postalCode,
+      references: refs || null,
+      updatedAt: new Date(),
+    })
+    .where(eq(customerProfile.userId, user.id))
+
+  await recordAudit({
+    actorUserId: user.id,
+    actorName: user.name,
+    action: "PROFILE_UPDATED",
+    entityType: "user",
+    entityId: user.id,
+  })
+
+  revalidatePath("/panel/perfil")
+  return { ok: true, message: "Datos actualizados correctamente." }
 }

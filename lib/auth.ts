@@ -14,6 +14,15 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: true,
   },
+  user: {
+    additionalFields: {
+      role: { type: 'string', required: false, defaultValue: 'CUSTOMER', input: false },
+      adminRoles: { type: 'string[]', required: false, defaultValue: [], input: false },
+      phone: { type: 'string', required: false, input: true },
+      boxNumber: { type: 'string', required: false, input: false },
+      mustChangePassword: { type: 'boolean', required: false, defaultValue: false, input: false },
+    },
+  },
   trustedOrigins: [
     ...(process.env.V0_RUNTIME_URL ? [process.env.V0_RUNTIME_URL] : []),
     ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),

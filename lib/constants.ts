@@ -62,3 +62,14 @@ export const PREALERT_STATUS = {
   MATCHED: "Vinculada",
   EXPIRED: "Vencida",
 } as const
+
+export const WALLET_TX_LABELS = {
+  DEPOSIT: "Depósito",
+  CREDIT: "Crédito",
+  DEBIT: "Débito",
+  ADJUSTMENT: "Ajuste manual",
+  HOLD: "Retención",
+  RELEASE: "Liberación",
+  SHIPPING_CHARGE: "Cargo de envío",
+  REFUND: "Reembolso",
+} as const

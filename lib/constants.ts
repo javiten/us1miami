@@ -146,6 +146,7 @@ export function canTransition(from: string, to: string): boolean {
 // CWR (customer consolidation) lifecycle.
 export const CONSOLIDATION_STATUS = {
   REQUESTED: "Solicitada",
+  UNDO_REQUESTED: "Baja solicitada",
   IN_PROGRESS: "En proceso",
   PENDING_PAYMENT: "Pago requerido",
   READY_TO_SHIP: "Lista para envío",

@@ -4,6 +4,7 @@ import { getCustomerPackages, getCustomerConsolidations } from "@/lib/queries/cu
 import { getCustomerInvoices } from "@/lib/queries/invoices"
 import { PageHeader, Card } from "@/components/portal/ui"
 import { ConsolidationForm } from "@/components/portal/consolidation-form"
+import { UndoRequestButton } from "@/components/portal/undo-request-button"
 import { CONSOLIDATION_STATUS } from "@/lib/constants"
 import { invoiceStatusLabel, invoiceStatusTone, effectiveInvoiceStatus } from "@/lib/invoices"
 import { money } from "@/lib/format"
@@ -63,6 +64,12 @@ export default async function ConsolidationsPage() {
                     <p className="mt-1 text-xs text-muted-foreground">
                       {ids.length} paquete{ids.length === 1 ? "" : "s"}
                     </p>
+                    {c.status === "REQUESTED" && <UndoRequestButton consolidationId={c.id} />}
+                    {c.status === "UNDO_REQUESTED" && (
+                      <p className="mt-2.5 text-xs font-medium text-orange-600">
+                        Pediste la baja de esta solicitud. Un asesor la está revisando.
+                      </p>
+                    )}
                     {inv && effStatus && (
                       <div className="mt-2.5 flex items-center justify-between gap-2">
                         <span

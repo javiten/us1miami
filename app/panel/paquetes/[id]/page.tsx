@@ -44,7 +44,13 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
               <div className="grid grid-cols-3 gap-3">
                 {pkg.photos.map((src, i) => (
                   <div key={i} className="relative aspect-square overflow-hidden rounded-xl border border-border bg-muted">
-                    <Image src={src || "/placeholder.svg"} alt={`Foto ${i + 1} del paquete`} fill className="object-cover" />
+                    <Image
+                      src={`/api/warehouse/file?pathname=${encodeURIComponent(src)}`}
+                      alt={`Foto ${i + 1} del paquete`}
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
                   </div>
                 ))}
               </div>

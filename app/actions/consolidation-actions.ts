@@ -501,11 +501,26 @@ export async function completeMcDeconsolidation(input: {
       const verifiedCwr = input.units.filter((u) => u.key.startsWith("cwr:") && u.state === "scanned").map((u) => Number(u.key.slice(4)))
       const verifiedWr = input.units.filter((u) => u.key.startsWith("wr:") && u.state === "scanned").map((u) => Number(u.key.slice(3)))
 
-      if (verifiedCwr.length)
+      if (verifiedCwr.length) {
         await tx
           .update(consolidations)
           .set({ status: "RECEIVED_ARGENTINA", updatedAt: new Date() })
           .where(inArray(consolidations.id, verifiedCwr))
+
+        // Cascade into the WRs that belong to the verified CWRs so their status
+        // reflects that the cargo landed in Argentina. They advance again to
+        // READY_FOR_DELIVERY_AR when the CWR itself is deconsolidated.
+        const memberCwrs = await tx
+          .select({ packageIds: consolidations.packageIds })
+          .from(consolidations)
+          .where(inArray(consolidations.id, verifiedCwr))
+        const cwrWrIds = memberCwrs.flatMap((c) => c.packageIds ?? [])
+        if (cwrWrIds.length)
+          await tx
+            .update(packages)
+            .set({ status: "RECEIVED_ARGENTINA", updatedAt: new Date() })
+            .where(inArray(packages.id, cwrWrIds))
+      }
       if (verifiedWr.length)
         await tx
           .update(packages)

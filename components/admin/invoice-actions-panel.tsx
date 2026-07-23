@@ -24,7 +24,7 @@ export function InvoiceActionsPanel({
   invoiceId: number
   status: string
   paymentMethod: string | null
-  billableWeightKg: number | null
+  billableWeightKg: string | null
 }) {
   const router = useRouter()
   const [panel, setPanel] = useState<Panel>(null)

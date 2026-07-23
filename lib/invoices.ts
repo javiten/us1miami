@@ -59,6 +59,11 @@ export function isInvoicePaid(status: string): boolean {
   return status === "PAID"
 }
 
+/** Statuses from which a customer may still initiate/settle a payment. */
+export function isPayableStatus(status: string): boolean {
+  return status === "OPEN" || status === "PENDING_MANUAL_PAYMENT"
+}
+
 /**
  * Effective status for display: an OPEN / PENDING_MANUAL_PAYMENT invoice that is
  * past its due date is surfaced as OVERDUE without mutating the stored row.

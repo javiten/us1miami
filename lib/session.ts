@@ -44,11 +44,18 @@ function normalizeRoles(value: unknown): AdminRole[] {
   return []
 }
 
-/** Require an authenticated customer. Redirects otherwise. */
+/**
+ * Require an authenticated CUSTOMER for /panel routes.
+ *
+ * Customer and admin are separate login scopes: a session that is not a
+ * customer (e.g. an admin-only session) does NOT satisfy this guard and is
+ * sent to the customer login — never cross-redirected into /admin. This keeps
+ * /panel protected by customer auth without leaking an admin session into the
+ * customer portal.
+ */
 export async function requireCustomer(): Promise<SessionUser> {
   const user = await getSessionUser()
-  if (!user) redirect("/ingresar")
-  if (user.role === "ADMIN") redirect("/admin")
+  if (!user || user.role !== "CUSTOMER") redirect("/ingresar")
   return user
 }
 

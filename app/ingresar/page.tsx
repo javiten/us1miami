@@ -11,8 +11,11 @@ export const metadata: Metadata = {
 }
 
 export default async function IngresarPage() {
+  // Customer login is its own scope. Only an existing CUSTOMER session skips
+  // ahead to /panel. An admin-only session must still see the customer login
+  // form here — we never inspect the admin session to redirect into /admin.
   const user = await getSessionUser()
-  if (user) redirect(user.role === "ADMIN" ? "/admin" : "/panel")
+  if (user?.role === "CUSTOMER") redirect("/panel")
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">

@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import * as Icons from "lucide-react"
 import { Logo } from "@/components/logo"
-import { authClient } from "@/lib/auth-client"
+import { authClient, adminAuthClient } from "@/lib/auth-client"
 import { cn } from "@/lib/utils"
 
 export type NavItem = {
@@ -35,7 +35,9 @@ export function PortalShell({
   const dark = variant === "admin"
 
   async function signOut() {
-    await authClient.signOut()
+    // Sign out only the current scope's cookie so the other portal's session in
+    // the same browser is left intact.
+    await (variant === "admin" ? adminAuthClient : authClient).signOut()
     router.push(variant === "admin" ? "/admin/login" : "/ingresar")
     router.refresh()
   }

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import * as Icons from "lucide-react"
-import { authClient } from "@/lib/auth-client"
+import { adminAuthClient } from "@/lib/auth-client"
 
 export function AdminLoginForm() {
   const router = useRouter()
@@ -20,7 +20,7 @@ export function AdminLoginForm() {
     // Admins sign in with a username that maps to an internal email.
     const email = usernameRaw.includes("@") ? usernameRaw : `${usernameRaw}@us1miami.internal`
 
-    const { error } = await authClient.signIn.email({ email, password })
+    const { error } = await adminAuthClient.signIn.email({ email, password })
     if (error) {
       setError("Credenciales inválidas. Verificá tu email y contraseña.")
       setPending(false)

@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation"
-import { getSessionUser } from "@/lib/session"
+import { getAdminSessionUser } from "@/lib/session"
 import { AdminShell } from "@/components/admin/admin-shell"
 import { ADMIN_ROLE_LABELS, permissionsFor, type AdminRole } from "@/lib/rbac"
 
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await getSessionUser()
+  const user = await getAdminSessionUser()
   if (!user || user.role !== "ADMIN") redirect("/admin/login")
 
   const roles = user.adminRoles as AdminRole[]

@@ -3,7 +3,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { Logo } from "@/components/logo"
 import { LoginForm } from "@/components/login-form"
-import { getSessionUser } from "@/lib/session"
+import { getCustomerSessionUser } from "@/lib/session"
 
 export const metadata: Metadata = {
   title: "Iniciar sesión — US1 Miami",
@@ -14,7 +14,7 @@ export default async function IngresarPage() {
   // Customer login is its own scope. Only an existing CUSTOMER session skips
   // ahead to /panel. An admin-only session must still see the customer login
   // form here — we never inspect the admin session to redirect into /admin.
-  const user = await getSessionUser()
+  const user = await getCustomerSessionUser()
   if (user?.role === "CUSTOMER") redirect("/panel")
 
   return (

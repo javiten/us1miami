@@ -1,6 +1,6 @@
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
+import { auth, authAdmin } from "@/lib/auth"
 import { hasPermission, type AdminRole, type Permission } from "@/lib/rbac"
 
 export type SessionUser = {
@@ -14,21 +14,44 @@ export type SessionUser = {
   mustChangePassword?: boolean
 }
 
-/** Returns the current session user, or null if unauthenticated. */
-export async function getSessionUser(): Promise<SessionUser | null> {
-  const session = await auth.api.getSession({ headers: await headers() })
-  if (!session?.user) return null
-  const u = session.user as Record<string, unknown>
+type AuthInstance = typeof auth | typeof authAdmin
+
+function toSessionUser(user: Record<string, unknown>): SessionUser {
   return {
-    id: u.id as string,
-    name: u.name as string,
-    email: u.email as string,
-    role: (u.role as string) ?? "CUSTOMER",
-    adminRoles: normalizeRoles(u.adminRoles),
-    phone: (u.phone as string) ?? null,
-    boxNumber: (u.boxNumber as string) ?? null,
-    mustChangePassword: Boolean(u.mustChangePassword),
+    id: user.id as string,
+    name: user.name as string,
+    email: user.email as string,
+    role: (user.role as string) ?? "CUSTOMER",
+    adminRoles: normalizeRoles(user.adminRoles),
+    phone: (user.phone as string) ?? null,
+    boxNumber: (user.boxNumber as string) ?? null,
+    mustChangePassword: Boolean(user.mustChangePassword),
   }
+}
+
+async function readSession(instance: AuthInstance): Promise<SessionUser | null> {
+  const session = await instance.api.getSession({ headers: await headers() })
+  if (!session?.user) return null
+  return toSessionUser(session.user as Record<string, unknown>)
+}
+
+/** Read the CUSTOMER-scope session (the `better-auth` cookie via /api/auth). */
+export async function getCustomerSessionUser(): Promise<SessionUser | null> {
+  return readSession(auth)
+}
+
+/** Read the ADMIN-scope session (the `us1_admin` cookie via /api/auth-admin). */
+export async function getAdminSessionUser(): Promise<SessionUser | null> {
+  return readSession(authAdmin)
+}
+
+/**
+ * Generic reader for endpoints that legitimately serve BOTH portals (e.g. the
+ * warehouse file/photo proxies): returns whichever scope is signed in, admin
+ * first. Prefer the scope-specific readers above for portal pages and guards.
+ */
+export async function getSessionUser(): Promise<SessionUser | null> {
+  return (await getAdminSessionUser()) ?? (await getCustomerSessionUser())
 }
 
 function normalizeRoles(value: unknown): AdminRole[] {
@@ -54,14 +77,14 @@ function normalizeRoles(value: unknown): AdminRole[] {
  * customer portal.
  */
 export async function requireCustomer(): Promise<SessionUser> {
-  const user = await getSessionUser()
+  const user = await getCustomerSessionUser()
   if (!user || user.role !== "CUSTOMER") redirect("/ingresar")
   return user
 }
 
 /** Require an authenticated admin. Redirects otherwise. */
 export async function requireAdmin(): Promise<SessionUser> {
-  const user = await getSessionUser()
+  const user = await getAdminSessionUser()
   if (!user) redirect("/admin/login")
   if (user.role !== "ADMIN") redirect("/admin/login")
   return user

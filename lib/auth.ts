@@ -30,6 +30,10 @@ export const auth = betterAuth({
     ...(process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? [`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`]
       : []),
+    // v0 preview sandboxes are served from rotating *.vercel.run hosts; trust
+    // them via wildcard so login works in preview without weakening production.
+    'https://*.vercel.run',
+    'https://*.vercel.app',
   ],
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days

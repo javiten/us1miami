@@ -46,6 +46,23 @@ export default async function AdminDashboardPage() {
         <StatCard label="Consolidaciones abiertas" value={Number(data.consolidations.open)} icon="Combine" />
       </div>
 
+      {incidents > 0 && (
+        <Link
+          href="/admin/paquetes?status=HELD"
+          className="mt-4 flex items-center justify-between rounded-2xl border border-rose-200 bg-rose-50 px-5 py-4 transition-colors hover:bg-rose-100"
+        >
+          <span className="text-sm font-semibold text-rose-700">
+            {incidents} {incidents === 1 ? "paquete con incidencia" : "paquetes con incidencias"} requieren atención
+          </span>
+          <span className="text-sm font-medium text-rose-700 underline">Revisar</span>
+        </Link>
+      )}
+
+      <Card className="mt-6">
+        <h2 className="mb-4 text-base font-semibold text-navy">Flujo operativo</h2>
+        <PipelineStrip counts={counts} />
+      </Card>
+
       <Card className="mt-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-base font-semibold text-navy">Últimos movimientos de paquetes</h2>

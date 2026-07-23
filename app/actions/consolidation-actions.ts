@@ -466,7 +466,7 @@ export async function generateMawb(mcId: number): Promise<{ ok?: boolean; error?
     actorName: admin.name,
     action: "MAWB_GENERATED",
     entityType: "master",
-    entityId: mc.mcNumber,
+    entityId: mc.mcNumber ?? undefined,
     metadata: { mcNumber: mc.mcNumber, mawbNumber },
   })
 
@@ -530,7 +530,7 @@ export async function completeMcDeconsolidation(input: {
         actorName: admin.name,
         action: "MC_DECONSOLIDATED",
         entityType: "master",
-        entityId: mc.mcNumber,
+        entityId: mc.mcNumber ?? undefined,
         metadata: {
           mcNumber: mc.mcNumber,
           verifiedCwr: verifiedCwr.length,
@@ -603,7 +603,7 @@ export async function completeCwrDeconsolidation(input: {
         actorName: admin.name,
         action: "CWR_DECONSOLIDATED",
         entityType: "consolidation",
-        entityId: cwr.cwrNumber,
+        entityId: cwr.cwrNumber ?? undefined,
         metadata: {
           cwrNumber: cwr.cwrNumber,
           verifiedWr: verifiedWr.length,
@@ -618,7 +618,7 @@ export async function completeCwrDeconsolidation(input: {
         actorName: admin.name,
         action: "CUSTOMER_NOTIFIED",
         entityType: "consolidation",
-        entityId: cwr.cwrNumber,
+        entityId: cwr.cwrNumber ?? undefined,
         metadata: { cwrNumber: cwr.cwrNumber, userId: cwr.userId, reason: "READY_FOR_DELIVERY_AR" },
       })
 

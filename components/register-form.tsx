@@ -1,9 +1,8 @@
 "use client"
 
 import { useActionState, useState } from "react"
-import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Loader2, MapPin, User, ShieldCheck } from "lucide-react"
-import { registerCustomer, type RegisterState } from "@/app/actions/auth"
+import { registerCustomer } from "@/app/actions/auth"
 
 const PROVINCES = [
   "Buenos Aires",
@@ -37,19 +36,11 @@ const inputClass =
 const labelClass = "mb-1.5 block text-sm font-medium text-navy"
 
 export function RegisterForm() {
-  const router = useRouter()
   const [showPw, setShowPw] = useState(false)
-  const [state, formAction, pending] = useActionState<RegisterState, FormData>(
-    async (prev, formData) => {
-      const result = await registerCustomer(prev, formData)
-      if (result.ok) {
-        router.push("/panel?welcome=1")
-        router.refresh()
-      }
-      return result
-    },
-    {},
-  )
+  // On success the server action redirects to /panel with the session cookie, so
+  // the button never needs to manage navigation. On error we get {error} back and
+  // `pending` resets automatically, so the loading state can never get stuck.
+  const [state, formAction, pending] = useActionState(registerCustomer, {})
 
   return (
     <form action={formAction} className="space-y-8">

@@ -2,11 +2,11 @@
 
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { eq } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { user, customerProfile, wallet } from "@/lib/db/schema"
-import { nextCounter, formatBoxNumber } from "@/lib/counters"
+import { user, account, session as sessionTable, customerProfile, wallet } from "@/lib/db/schema"
+import { formatBoxNumber } from "@/lib/counters"
 import { recordAudit } from "@/lib/audit"
 
 export type RegisterState = { error?: string; ok?: boolean }
@@ -54,6 +54,8 @@ export async function registerCustomer(_prev: RegisterState, formData: FormData)
     return { error: "Ya existe una cuenta con este email." }
   }
 
+  // 1) Create the auth user (hashes the password, creates the account row, and
+  //    with autoSignIn establishes the session + cookie via the nextCookies plugin).
   try {
     await auth.api.signUpEmail({
       body: { email, password, name: `${firstName} ${lastName}` },
@@ -66,44 +68,72 @@ export async function registerCustomer(_prev: RegisterState, formData: FormData)
   const created = rows[0]
   if (!created) return { error: "Error al crear la cuenta." }
 
-  // Assign the next sequential, immutable box number (starts at US1-1001).
-  const boxNumber = formatBoxNumber(await nextCounter("box"))
+  // 2) Assign box + profile + wallet atomically. The box counter is incremented
+  //    INSIDE the transaction so a rollback never consumes a box number, and a
+  //    mid-way failure leaves no partial profile/wallet.
+  let boxNumber: string
+  try {
+    boxNumber = await db.transaction(async (tx) => {
+      const res = await tx.execute(
+        sql`UPDATE "counters" SET "value" = "value" + 1 WHERE "name" = 'box' RETURNING "value"`,
+      )
+      const value = Number((res.rows?.[0] as { value?: number } | undefined)?.value)
+      if (!value) throw new Error("box counter missing")
+      const box = formatBoxNumber(value)
 
-  await db
-    .update(user)
-    .set({ role: "CUSTOMER", boxNumber, phone, updatedAt: new Date() })
-    .where(eq(user.id, created.id))
+      await tx
+        .update(user)
+        .set({ role: "CUSTOMER", boxNumber: box, phone: phone || null, updatedAt: new Date() })
+        .where(eq(user.id, created.id))
 
-  await db.insert(customerProfile).values({
-    userId: created.id,
-    firstName,
-    lastName,
-    street,
-    streetNumber,
-    floor: floor || null,
-    apartment: apartment || null,
-    city,
-    province,
-    postalCode,
-    references: refs || null,
-    acceptedTerms,
-    acceptedPrivacy,
-    acceptedProhibited,
-    acceptedStorage,
-  })
+      await tx.insert(customerProfile).values({
+        userId: created.id,
+        firstName,
+        lastName,
+        street,
+        streetNumber,
+        floor: floor || null,
+        apartment: apartment || null,
+        city,
+        province,
+        postalCode,
+        references: refs || null,
+        acceptedTerms,
+        acceptedPrivacy,
+        acceptedProhibited,
+        acceptedStorage,
+      })
 
-  await db.insert(wallet).values({ userId: created.id }).onConflictDoNothing()
+      await tx.insert(wallet).values({ userId: created.id }).onConflictDoNothing()
+      return box
+    })
+  } catch {
+    // Roll back the auth user so no orphaned account/session remains and the
+    // customer can retry with the same email.
+    await db.delete(sessionTable).where(eq(sessionTable.userId, created.id))
+    await db.delete(account).where(eq(account.userId, created.id))
+    await db.delete(user).where(eq(user.id, created.id))
+    return { error: "No pudimos completar tu registro. Intentá nuevamente." }
+  }
 
-  await recordAudit({
-    actorUserId: created.id,
-    actorName: `${firstName} ${lastName}`,
-    action: "CUSTOMER_REGISTERED",
-    entityType: "user",
-    entityId: created.id,
-    metadata: { boxNumber },
-  })
+  // Best-effort audit; never block the redirect on it.
+  try {
+    await recordAudit({
+      actorUserId: created.id,
+      actorName: `${firstName} ${lastName}`,
+      action: "CUSTOMER_REGISTERED",
+      entityType: "user",
+      entityId: created.id,
+      metadata: { boxNumber },
+    })
+  } catch {
+    // ignore audit failures
+  }
 
-  return { ok: true }
+  // 3) Redirect on the SERVER so the freshly-set session cookie is sent with the
+  //    redirect response and /panel loads authenticated in one hop. Must stay
+  //    OUTSIDE any try/catch so the NEXT_REDIRECT is not suppressed.
+  redirect("/panel?welcome=1")
 }
 
 export async function signOutAction() {

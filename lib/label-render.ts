@@ -52,6 +52,15 @@ const FLAG_RULES: { flag: string; test: RegExp }[] = [
   { flag: "NO IDENTIFICADO", test: /no identif|sin identif|unknown|desconocid/i },
 ]
 
+/**
+ * Show only the operator's name on the label — strip any trailing role suffix
+ * like "Javier (Super Admin)" → "Javier". Handles existing stored data too.
+ */
+function operatorName(name: string | null | undefined): string {
+  if (!name) return DASH
+  return name.replace(/\s*\([^)]*\)\s*$/, "").trim() || DASH
+}
+
 /** Derive operational handling flags from the internal notes text. */
 export function deriveFlags(notes: string | null | undefined): string[] {
   if (!notes) return []
@@ -112,7 +121,7 @@ export function buildLabelData(pkg: PackageRow): LabelData {
     pieces: "1",
     content: pkg.description || DASH,
     location: pkg.warehouseLocation || DASH,
-    operator: pkg.receivedByName || DASH,
+    operator: operatorName(pkg.receivedByName),
     notes: pkg.notes || DASH,
     flags: deriveFlags(pkg.notes),
   }

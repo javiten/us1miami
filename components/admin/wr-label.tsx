@@ -36,22 +36,46 @@ type Props = {
 export function WrLabel({ wrNumber, customerName, boxNumber, data, barcodeSvg, qrSvg, detailHref }: Props) {
   const [busy, setBusy] = useState(false)
 
-  function print(mode: "print" | "reprint") {
-    void logLabelPrint(wrNumber, mode)
-    window.print()
+  // Render the on-screen 4x6 label to a jsPDF document sized exactly 4in x 6in.
+  // Printing this PDF guarantees a true 4x6 output regardless of the browser's
+  // print dialog paper default (Safari/macOS ignore the CSS @page size).
+  async function buildPdf() {
+    const el = document.getElementById("wr-print")
+    if (!el) return null
+    const [h2c, jspdf] = await Promise.all([import("html2canvas-pro"), import("jspdf")])
+    const html2canvas = h2c.default
+    const canvas = await html2canvas(el, { scale: 3, backgroundColor: "#ffffff" })
+    const img = canvas.toDataURL("image/png")
+    const pdf = new jspdf.jsPDF({ orientation: "portrait", unit: "in", format: [4, 6] })
+    pdf.addImage(img, "PNG", 0, 0, 4, 6)
+    return pdf
+  }
+
+  async function print(mode: "print" | "reprint") {
+    setBusy(true)
+    try {
+      const pdf = await buildPdf()
+      if (!pdf) return
+      void logLabelPrint(wrNumber, mode)
+      // Embed an auto-print action and open the 4x6 PDF so the OS print dialog
+      // opens against a real 4x6 page — no scaling, no extra blank page.
+      pdf.autoPrint()
+      const url = pdf.output("bloburl")
+      const win = window.open(url, "_blank")
+      if (!win) {
+        // Popup blocked (e.g. inside an iframe): fall back to a download.
+        pdf.save(`${wrNumber}.pdf`)
+      }
+    } finally {
+      setBusy(false)
+    }
   }
 
   async function downloadPdf() {
-    const el = document.getElementById("wr-print")
-    if (!el) return
     setBusy(true)
     try {
-      const [h2c, jspdf] = await Promise.all([import("html2canvas-pro"), import("jspdf")])
-      const html2canvas = h2c.default
-      const canvas = await html2canvas(el, { scale: 3, backgroundColor: "#ffffff" })
-      const img = canvas.toDataURL("image/png")
-      const pdf = new jspdf.jsPDF({ orientation: "portrait", unit: "in", format: [4, 6] })
-      pdf.addImage(img, "PNG", 0, 0, 4, 6)
+      const pdf = await buildPdf()
+      if (!pdf) return
       pdf.save(`${wrNumber}.pdf`)
       void logLabelPrint(wrNumber, "pdf")
     } finally {
@@ -96,14 +120,16 @@ export function WrLabel({ wrNumber, customerName, boxNumber, data, barcodeSvg, q
             <button
               type="button"
               onClick={() => print("print")}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+              disabled={busy}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-900 px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800 disabled:opacity-50"
             >
               <Printer className="h-4 w-4" /> Imprimir
             </button>
             <button
               type="button"
               onClick={() => print("reprint")}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+              disabled={busy}
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50"
             >
               <RotateCw className="h-4 w-4" /> Reimprimir
             </button>

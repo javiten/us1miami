@@ -168,7 +168,7 @@ export async function createCwr(input: {
       // created PENDING_PAYMENT and stays operationally blocked until the linked
       // invoice is PAID (or, for >20 kg, until the review invoice is resolved).
       const pricing = computeCwrPricing({
-        weightLb: input.weightLb,
+        weightLb: input.weightLb ?? 0,
         lengthIn: input.lengthIn ?? null,
         widthIn: input.widthIn ?? null,
         heightIn: input.heightIn ?? null,
@@ -331,6 +331,8 @@ export async function scanUnitForMaster(
 
   if (cwr) {
     if (cwr.masterId) return { error: `${cwr.cwrNumber} ya está en una carga maestra.` }
+    if (cwr.status === "PENDING_PAYMENT")
+      return { error: `${cwr.cwrNumber} tiene el envío impago (PAYMENT_REQUIRED). El cliente debe pagar antes de cargarlo.` }
     if (cwr.status !== "READY_TO_SHIP") return { error: `${cwr.cwrNumber} no está listo para envío.` }
     return {
       ok: true,

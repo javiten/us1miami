@@ -7,7 +7,7 @@ import { invoices, consolidations, wallet, walletTransaction } from "@/lib/db/sc
 import { requireCustomer, requirePermission, type SessionUser } from "@/lib/session"
 import { recordAudit } from "@/lib/audit"
 import { createInvoiceCardCheckout } from "@/lib/payments"
-import { priceByBillableKg, computeCwrPricing } from "@/lib/pricing"
+import { computeCwrPricing } from "@/lib/pricing"
 import type { PaymentMethod } from "@/lib/invoices"
 
 export type PayState = { ok?: boolean; error?: string; message?: string; redirectUrl?: string }
@@ -435,5 +435,53 @@ export async function recalculateInvoice(input: { invoiceId: number }): Promise<
   }
 }
 
-// Silence unused import in environments where priceByBillableKg is tree-shaken.
-void priceByBillableKg
+/**
+ * Resolve a REQUIRES_REVIEW invoice (billable weight over the auto-pricing
+ * ceiling) by setting the negotiated per-kg rate manually. The subtotal is
+ * derived from the frozen billable weight so the amount can never be typed in
+ * directly. Moves the invoice to OPEN so the customer can pay.
+ */
+export async function resolveReviewInvoice(input: { invoiceId: number; ratePerKg: number }): Promise<PayState> {
+  const admin = await requirePermission("invoices.manage")
+  if (!Number.isFinite(input.ratePerKg) || input.ratePerKg <= 0)
+    return { error: "Ingresá una tarifa por kg válida." }
+  try {
+    const result = await db.transaction(async (tx) => {
+      const [inv] = await tx.select().from(invoices).where(eq(invoices.id, input.invoiceId)).for("update").limit(1)
+      if (!inv) return { error: "Factura no encontrada." }
+      if (inv.status !== "REQUIRES_REVIEW") return { error: "Solo se resuelven facturas en revisión." }
+      if (inv.billableWeightKg == null) return { error: "La factura no tiene peso facturable." }
+
+      // Manual (negotiated) rate for over-ceiling shipments: apply the rate
+      // directly to the frozen billable weight. The amount is still derived,
+      // never typed in.
+      const rate = Math.round((input.ratePerKg + Number.EPSILON) * 100) / 100
+      const subtotal = Math.round((Number(inv.billableWeightKg) * rate + Number.EPSILON) * 100) / 100
+      await tx
+        .update(invoices)
+        .set({
+          ratePerKg: String(rate),
+          subtotal: String(subtotal),
+          status: "OPEN",
+          updatedAt: new Date(),
+        })
+        .where(eq(invoices.id, inv.id))
+      return { ok: true, invoiceNumber: inv.invoiceNumber, consolidationId: inv.consolidationId, ratePerKg: rate, subtotal }
+    })
+    if (result.error) return { error: result.error }
+    await recordAudit({
+      actorUserId: admin.id,
+      actorName: admin.name,
+      action: "INVOICE_REVIEW_RESOLVED",
+      entityType: "invoice",
+      entityId: result.invoiceNumber ?? String(input.invoiceId),
+      metadata: { by: admin.name, ratePerKg: result.ratePerKg, subtotal: result.subtotal },
+    })
+    revalidateAll(result.consolidationId)
+    revalidatePath(`/admin/invoices/${input.invoiceId}`)
+    return { ok: true, message: "Tarifa aplicada. La factura quedó lista para pago." }
+  } catch (err) {
+    console.log("[v0] resolveReviewInvoice failed:", (err as Error).message)
+    return { error: "No se pudo resolver la factura. Reintentá." }
+  }
+}

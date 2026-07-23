@@ -34,6 +34,7 @@ const NAV: NavItem[] = [
     icon: "PackageSearch",
     permission: "deconsolidation.manage",
   },
+  { href: "/admin/invoices", label: "Facturas", icon: "Receipt", permission: "invoices.view" },
   { href: "/admin/clientes", label: "Clientes", icon: "Users", permission: "customers.view" },
   { href: "/admin/billeteras", label: "Billeteras", icon: "Wallet", permission: "wallets.view" },
   { href: "/admin/auditoria", label: "Auditoría", icon: "ScrollText", permission: "audit.view" },

@@ -1,16 +1,22 @@
+import Link from "next/link"
 import { requireCustomer } from "@/lib/session"
 import { getCustomerPackages, getCustomerConsolidations } from "@/lib/queries/customer"
+import { getCustomerInvoices } from "@/lib/queries/invoices"
 import { PageHeader, Card } from "@/components/portal/ui"
 import { ConsolidationForm } from "@/components/portal/consolidation-form"
 import { CONSOLIDATION_STATUS } from "@/lib/constants"
+import { invoiceStatusLabel, invoiceStatusTone, effectiveInvoiceStatus } from "@/lib/invoices"
+import { money } from "@/lib/format"
 
 export default async function ConsolidationsPage() {
   const user = await requireCustomer()
-  const [pkgs, cons] = await Promise.all([
+  const [pkgs, cons, invs] = await Promise.all([
     getCustomerPackages(user.id),
     getCustomerConsolidations(user.id),
+    getCustomerInvoices(user.id),
   ])
   const available = pkgs.filter((p) => p.status === "RECEIVED" || p.status === "PROCESSED")
+  const invByCons = new Map(invs.map((i) => [i.invoice.consolidationId, i.invoice]))
 
   return (
     <div>
@@ -42,6 +48,10 @@ export default async function ConsolidationsPage() {
             <ul className="space-y-3">
               {cons.map((c) => {
                 const ids = Array.isArray(c.packageIds) ? (c.packageIds as number[]) : []
+                const inv = invByCons.get(c.id)
+                const effStatus = inv ? effectiveInvoiceStatus(inv) : null
+                const needsPayment =
+                  inv && (inv.status === "OPEN" || inv.status === "PENDING_MANUAL_PAYMENT" || inv.status === "REQUIRES_REVIEW")
                 return (
                   <li key={c.id} className="rounded-xl border border-border p-3.5">
                     <div className="flex items-center justify-between">
@@ -51,6 +61,24 @@ export default async function ConsolidationsPage() {
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">{ids.length} paquetes</p>
+                    {inv && effStatus && (
+                      <div className="mt-2.5 flex items-center justify-between gap-2">
+                        <span
+                          className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${invoiceStatusTone(effStatus)}`}
+                        >
+                          {invoiceStatusLabel(effStatus)}
+                          {inv.subtotal != null ? ` · ${money(inv.subtotal)}` : ""}
+                        </span>
+                        {needsPayment && (
+                          <Link
+                            href={`/panel/facturas/${c.id}`}
+                            className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                          >
+                            {inv.status === "REQUIRES_REVIEW" ? "Ver factura" : "Pagar envío"}
+                          </Link>
+                        )}
+                      </div>
+                    )}
                   </li>
                 )
               })}

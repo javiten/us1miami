@@ -60,7 +60,9 @@ export default async function ConsolidationsPage() {
                         {CONSOLIDATION_STATUS[c.status as keyof typeof CONSOLIDATION_STATUS] ?? c.status}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{ids.length} paquetes</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {ids.length} paquete{ids.length === 1 ? "" : "s"}
+                    </p>
                     {inv && effStatus && (
                       <div className="mt-2.5 flex items-center justify-between gap-2">
                         <span

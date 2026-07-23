@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { motion } from "motion/react"
 import { ArrowRight, Phone, Mail } from "lucide-react"
 import { Reveal } from "@/components/reveal"
@@ -21,14 +22,15 @@ export function FinalCta() {
             {t.finalCta.description}
           </p>
 
-          <motion.a
-            href="#quote"
-            whileHover={{ y: -2 }}
-            className="relative mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-navy shadow-lg"
-          >
-            {t.finalCta.cta}
-            <ArrowRight className="h-4 w-4" />
-          </motion.a>
+          <motion.div whileHover={{ y: -2 }} className="relative mt-8 inline-flex">
+            <Link
+              href="/registro"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-semibold text-navy shadow-lg"
+            >
+              {t.finalCta.cta}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </motion.div>
 
           <div className="relative mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
             <a

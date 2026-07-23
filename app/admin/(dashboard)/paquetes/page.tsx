@@ -1,5 +1,5 @@
 import { getAllPackages } from "@/lib/queries/admin"
-import { requireAdmin } from "@/lib/session"
+import { requirePermission } from "@/lib/session"
 import { PageHeader, StatusBadge } from "@/components/portal/ui"
 import { PACKAGE_STATUS } from "@/lib/constants"
 import Link from "next/link"
@@ -9,7 +9,7 @@ export default async function AdminPackagesPage({
 }: {
   searchParams: Promise<{ status?: string }>
 }) {
-  await requireAdmin(["WAREHOUSE", "OPERATIONS", "SUPER_ADMIN"])
+  await requirePermission("warehouse.records")
   const { status } = await searchParams
   const rows = await getAllPackages(status)
 

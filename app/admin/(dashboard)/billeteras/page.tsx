@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/session"
+import { requirePermission } from "@/lib/session"
 import { db } from "@/lib/db"
 import { wallet, walletTransaction, user } from "@/lib/db/schema"
 import { desc, eq, sql } from "drizzle-orm"
@@ -8,7 +8,7 @@ import { WALLET_TX_LABELS } from "@/lib/constants"
 import Link from "next/link"
 
 export default async function AdminWalletsPage() {
-  await requireAdmin(["FINANCE", "SUPER_ADMIN"])
+  await requirePermission("wallets.view")
 
   const [agg] = await db
     .select({

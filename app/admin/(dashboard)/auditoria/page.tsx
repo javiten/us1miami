@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/session"
+import { requirePermission } from "@/lib/session"
 import { getAuditLog } from "@/lib/queries/admin"
 import { PageHeader, Card } from "@/components/portal/ui"
 
@@ -15,7 +15,7 @@ const ACTION_LABELS: Record<string, string> = {
 }
 
 export default async function AdminAuditPage() {
-  await requireAdmin(["SUPER_ADMIN"])
+  await requirePermission("audit.view")
   const rows = await getAuditLog()
 
   return (

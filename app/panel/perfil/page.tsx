@@ -16,7 +16,7 @@ export default async function ProfilePage() {
           <h2 className="mb-4 text-base font-semibold text-navy">Datos personales y de entrega</h2>
           <ProfileForm
             profile={{
-              phone: user.phone,
+              phone: user.phone ?? null,
               street: profile?.street ?? null,
               streetNumber: profile?.streetNumber ?? null,
               floor: profile?.floor ?? null,

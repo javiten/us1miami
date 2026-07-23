@@ -12,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/blob": "^2.6.1",
     "better-auth": "^1.6.24",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",

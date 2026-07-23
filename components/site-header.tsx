@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { motion } from "motion/react"
 import { Menu, X, Phone } from "lucide-react"
 import { Logo } from "@/components/logo"
@@ -68,6 +69,12 @@ export function SiteHeader() {
             {"(305) 967-9756"}
           </a>
           <LanguageSwitcher />
+          <Link
+            href="/ingresar"
+            className="rounded-xl px-3 py-2 text-sm font-medium text-navy transition-colors hover:bg-muted"
+          >
+            {t.nav.login}
+          </Link>
           <a
             href="#quote"
             className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_20px_-8px_rgba(15,125,255,0.8)] transition-transform hover:-translate-y-0.5"
@@ -106,6 +113,13 @@ export function SiteHeader() {
                 {l.label}
               </a>
             ))}
+            <Link
+              href="/ingresar"
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+            >
+              {t.nav.login}
+            </Link>
             <a
               href="#quote"
               onClick={() => setOpen(false)}

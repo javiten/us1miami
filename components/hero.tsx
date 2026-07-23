@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { motion } from "motion/react"
 import { ArrowRight, MapPin, Check } from "lucide-react"
 import { useI18n } from "@/components/language-provider"
@@ -68,12 +69,12 @@ export function Hero() {
               {t.hero.primaryCta}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </a>
-            <a
-              href="#quote"
+            <Link
+              href="/registro"
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 py-3.5 text-sm font-semibold text-navy shadow-sm transition-colors hover:bg-muted"
             >
               {t.hero.secondaryCta}
-            </a>
+            </Link>
           </motion.div>
 
           <motion.ul

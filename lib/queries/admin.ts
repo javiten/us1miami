@@ -121,6 +121,42 @@ export async function getAuditLog() {
   return db.select().from(auditLog).orderBy(desc(auditLog.createdAt)).limit(150)
 }
 
+/** Fetch a single package by its WR number, joined with customer name + profile, for the label / detail. */
+export async function getPackageByWrNumber(wrNumber: string) {
+  const [row] = await db
+    .select({
+      pkg: packages,
+      customerName: user.name,
+      customerEmail: user.email,
+      firstName: customerProfile.firstName,
+      lastName: customerProfile.lastName,
+    })
+    .from(packages)
+    .leftJoin(user, eq(user.id, packages.userId))
+    .leftJoin(customerProfile, eq(customerProfile.userId, packages.userId))
+    .where(eq(packages.wrNumber, wrNumber))
+    .limit(1)
+  return row ?? null
+}
+
+/** Fetch a single package by numeric id, joined with customer name + profile. */
+export async function getPackageById(id: number) {
+  const [row] = await db
+    .select({
+      pkg: packages,
+      customerName: user.name,
+      customerEmail: user.email,
+      firstName: customerProfile.firstName,
+      lastName: customerProfile.lastName,
+    })
+    .from(packages)
+    .leftJoin(user, eq(user.id, packages.userId))
+    .leftJoin(customerProfile, eq(customerProfile.userId, packages.userId))
+    .where(eq(packages.id, id))
+    .limit(1)
+  return row ?? null
+}
+
 export async function findCustomerByBox(boxNumber: string) {
   const [u] = await db.select().from(user).where(eq(user.boxNumber, boxNumber)).limit(1)
   return u ?? null

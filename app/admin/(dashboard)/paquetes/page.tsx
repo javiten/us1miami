@@ -64,7 +64,11 @@ export default async function AdminPackagesPage({
             ) : (
               rows.map((p) => (
                 <tr key={p.id} className="border-b border-border/60 last:border-0 hover:bg-muted/40">
-                  <td className="px-4 py-3 font-mono text-xs text-foreground">{p.wrNumber ?? "—"}</td>
+                  <td className="px-4 py-3 font-mono text-xs">
+                    <Link href={`/admin/paquetes/${p.id}`} className="text-primary hover:underline">
+                      {p.wrNumber ?? `#${p.id}`}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3">
                     {p.userId ? (
                       <Link href={`/admin/clientes/${p.userId}`} className="text-primary hover:underline">

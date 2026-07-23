@@ -140,6 +140,20 @@ export async function receivePackage(payload: ReceivePayload): Promise<Reception
   return { ok: true, wrNumber, packageId: pkg.id }
 }
 
+/** Record that a WR label was printed or reprinted, for the audit trail. */
+export async function logLabelPrint(wrNumber: string, mode: "print" | "reprint" | "pdf" = "print") {
+  const admin = await requirePermission("warehouse.records")
+  await recordAudit({
+    actorUserId: admin.id,
+    actorName: admin.name,
+    action: mode === "reprint" ? "LABEL_REPRINTED" : mode === "pdf" ? "LABEL_PDF_EXPORTED" : "LABEL_PRINTED",
+    entityType: "package",
+    entityId: wrNumber,
+    metadata: { wrNumber, mode },
+  })
+  return { ok: true }
+}
+
 /** Fetch a finalized package with customer info for the label / receipt screen. */
 export async function getReceptionResult(packageId: number) {
   await requirePermission("warehouse.receive")

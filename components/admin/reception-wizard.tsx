@@ -449,7 +449,7 @@ function ReceptionReceipt({
         <div className="mt-6 flex gap-3">
           <button
             type="button"
-            onClick={() => window.print()}
+            onClick={() => window.open(`/admin/wr/${encodeURIComponent(wrNumber)}/label`, "_blank", "noopener")}
             className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
           >
             <Printer className="h-4 w-4" /> Imprimir etiqueta

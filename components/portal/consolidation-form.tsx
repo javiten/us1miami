@@ -30,7 +30,7 @@ export function ConsolidationForm({ available }: { available: Pkg[] }) {
         </span>
         <h3 className="mt-4 text-base font-semibold text-navy">No hay paquetes disponibles para consolidar</h3>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Cuando tengas 2 o más paquetes en depósito, vas a poder combinarlos en un solo envío.
+          Cuando tengas uno o más paquetes en depósito, vas a poder prepararlos para el envío a Argentina.
         </p>
       </div>
     )
@@ -102,7 +102,7 @@ export function ConsolidationForm({ available }: { available: Pkg[] }) {
         </p>
         <button
           type="submit"
-          disabled={pending || selected.length < 2}
+          disabled={pending || selected.length < 1}
           className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
         >
           {pending ? "Enviando…" : "Solicitar consolidación"}

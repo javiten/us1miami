@@ -64,7 +64,7 @@ export async function requestConsolidation(_prev: ActionState, formData: FormDat
     .filter((n) => Number.isFinite(n))
   const notes = String(formData.get("notes") ?? "").trim()
 
-  if (ids.length < 2) return { error: "Seleccioná al menos 2 paquetes para consolidar." }
+  if (ids.length < 1) return { error: "Seleccioná al menos un paquete para preparar el envío." }
 
   // Verify all packages belong to this customer and are available.
   const owned = await db

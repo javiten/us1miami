@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation"
 import * as Icons from "lucide-react"
-import { getSessionUser } from "@/lib/session"
+import { getAdminSessionUser } from "@/lib/session"
 import { AdminLoginForm } from "@/components/admin/admin-login-form"
 
 export const metadata = { title: "Panel de administración — US1 Miami" }
 
 export default async function AdminLoginPage() {
-  const user = await getSessionUser()
+  const user = await getAdminSessionUser()
   if (user?.role === "ADMIN") redirect("/admin")
 
   return (

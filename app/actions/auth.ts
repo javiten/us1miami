@@ -3,7 +3,7 @@
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { eq, sql } from "drizzle-orm"
-import { auth } from "@/lib/auth"
+import { auth, authAdmin } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { user, account, session as sessionTable, customerProfile, wallet } from "@/lib/db/schema"
 import { formatBoxNumber } from "@/lib/counters"
@@ -137,12 +137,13 @@ export async function registerCustomer(_prev: RegisterState, formData: FormData)
 }
 
 export async function signOutAction() {
-  // Destroy the server session and clear the auth cookie. The nextCookies()
-  // plugin flushes the Set-Cookie into this server-action response, so the
-  // browser drops the session immediately. Then bounce to the admin login,
-  // which the layout guard also blocks for unauthenticated users.
+  // Admin sign-out. Clears the ADMIN-scope cookie (`us1_admin`) only, leaving any
+  // customer session in the same browser untouched. The nextCookies() plugin
+  // flushes the Set-Cookie into this server-action response, so the browser
+  // drops the admin session immediately. Then bounce to the admin login, which
+  // the layout guard also blocks for unauthenticated users.
   try {
-    await auth.api.signOut({ headers: await headers() })
+    await authAdmin.api.signOut({ headers: await headers() })
   } catch {
     // Session may already be gone; proceed to redirect regardless.
   }

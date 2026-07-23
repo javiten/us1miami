@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 import { Check } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { RegisterForm } from "@/components/register-form"
-import { getSessionUser } from "@/lib/session"
+import { getCustomerSessionUser } from "@/lib/session"
 
 export const metadata: Metadata = {
   title: "Crear mi dirección — US1 Miami",
@@ -19,8 +19,10 @@ const BENEFITS = [
 ]
 
 export default async function RegistroPage() {
-  const user = await getSessionUser()
-  if (user) redirect(user.role === "ADMIN" ? "/admin" : "/panel")
+  // Only an existing CUSTOMER session skips registration. An admin-only session
+  // must still be able to reach the customer sign-up form.
+  const user = await getCustomerSessionUser()
+  if (user?.role === "CUSTOMER") redirect("/panel")
 
   return (
     <main className="min-h-screen bg-background">

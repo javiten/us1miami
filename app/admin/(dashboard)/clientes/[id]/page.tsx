@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import * as Icons from "lucide-react"
-import { requirePermission, getSessionUser } from "@/lib/session"
+import { requirePermission, getAdminSessionUser } from "@/lib/session"
 import { getCustomerDetail } from "@/lib/queries/admin"
 import { hasPermission, type AdminRole } from "@/lib/rbac"
 import { Card, StatusBadge } from "@/components/portal/ui"
@@ -11,7 +11,7 @@ import { money } from "@/lib/format"
 
 export default async function AdminCustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   await requirePermission("customers.view")
-  const sessionUser = await getSessionUser()
+  const sessionUser = await getAdminSessionUser()
   const roles = (sessionUser?.adminRoles ?? []) as AdminRole[]
   const canAdjust = hasPermission(roles, "wallets.adjust")
   const canManage = hasPermission(roles, "customers.manage")

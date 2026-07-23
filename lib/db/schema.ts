@@ -155,14 +155,61 @@ export const prealerts = pgTable("prealerts", {
   createdAt: timestamp("createdAt").notNull().defaultNow(),
 })
 
-// Consolidation requests (CWR).
+// Consolidation records (CWR). One CWR groups several WR of a single customer.
 export const consolidations = pgTable("consolidations", {
   id: serial("id").primaryKey(),
   userId: text("userId").notNull(),
   cwrNumber: text("cwrNumber"),
-  status: text("status").notNull().default("REQUESTED"), // REQUESTED | PROCESSING | COMPLETED
+  status: text("status").notNull().default("REQUESTED"),
   packageIds: jsonb("packageIds").$type<number[]>().notNull().default([]),
   notes: text("notes"),
+  // Consolidated shipment measurements + handling data.
+  pieces: integer("pieces"),
+  weightLb: numeric("weightLb", { precision: 10, scale: 2 }),
+  lengthIn: numeric("lengthIn", { precision: 10, scale: 2 }),
+  widthIn: numeric("widthIn", { precision: 10, scale: 2 }),
+  heightIn: numeric("heightIn", { precision: 10, scale: 2 }),
+  description: text("description"),
+  warehouseLocation: text("warehouseLocation"),
+  photos: jsonb("photos").$type<string[]>().notNull().default([]),
+  // Master consolidation link (set when this CWR is loaded into an MC).
+  masterId: integer("masterId"),
+  operatorId: text("operatorId"),
+  operatorName: text("operatorName"),
+  completedAt: timestamp("completedAt"),
+  deconsolidatedAt: timestamp("deconsolidatedAt"),
+  deconsolidatedById: text("deconsolidatedById"),
+  deconsolidatedByName: text("deconsolidatedByName"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+})
+
+// Master consolidations (MC). Groups CWR + individual WR from multiple
+// customers into a single master unit for dispatch and deconsolidation.
+export const masterConsolidations = pgTable("master_consolidations", {
+  id: serial("id").primaryKey(),
+  mcNumber: text("mcNumber"),
+  status: text("status").notNull().default("OPEN"),
+  cwrIds: jsonb("cwrIds").$type<number[]>().notNull().default([]),
+  packageIds: jsonb("packageIds").$type<number[]>().notNull().default([]),
+  customerCount: integer("customerCount"),
+  pieces: integer("pieces"),
+  weightLb: numeric("weightLb", { precision: 10, scale: 2 }),
+  lengthIn: numeric("lengthIn", { precision: 10, scale: 2 }),
+  widthIn: numeric("widthIn", { precision: 10, scale: 2 }),
+  heightIn: numeric("heightIn", { precision: 10, scale: 2 }),
+  sealNumber: text("sealNumber"),
+  mawbNumber: text("mawbNumber"),
+  destination: text("destination"),
+  service: text("service"),
+  photos: jsonb("photos").$type<string[]>().notNull().default([]),
+  notes: text("notes"),
+  operatorId: text("operatorId"),
+  operatorName: text("operatorName"),
+  completedAt: timestamp("completedAt"),
+  deconsolidatedAt: timestamp("deconsolidatedAt"),
+  deconsolidatedById: text("deconsolidatedById"),
+  deconsolidatedByName: text("deconsolidatedByName"),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 })

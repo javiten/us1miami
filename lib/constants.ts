@@ -46,13 +46,29 @@ export const PACKAGE_INCIDENTS = {
   HELD: "Retenido",
   RETURNED: "Devuelto",
   CANCELLED: "Cancelado",
+  DAMAGED: "Dañado",
+  MISSING: "Faltante",
+} as const
+
+// Off-flow warehouse states used by the consolidation / master-cargo pipeline.
+// A WR carries exactly one of these while it is locked inside a CWR or MC.
+export const PACKAGE_CONSOLIDATION_STATUS = {
+  CONSOLIDATED_IN_CWR: "Consolidado en CWR",
+  IN_MASTER: "En carga maestra",
+  RECEIVED_ARGENTINA: "Recibido en Argentina",
+  READY_FOR_DELIVERY_AR: "Listo para entrega",
 } as const
 
 // Every valid status label, keyed by its stored value.
-export const ALL_PACKAGE_STATUS = { ...PACKAGE_STATUS, ...PACKAGE_INCIDENTS } as const
+export const ALL_PACKAGE_STATUS = {
+  ...PACKAGE_STATUS,
+  ...PACKAGE_CONSOLIDATION_STATUS,
+  ...PACKAGE_INCIDENTS,
+} as const
 
 export type PackageStatus = keyof typeof PACKAGE_STATUS
 export type PackageIncident = keyof typeof PACKAGE_INCIDENTS
+export type PackageConsolidationStatus = keyof typeof PACKAGE_CONSOLIDATION_STATUS
 export type AnyPackageStatus = keyof typeof ALL_PACKAGE_STATUS
 
 // Ordered main flow — used by the timeline and the operational pipeline.
@@ -67,9 +83,18 @@ export const STATUS_ORDER: PackageStatus[] = [
   "DELIVERED",
 ]
 
-export const INCIDENT_KEYS: PackageIncident[] = ["UNIDENTIFIED", "HELD", "RETURNED", "CANCELLED"]
+export const INCIDENT_KEYS: PackageIncident[] = [
+  "UNIDENTIFIED",
+  "HELD",
+  "RETURNED",
+  "CANCELLED",
+  "DAMAGED",
+  "MISSING",
+]
 
-// Allowed transitions between statuses. Anything not listed is blocked.
+// Allowed transitions for the MANUAL status control (WR drawer). The
+// consolidation/deconsolidation workflows write their locked states directly
+// and are intentionally NOT reachable from this manual map.
 export const VALID_TRANSITIONS: Record<AnyPackageStatus, AnyPackageStatus[]> = {
   EXPECTED: ["RECEIVED", "UNIDENTIFIED", "CANCELLED"],
   RECEIVED: ["PROCESSED", "HELD", "RETURNED", "UNIDENTIFIED"],
@@ -79,10 +104,18 @@ export const VALID_TRANSITIONS: Record<AnyPackageStatus, AnyPackageStatus[]> = {
   IN_TRANSIT: ["IN_ARGENTINA", "HELD"],
   IN_ARGENTINA: ["DELIVERED", "HELD"],
   DELIVERED: [],
+  // Consolidation-locked states are managed by their workflows; allow only
+  // incident escalation and the forward delivery step from Argentina states.
+  CONSOLIDATED_IN_CWR: ["HELD", "DAMAGED"],
+  IN_MASTER: ["HELD", "DAMAGED"],
+  RECEIVED_ARGENTINA: ["READY_FOR_DELIVERY_AR", "DELIVERED", "HELD", "DAMAGED"],
+  READY_FOR_DELIVERY_AR: ["DELIVERED", "HELD", "DAMAGED"],
   UNIDENTIFIED: ["RECEIVED", "RETURNED", "CANCELLED"],
   HELD: ["PROCESSED", "READY_TO_SHIP", "RETURNED", "CANCELLED"],
   RETURNED: [],
   CANCELLED: [],
+  DAMAGED: ["HELD", "RETURNED", "CANCELLED"],
+  MISSING: ["RECEIVED_ARGENTINA", "HELD", "CANCELLED"],
 }
 
 /** Normalize any stored value to a known status key (legacy-safe). */
@@ -110,13 +143,37 @@ export function canTransition(from: string, to: string): boolean {
   return allowedTransitions(from).includes(normalizeStatus(to))
 }
 
+// CWR (customer consolidation) lifecycle.
 export const CONSOLIDATION_STATUS = {
   REQUESTED: "Solicitada",
   IN_PROGRESS: "En proceso",
+  READY_TO_SHIP: "Lista para envío",
+  CONSOLIDATED_IN_MC: "En carga maestra",
+  IN_TRANSIT: "En tránsito",
+  RECEIVED_ARGENTINA: "Recibida en Argentina",
+  DECONSOLIDATED: "Desconsolidada",
   COMPLETED: "Completada",
   SHIPPED: "Enviada",
   CANCELLED: "Cancelada",
 } as const
+
+export function cwrStatusLabel(status: string): string {
+  return (CONSOLIDATION_STATUS as Record<string, string>)[status] ?? status
+}
+
+// MC (master consolidation) lifecycle.
+export const MASTER_STATUS = {
+  OPEN: "Abierta",
+  READY_TO_SHIP: "Lista para envío",
+  IN_TRANSIT: "En tránsito",
+  RECEIVED_ARGENTINA: "Recibida en Argentina",
+  DECONSOLIDATED: "Desconsolidada",
+  CANCELLED: "Cancelada",
+} as const
+
+export function mcStatusLabel(status: string): string {
+  return (MASTER_STATUS as Record<string, string>)[status] ?? status
+}
 
 export const PREALERT_STATUS = {
   PENDING: "Pendiente",

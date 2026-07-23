@@ -1,6 +1,6 @@
 import { pool } from "@/lib/db"
 
-export type CounterName = "box" | "wr" | "cwr" | "aw" | "mawb"
+export type CounterName = "box" | "wr" | "cwr" | "aw" | "mawb" | "mc"
 
 const PREFIX: Record<CounterName, string> = {
   box: "US1-",
@@ -8,6 +8,7 @@ const PREFIX: Record<CounterName, string> = {
   cwr: "CWR",
   aw: "AW",
   mawb: "MAWB",
+  mc: "MC",
 }
 
 /**

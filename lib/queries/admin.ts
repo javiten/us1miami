@@ -1,7 +1,86 @@
 import "server-only"
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm"
+import { and, desc, eq, ilike, inArray, or, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
-import { packages, wallet, walletTransaction, customerProfile, consolidations, auditLog, user } from "@/lib/db/schema"
+import {
+  packages,
+  wallet,
+  walletTransaction,
+  customerProfile,
+  consolidations,
+  masterConsolidations,
+  auditLog,
+  user,
+} from "@/lib/db/schema"
+
+const DASH = "\u2014"
+
+/** Load a CWR by number with its owner + member WRs (for label + deconsolidation). */
+export async function getCwrByNumber(cwrNumber: string) {
+  const [cwr] = await db
+    .select({
+      cwr: consolidations,
+      customerName: user.name,
+      boxNumber: user.boxNumber,
+    })
+    .from(consolidations)
+    .leftJoin(user, eq(user.id, consolidations.userId))
+    .where(sql`upper(${consolidations.cwrNumber}) = ${cwrNumber.toUpperCase()}`)
+    .limit(1)
+  if (!cwr) return null
+  const ids = cwr.cwr.packageIds ?? []
+  const members = ids.length
+    ? await db.select().from(packages).where(inArray(packages.id, ids)).orderBy(packages.wrNumber)
+    : []
+  return { ...cwr, members }
+}
+
+/** Load an MC by number with its member CWRs and loose WRs. */
+export async function getMcByNumber(mcNumber: string) {
+  const [mc] = await db
+    .select()
+    .from(masterConsolidations)
+    .where(sql`upper(${masterConsolidations.mcNumber}) = ${mcNumber.toUpperCase()}`)
+    .limit(1)
+  if (!mc) return null
+  const cwrIds = mc.cwrIds ?? []
+  const pkgIds = mc.packageIds ?? []
+  const cwrs = cwrIds.length
+    ? await db
+        .select({ cwr: consolidations, customerName: user.name, boxNumber: user.boxNumber })
+        .from(consolidations)
+        .leftJoin(user, eq(user.id, consolidations.userId))
+        .where(inArray(consolidations.id, cwrIds))
+    : []
+  const looseWr = pkgIds.length
+    ? await db
+        .select({
+          id: packages.id,
+          wrNumber: packages.wrNumber,
+          customerName: user.name,
+          boxNumber: packages.boxNumber,
+          status: packages.status,
+        })
+        .from(packages)
+        .leftJoin(user, eq(user.id, packages.userId))
+        .where(inArray(packages.id, pkgIds))
+    : []
+  return { mc, cwrs, looseWr, DASH }
+}
+
+/** All CWRs for the list view. */
+export async function getAllCwrs() {
+  return db
+    .select({ cwr: consolidations, customerName: user.name, boxNumber: user.boxNumber })
+    .from(consolidations)
+    .leftJoin(user, eq(user.id, consolidations.userId))
+    .orderBy(desc(consolidations.createdAt))
+    .limit(100)
+}
+
+/** All MCs for the list view. */
+export async function getAllMcs() {
+  return db.select().from(masterConsolidations).orderBy(desc(masterConsolidations.createdAt)).limit(100)
+}
 
 export async function getAdminDashboard() {
   const [pkgAgg] = await db

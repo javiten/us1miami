@@ -15,6 +15,8 @@ export type Permission =
   | "packages.notes"
   | "box.reassign"
   | "consolidations.manage"
+  | "master.manage"
+  | "deconsolidation.manage"
   | "outbound.manage"
   | "airwaybills.manage"
   | "manifests.manage"
@@ -42,6 +44,8 @@ const SUPER_ADMIN_PERMS: Permission[] = [
   "packages.notes",
   "box.reassign",
   "consolidations.manage",
+  "master.manage",
+  "deconsolidation.manage",
   "outbound.manage",
   "airwaybills.manage",
   "manifests.manage",
@@ -67,6 +71,8 @@ const OPERATIONS_PERMS: Permission[] = [
   "packages.transition",
   "packages.notes",
   "consolidations.manage",
+  "master.manage",
+  "deconsolidation.manage",
   "outbound.manage",
   "airwaybills.manage",
   "manifests.manage",

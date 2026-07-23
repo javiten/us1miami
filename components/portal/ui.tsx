@@ -73,11 +73,18 @@ const STATUS_TONES: Record<AnyPackageStatus, string> = {
   IN_TRANSIT: "bg-indigo-50 text-indigo-600",
   IN_ARGENTINA: "bg-teal-50 text-teal-600",
   DELIVERED: "bg-emerald-50 text-emerald-600",
+  // Consolidation pipeline states.
+  CONSOLIDATED_IN_CWR: "bg-amber-50 text-amber-700",
+  IN_MASTER: "bg-cyan-50 text-cyan-700",
+  RECEIVED_ARGENTINA: "bg-teal-50 text-teal-600",
+  READY_FOR_DELIVERY_AR: "bg-lime-50 text-lime-700",
   // Incidents share a red-toned palette so they stand out from the flow.
   UNIDENTIFIED: "bg-rose-50 text-rose-600",
   HELD: "bg-red-50 text-red-600",
   RETURNED: "bg-orange-50 text-orange-600",
   CANCELLED: "bg-gray-200 text-gray-600",
+  DAMAGED: "bg-red-100 text-red-700",
+  MISSING: "bg-orange-100 text-orange-700",
 }
 
 export function StatusBadge({ status }: { status: string }) {

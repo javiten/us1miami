@@ -3,9 +3,10 @@
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
 import { db } from "@/lib/db"
-import { packages } from "@/lib/db/schema"
+import { packages, user } from "@/lib/db/schema"
 import { requirePermission } from "@/lib/session"
 import { recordAudit } from "@/lib/audit"
+import { getPackageById, getPackageAuditHistory } from "@/lib/queries/admin"
 import { canTransition, statusLabel } from "@/lib/constants"
 
 export type PackageActionResult = { ok?: boolean; error?: string }
@@ -129,6 +130,75 @@ export async function editPackage(
 
   revalidatePackage(packageId)
   return { ok: true }
+}
+
+/**
+ * Reassign a package to a different customer / box. Restricted to Super-Admin
+ * via the `box.reassign` permission. Records both the old and new owner.
+ */
+export async function reassignPackageBox(input: {
+  packageId: number
+  toUserId: string
+  reason?: string
+}): Promise<PackageActionResult> {
+  const admin = await requirePermission("box.reassign")
+  const packageId = Number(input.packageId)
+  const toUserId = String(input.toUserId ?? "")
+  if (!Number.isFinite(packageId) || !toUserId) return { error: "Datos inválidos." }
+
+  const [pkg] = await db
+    .select({ userId: packages.userId, boxNumber: packages.boxNumber, wrNumber: packages.wrNumber })
+    .from(packages)
+    .where(eq(packages.id, packageId))
+    .limit(1)
+  if (!pkg) return { error: "Paquete no encontrado." }
+  if (pkg.userId === toUserId) return { error: "El paquete ya pertenece a ese cliente." }
+
+  const [target] = await db
+    .select({ id: user.id, name: user.name, boxNumber: user.boxNumber, role: user.role })
+    .from(user)
+    .where(eq(user.id, toUserId))
+    .limit(1)
+  if (!target || target.role !== "CUSTOMER") return { error: "Cliente destino no válido." }
+
+  const [prevOwner] = await db.select({ name: user.name }).from(user).where(eq(user.id, pkg.userId)).limit(1)
+
+  await db
+    .update(packages)
+    .set({ userId: toUserId, boxNumber: target.boxNumber, updatedAt: new Date() })
+    .where(eq(packages.id, packageId))
+
+  await recordAudit({
+    actorUserId: admin.id,
+    actorName: admin.name,
+    action: "PACKAGE_REASSIGNED",
+    entityType: "package",
+    entityId: packageId,
+    metadata: {
+      wrNumber: pkg.wrNumber,
+      fromUserId: pkg.userId,
+      fromCustomer: prevOwner?.name ?? null,
+      fromBox: pkg.boxNumber,
+      toUserId,
+      toCustomer: target.name,
+      toBox: target.boxNumber,
+      reason: input.reason?.trim() || null,
+    },
+  })
+
+  revalidatePackage(packageId)
+  return { ok: true }
+}
+
+/** Load a package with its full audit history for the WR detail drawer. */
+export async function loadPackageDetail(packageId: number) {
+  await requirePermission("packages.view")
+  const id = Number(packageId)
+  if (!Number.isFinite(id)) return null
+  const row = await getPackageById(id)
+  if (!row) return null
+  const history = await getPackageAuditHistory(id, row.pkg.wrNumber)
+  return { row, history }
 }
 
 /**

@@ -1,12 +1,14 @@
 "use client"
 
-import { useState, useTransition } from "react"
-import { Check, ChevronLeft, ChevronRight, Package, Printer, Search, User } from "lucide-react"
+import { useState, useTransition, useRef, useEffect } from "react"
+import { AlertTriangle, Check, ChevronLeft, ChevronRight, Package, Printer, ScanLine, Search, User } from "lucide-react"
 import {
   searchCustomers,
   getCustomerPrealerts,
+  lookupTracking,
   receivePackage,
   type ReceptionState,
+  type TrackingLookup,
 } from "@/app/actions/reception-actions"
 import { PhotoCapture, type CapturedPhoto } from "@/components/admin/photo-capture"
 
@@ -25,13 +27,24 @@ export function ReceptionWizard({ workstation }: { workstation: string }) {
   const [step, setStep] = useState(0)
   const [pending, startTransition] = useTransition()
 
-  // Step 1
+  // Step 1 — scanner-first tracking
+  const [scan, setScan] = useState("")
+  const [lookup, setLookup] = useState<TrackingLookup | null>(null)
+  const [scanning, setScanning] = useState(false)
+  const scanRef = useRef<HTMLInputElement>(null)
+
+  // Step 1 — customer
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<Customer[]>([])
   const [searching, setSearching] = useState(false)
   const [customer, setCustomer] = useState<Customer | null>(null)
   const [prealerts, setPrealerts] = useState<Prealert[]>([])
   const [prealertId, setPrealertId] = useState<number | null>(null)
+
+  // Keep the scanner input focused whenever we're on step 0 with no customer yet.
+  useEffect(() => {
+    if (step === 0 && !customer) scanRef.current?.focus()
+  }, [step, customer])
 
   // Step 2
   const [form, setForm] = useState({
@@ -76,6 +89,40 @@ export function ReceptionWizard({ workstation }: { workstation: string }) {
     setQuery(`${c.name}${c.boxNumber ? ` · ${c.boxNumber}` : ""}`)
     const pa = await getCustomerPrealerts(c.id)
     setPrealerts(pa as Prealert[])
+  }
+
+  async function runLookup() {
+    const t = scan.trim()
+    if (t.length < 4) return
+    setScanning(true)
+    try {
+      const res = await lookupTracking(t)
+      setLookup(res)
+      // Always seed the tracking field for the detail step.
+      setForm((f) => ({ ...f, trackingNumber: t }))
+      // Auto-match a prealert: select its customer and prefill package data.
+      if (res.prealert && !res.duplicate) {
+        const pa = res.prealert
+        setCustomer({
+          id: pa.userId,
+          name: pa.customerName ?? "Cliente",
+          email: "",
+          boxNumber: pa.boxNumber,
+        })
+        setPrealertId(pa.id)
+        setForm((f) => ({
+          ...f,
+          trackingNumber: pa.trackingNumber ?? t,
+          carrier: pa.carrier ?? f.carrier,
+          store: pa.store ?? f.store,
+          description: pa.description ?? f.description,
+        }))
+        const pas = await getCustomerPrealerts(pa.userId)
+        setPrealerts(pas as Prealert[])
+      }
+    } finally {
+      setScanning(false)
+    }
   }
 
   function applyPrealert(pa: Prealert) {
@@ -131,6 +178,8 @@ export function ReceptionWizard({ workstation }: { workstation: string }) {
 
   function reset() {
     setStep(0)
+    setScan("")
+    setLookup(null)
     setQuery("")
     setResults([])
     setCustomer(null)
@@ -200,6 +249,53 @@ export function ReceptionWizard({ workstation }: { workstation: string }) {
         {step === 0 && (
           <div className="space-y-5">
             <div>
+              <h2 className="text-lg font-semibold text-foreground">Escanear paquete</h2>
+              <p className="text-sm text-muted-foreground">
+                Escaneá o escribí el tracking. Detectamos duplicados y prealertas automáticamente.
+              </p>
+            </div>
+            <div className="relative">
+              <ScanLine className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+              <input
+                ref={scanRef}
+                value={scan}
+                onChange={(e) => setScan(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.nativeEvent.isComposing && e.keyCode !== 229) {
+                    e.preventDefault()
+                    void runLookup()
+                  }
+                }}
+                onBlur={() => {
+                  if (scan.trim().length >= 4 && !lookup) void runLookup()
+                }}
+                placeholder="Escaneá el código de tracking…"
+                className="w-full rounded-xl border border-border bg-background py-2.5 pl-10 pr-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+            {scanning && <p className="text-sm text-muted-foreground">Verificando tracking…</p>}
+            {lookup?.duplicate && (
+              <div className="flex items-start gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>
+                  <strong>Posible duplicado.</strong> Este tracking ya fue recibido como{" "}
+                  <strong>{lookup.duplicate.wrNumber ?? `#${lookup.duplicate.id}`}</strong>
+                  {lookup.duplicate.customerName ? ` (${lookup.duplicate.customerName})` : ""}. Verificá antes de
+                  continuar.
+                </span>
+              </div>
+            )}
+            {lookup?.prealert && !lookup.duplicate && (
+              <div className="flex items-start gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                <Check className="mt-0.5 h-4 w-4 shrink-0" />
+                <span>
+                  Prealerta encontrada: <strong>{lookup.prealert.store ?? "—"}</strong> de{" "}
+                  <strong>{lookup.prealert.customerName ?? "cliente"}</strong>. Cliente y datos precargados.
+                </span>
+              </div>
+            )}
+
+            <div className="border-t border-border pt-5">
               <h2 className="text-lg font-semibold text-foreground">Buscar cliente</h2>
               <p className="text-sm text-muted-foreground">Buscá por nombre, email o número de casillero.</p>
             </div>

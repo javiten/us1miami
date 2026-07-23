@@ -38,6 +38,64 @@ export async function searchCustomers(query: string) {
   return rows
 }
 
+export type TrackingLookup = {
+  duplicate: { id: number; wrNumber: string | null; status: string; customerName: string | null } | null
+  prealert: {
+    id: number
+    userId: string
+    customerName: string | null
+    boxNumber: string | null
+    store: string | null
+    trackingNumber: string | null
+    carrier: string | null
+    description: string | null
+  } | null
+}
+
+/**
+ * Scanner-first lookup: given a scanned/typed tracking number, detect whether a
+ * package with that tracking was already received (duplicate) and whether an
+ * open prealert matches it (auto-fills customer + package data).
+ */
+export async function lookupTracking(tracking: string): Promise<TrackingLookup> {
+  await requirePermission("warehouse.receive")
+  const t = tracking.trim()
+  if (t.length < 4) return { duplicate: null, prealert: null }
+
+  const [dup] = await db
+    .select({
+      id: packages.id,
+      wrNumber: packages.wrNumber,
+      status: packages.status,
+      customerName: userTable.name,
+    })
+    .from(packages)
+    .leftJoin(userTable, eq(userTable.id, packages.userId))
+    .where(eq(packages.trackingNumber, t))
+    .limit(1)
+
+  const [pa] = await db
+    .select({
+      id: prealerts.id,
+      userId: prealerts.userId,
+      customerName: userTable.name,
+      boxNumber: userTable.boxNumber,
+      store: prealerts.store,
+      trackingNumber: prealerts.trackingNumber,
+      carrier: prealerts.carrier,
+      description: prealerts.description,
+    })
+    .from(prealerts)
+    .leftJoin(userTable, eq(userTable.id, prealerts.userId))
+    .where(and(eq(prealerts.trackingNumber, t), eq(prealerts.status, "PENDING")))
+    .limit(1)
+
+  return {
+    duplicate: dup ?? null,
+    prealert: pa ?? null,
+  }
+}
+
 /** Return open prealerts for a customer so the operator can match a package. */
 export async function getCustomerPrealerts(userId: string) {
   await requirePermission("warehouse.receive")

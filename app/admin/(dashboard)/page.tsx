@@ -1,17 +1,24 @@
 import Link from "next/link"
 import { requireAdmin } from "@/lib/session"
-import { getAdminDashboard } from "@/lib/queries/admin"
+import { getAdminDashboard, getPackageStatusCounts } from "@/lib/queries/admin"
 import { PageHeader, StatCard, Card, StatusBadge } from "@/components/portal/ui"
+import { PipelineStrip } from "@/components/admin/pipeline-strip"
+import { AutoRefresh } from "@/components/admin/auto-refresh"
 import { money } from "@/lib/format"
 
 export const metadata = { title: "Dashboard — Admin US1 Miami" }
 
+// Keep server data fresh; AutoRefresh re-renders on the client every 30s.
+export const revalidate = 30
+
 export default async function AdminDashboardPage() {
   await requireAdmin()
-  const data = await getAdminDashboard()
+  const [data, counts] = await Promise.all([getAdminDashboard(), getPackageStatusCounts()])
+  const incidents = Number(data.packages.incidents)
 
   return (
     <div>
+      <AutoRefresh />
       <PageHeader title="Panel operativo" description="Vista general de la operación de US1 Miami en tiempo real." />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

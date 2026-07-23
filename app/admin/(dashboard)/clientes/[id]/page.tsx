@@ -6,12 +6,15 @@ import { getCustomerDetail } from "@/lib/queries/admin"
 import { hasPermission, type AdminRole } from "@/lib/rbac"
 import { Card, StatusBadge } from "@/components/portal/ui"
 import { WalletAdjustForm } from "@/components/admin/wallet-adjust-form"
+import { CustomerEditForm } from "@/components/admin/customer-edit-form"
 import { money } from "@/lib/format"
 
 export default async function AdminCustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
   await requirePermission("customers.view")
   const sessionUser = await getSessionUser()
-  const canAdjust = hasPermission((sessionUser?.adminRoles ?? []) as AdminRole[], "wallets.adjust")
+  const roles = (sessionUser?.adminRoles ?? []) as AdminRole[]
+  const canAdjust = hasPermission(roles, "wallets.adjust")
+  const canManage = hasPermission(roles, "customers.manage")
 
   const { id } = await params
   const detail = await getCustomerDetail(id)
@@ -31,9 +34,17 @@ export default async function AdminCustomerDetailPage({ params }: { params: Prom
           <h1 className="text-2xl font-bold text-navy">{user.name}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
         </div>
-        <span className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary">
-          Box {user.boxNumber}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary">
+            Box {user.boxNumber}
+          </span>
+          {canManage && (
+            <CustomerEditForm
+              customer={{ id: user.id, name: user.name, phone: user.phone }}
+              profile={profile ?? null}
+            />
+          )}
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">

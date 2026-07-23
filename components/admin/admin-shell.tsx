@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import * as Icons from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Logo } from "@/components/logo"
 import { signOutAction } from "@/app/actions/auth"
 import type { Permission } from "@/lib/rbac"
 
@@ -47,11 +48,10 @@ export function AdminShell({
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center gap-2 border-b border-white/10 px-6">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Icons.ShieldCheck className="h-4 w-4" />
-          </span>
-          <span className="font-bold">US1 Miami</span>
+        <div className="flex h-20 items-center gap-2 border-b border-white/10 px-6">
+          <Link href="/admin" onClick={() => setOpen(false)} aria-label="US1 Miami Admin">
+            <Logo dark className="h-[57px]" />
+          </Link>
           <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
             Admin
           </span>

@@ -1,17 +1,24 @@
 import Link from "next/link"
 import { requireAdmin } from "@/lib/session"
-import { getAdminDashboard } from "@/lib/queries/admin"
+import { getAdminDashboard, getPackageStatusCounts } from "@/lib/queries/admin"
 import { PageHeader, StatCard, Card, StatusBadge } from "@/components/portal/ui"
+import { PipelineStrip } from "@/components/admin/pipeline-strip"
+import { AutoRefresh } from "@/components/admin/auto-refresh"
 import { money } from "@/lib/format"
 
 export const metadata = { title: "Dashboard — Admin US1 Miami" }
 
+// Keep server data fresh; AutoRefresh re-renders on the client every 30s.
+export const revalidate = 30
+
 export default async function AdminDashboardPage() {
   await requireAdmin()
-  const data = await getAdminDashboard()
+  const [data, counts] = await Promise.all([getAdminDashboard(), getPackageStatusCounts()])
+  const incidents = Number(data.packages.incidents)
 
   return (
     <div>
+      <AutoRefresh />
       <PageHeader title="Panel operativo" description="Vista general de la operación de US1 Miami en tiempo real." />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -38,6 +45,23 @@ export default async function AdminDashboardPage() {
         <StatCard label="En tránsito" value={Number(data.packages.inTransit)} icon="Plane" />
         <StatCard label="Consolidaciones abiertas" value={Number(data.consolidations.open)} icon="Combine" />
       </div>
+
+      {incidents > 0 && (
+        <Link
+          href="/admin/paquetes?status=HELD"
+          className="mt-4 flex items-center justify-between rounded-2xl border border-rose-200 bg-rose-50 px-5 py-4 transition-colors hover:bg-rose-100"
+        >
+          <span className="text-sm font-semibold text-rose-700">
+            {incidents} {incidents === 1 ? "paquete con incidencia" : "paquetes con incidencias"} requieren atención
+          </span>
+          <span className="text-sm font-medium text-rose-700 underline">Revisar</span>
+        </Link>
+      )}
+
+      <Card className="mt-6">
+        <h2 className="mb-4 text-base font-semibold text-navy">Flujo operativo</h2>
+        <PipelineStrip counts={counts} />
+      </Card>
 
       <Card className="mt-6">
         <div className="mb-4 flex items-center justify-between">

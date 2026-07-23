@@ -9,8 +9,12 @@ export async function getAdminDashboard() {
       total: sql<number>`count(*)`,
       expected: sql<number>`count(*) filter (where ${packages.status} = 'EXPECTED')`,
       received: sql<number>`count(*) filter (where ${packages.status} = 'RECEIVED')`,
-      inWarehouse: sql<number>`count(*) filter (where ${packages.status} = 'IN_WAREHOUSE')`,
+      // Fold legacy IN_WAREHOUSE into PROCESSED so counts stay correct.
+      inWarehouse: sql<number>`count(*) filter (where ${packages.status} in ('PROCESSED','IN_WAREHOUSE'))`,
+      readyToShip: sql<number>`count(*) filter (where ${packages.status} = 'READY_TO_SHIP')`,
       inTransit: sql<number>`count(*) filter (where ${packages.status} = 'IN_TRANSIT')`,
+      delivered: sql<number>`count(*) filter (where ${packages.status} = 'DELIVERED')`,
+      incidents: sql<number>`count(*) filter (where ${packages.status} in ('UNIDENTIFIED','HELD','RETURNED','CANCELLED'))`,
       today: sql<number>`count(*) filter (where ${packages.receivedAt} >= current_date)`,
     })
     .from(packages)
@@ -94,12 +98,27 @@ export async function getCustomerDetail(userId: string) {
   return { user: u, profile, wallet: w, packages: pkgs, transactions: txs }
 }
 
-export async function getAllPackages(status?: string) {
+export async function getAllPackages(status?: string, search?: string) {
+  const term = search?.trim()
+  const filters = [
+    status ? eq(packages.status, status) : undefined,
+    term
+      ? or(
+          ilike(packages.wrNumber, `%${term}%`),
+          ilike(packages.trackingNumber, `%${term}%`),
+          ilike(packages.boxNumber, `%${term}%`),
+          ilike(packages.description, `%${term}%`),
+          ilike(packages.store, `%${term}%`),
+          ilike(user.name, `%${term}%`),
+        )
+      : undefined,
+  ].filter(Boolean)
   const rows = await db
     .select({
       id: packages.id,
       status: packages.status,
       wrNumber: packages.wrNumber,
+      trackingNumber: packages.trackingNumber,
       boxNumber: packages.boxNumber,
       description: packages.description,
       store: packages.store,
@@ -111,14 +130,49 @@ export async function getAllPackages(status?: string) {
     })
     .from(packages)
     .leftJoin(user, eq(user.id, packages.userId))
-    .where(status ? eq(packages.status, status) : undefined)
+    .where(filters.length ? and(...filters) : undefined)
     .orderBy(desc(packages.createdAt))
     .limit(200)
   return rows
 }
 
+/** Count of packages per status value, for the filter-tab counters. */
+export async function getPackageStatusCounts(): Promise<Record<string, number>> {
+  const rows = await db
+    .select({ status: packages.status, n: sql<number>`count(*)::int` })
+    .from(packages)
+    .groupBy(packages.status)
+  const counts: Record<string, number> = {}
+  let total = 0
+  for (const r of rows) {
+    // Fold any legacy status values into their canonical key.
+    const key = r.status === "IN_WAREHOUSE" ? "PROCESSED" : r.status
+    counts[key] = (counts[key] ?? 0) + Number(r.n)
+    total += Number(r.n)
+  }
+  counts[""] = total
+  return counts
+}
+
 export async function getAuditLog() {
   return db.select().from(auditLog).orderBy(desc(auditLog.createdAt)).limit(150)
+}
+
+/** Audit entries for a single package (matched by numeric id and WR number). */
+export async function getPackageAuditHistory(packageId: number, wrNumber?: string | null) {
+  return db
+    .select()
+    .from(auditLog)
+    .where(
+      and(
+        eq(auditLog.entityType, "package"),
+        wrNumber
+          ? or(eq(auditLog.entityId, String(packageId)), eq(auditLog.entityId, wrNumber))
+          : eq(auditLog.entityId, String(packageId)),
+      ),
+    )
+    .orderBy(desc(auditLog.createdAt))
+    .limit(100)
 }
 
 /** Fetch a single package by its WR number, joined with customer name + profile, for the label / detail. */

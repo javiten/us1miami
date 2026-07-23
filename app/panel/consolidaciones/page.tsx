@@ -10,7 +10,7 @@ export default async function ConsolidationsPage() {
     getCustomerPackages(user.id),
     getCustomerConsolidations(user.id),
   ])
-  const available = pkgs.filter((p) => p.status === "IN_WAREHOUSE")
+  const available = pkgs.filter((p) => p.status === "RECEIVED" || p.status === "PROCESSED")
 
   return (
     <div>

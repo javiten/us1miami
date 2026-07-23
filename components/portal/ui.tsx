@@ -1,6 +1,14 @@
 import * as Icons from "lucide-react"
 import { cn } from "@/lib/utils"
-import { PACKAGE_STATUS, STATUS_ORDER, type PackageStatus } from "@/lib/constants"
+import {
+  PACKAGE_STATUS,
+  STATUS_ORDER,
+  normalizeStatus,
+  statusLabel,
+  isIncident,
+  type PackageStatus,
+  type AnyPackageStatus,
+} from "@/lib/constants"
 
 export function PageHeader({
   title,
@@ -56,21 +64,27 @@ export function StatCard({
   )
 }
 
-const STATUS_TONES: Record<PackageStatus, string> = {
+const STATUS_TONES: Record<AnyPackageStatus, string> = {
   EXPECTED: "bg-slate-100 text-slate-600",
   RECEIVED: "bg-sky-50 text-sky-600",
-  IN_WAREHOUSE: "bg-blue-50 text-blue-600",
+  PROCESSED: "bg-blue-50 text-blue-600",
   CONSOLIDATING: "bg-amber-50 text-amber-600",
   READY_TO_SHIP: "bg-violet-50 text-violet-600",
   IN_TRANSIT: "bg-indigo-50 text-indigo-600",
+  IN_ARGENTINA: "bg-teal-50 text-teal-600",
   DELIVERED: "bg-emerald-50 text-emerald-600",
+  // Incidents share a red-toned palette so they stand out from the flow.
+  UNIDENTIFIED: "bg-rose-50 text-rose-600",
+  HELD: "bg-red-50 text-red-600",
+  RETURNED: "bg-orange-50 text-orange-600",
+  CANCELLED: "bg-gray-200 text-gray-600",
 }
 
 export function StatusBadge({ status }: { status: string }) {
-  const key = (status in PACKAGE_STATUS ? status : "EXPECTED") as PackageStatus
+  const key = normalizeStatus(status)
   return (
     <span className={cn("inline-flex rounded-full px-2.5 py-1 text-xs font-semibold", STATUS_TONES[key])}>
-      {PACKAGE_STATUS[key]}
+      {statusLabel(status)}
     </span>
   )
 }
@@ -99,10 +113,17 @@ export function EmptyState({
   )
 }
 
-export function StatusTimeline({ current }: { current: PackageStatus }) {
-  const currentIndex = STATUS_ORDER.indexOf(current)
+export function StatusTimeline({ current }: { current: string }) {
+  const normalized = normalizeStatus(current)
+  const currentIndex = STATUS_ORDER.indexOf(normalized as PackageStatus)
   return (
     <ol className="space-y-0">
+      {isIncident(current) && (
+        <li className="mb-3 flex items-center gap-2 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-600">
+          <Icons.AlertTriangle className="h-4 w-4" />
+          {statusLabel(current)}
+        </li>
+      )}
       {STATUS_ORDER.map((s, i) => {
         const done = i <= currentIndex
         const isCurrent = i === currentIndex

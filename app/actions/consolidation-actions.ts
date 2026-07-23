@@ -254,6 +254,292 @@ export async function createCwr(input: {
 }
 
 // ==========================================================================
+// 1b. CUSTOMER CONSOLIDATION REQUESTS  (admin queue)
+// ==========================================================================
+
+type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0]
+
+/** Revert packages to an available warehouse state and detach them from a CWR. */
+async function releasePackages(tx: Tx, ids: number[]) {
+  if (!ids.length) return
+  await tx
+    .update(packages)
+    .set({ status: "PROCESSED", consolidationId: null, cwrNumber: null, updatedAt: new Date() })
+    .where(inArray(packages.id, ids))
+}
+
+function revalidateRequests() {
+  revalidatePath("/admin/solicitudes")
+  revalidatePath("/admin/paquetes")
+  revalidatePath("/admin/invoices")
+  revalidatePath("/admin")
+  revalidatePath("/panel/consolidaciones")
+  revalidatePath("/panel/paquetes")
+}
+
+/** Accept a customer request: weigh it, turn it into a priced CWR + invoice. */
+export async function acceptConsolidationRequest(input: {
+  id: number
+  pieces?: number
+  weightLb?: number
+  lengthIn?: number
+  widthIn?: number
+  heightIn?: number
+  description?: string
+  warehouseLocation?: string
+  notes?: string
+}): Promise<CreateCwrResult> {
+  const admin = await requirePermission("consolidations.manage")
+  if (!input.weightLb || input.weightLb <= 0) return { error: "Ingresá el peso final." }
+
+  try {
+    return await db.transaction(async (tx) => {
+      const [cons] = await tx.select().from(consolidations).where(eq(consolidations.id, input.id)).limit(1)
+      if (!cons) return { error: "Solicitud no encontrada." }
+      if (cons.status !== "REQUESTED")
+        return { error: "Solo se pueden aceptar solicitudes pendientes. Resolvé la baja primero si corresponde." }
+
+      const ids = (cons.packageIds as number[]) ?? []
+      if (ids.length < 1) return { error: "La solicitud no tiene paquetes." }
+
+      const rows = await tx.select({ id: packages.id, status: packages.status }).from(packages).where(inArray(packages.id, ids))
+      if (rows.length !== ids.length) return { error: "Algún paquete ya no existe." }
+
+      const seq = await nextCounter("cwr")
+      const cwrNumber = `CWR-${seq}`
+
+      const pricing = computeCwrPricing({
+        weightLb: input.weightLb ?? 0,
+        lengthIn: input.lengthIn ?? null,
+        widthIn: input.widthIn ?? null,
+        heightIn: input.heightIn ?? null,
+      })
+
+      await tx
+        .update(consolidations)
+        .set({
+          cwrNumber,
+          status: "PENDING_PAYMENT",
+          pieces: input.pieces ?? ids.length,
+          weightLb: String(input.weightLb),
+          lengthIn: input.lengthIn != null ? String(input.lengthIn) : null,
+          widthIn: input.widthIn != null ? String(input.widthIn) : null,
+          heightIn: input.heightIn != null ? String(input.heightIn) : null,
+          description: input.description || cons.description,
+          warehouseLocation: input.warehouseLocation || null,
+          notes: input.notes || cons.notes,
+          operatorId: admin.id,
+          operatorName: admin.name,
+          completedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(eq(consolidations.id, input.id))
+
+      await tx
+        .update(packages)
+        .set({ status: "CONSOLIDATED_IN_CWR", cwrNumber, consolidationId: input.id, updatedAt: new Date() })
+        .where(inArray(packages.id, ids))
+
+      const invSeq = await nextCounter("inv")
+      const invoiceNumber = `INV-${invSeq}`
+      const dueDate = new Date(Date.now() + INVOICE_DUE_DAYS * 24 * 60 * 60 * 1000)
+      await tx.insert(invoices).values({
+        invoiceNumber,
+        consolidationId: input.id,
+        userId: cons.userId,
+        status: pricing.requiresReview ? "REQUIRES_REVIEW" : "OPEN",
+        actualWeightKg: String(pricing.actualWeightKg),
+        volumetricWeightKg: String(pricing.volumetricWeightKg),
+        billableWeightKg: String(pricing.billableWeightKg),
+        ratePerKg: pricing.ratePerKg != null ? String(pricing.ratePerKg) : null,
+        subtotal: pricing.subtotal != null ? String(pricing.subtotal) : null,
+        dueDate,
+      })
+
+      await recordAudit({
+        actorUserId: admin.id,
+        actorName: admin.name,
+        action: "CWR_CREATED",
+        entityType: "consolidation",
+        entityId: cwrNumber,
+        metadata: { cwrNumber, packageIds: ids, weightLb: input.weightLb, userId: cons.userId, invoiceNumber, fromRequest: input.id },
+      })
+      await recordAudit({
+        actorUserId: admin.id,
+        actorName: admin.name,
+        action: "INVOICE_CREATED",
+        entityType: "invoice",
+        entityId: invoiceNumber,
+        metadata: {
+          invoiceNumber,
+          cwrNumber,
+          billableWeightKg: pricing.billableWeightKg,
+          ratePerKg: pricing.ratePerKg,
+          subtotal: pricing.subtotal,
+          requiresReview: pricing.requiresReview,
+        },
+      })
+
+      revalidateRequests()
+      return { ok: true, cwrNumber, cwrId: input.id }
+    })
+  } catch {
+    return { error: "No se pudo aceptar la solicitud. Reintentá." }
+  }
+}
+
+/** Add and/or remove packages on a still-pending consolidation request. */
+export async function editConsolidationRequest(input: {
+  id: number
+  addIds?: number[]
+  removeIds?: number[]
+}): Promise<{ ok?: boolean; error?: string }> {
+  const admin = await requirePermission("consolidations.manage")
+  const addIds = (input.addIds ?? []).filter(Number.isFinite)
+  const removeIds = (input.removeIds ?? []).filter(Number.isFinite)
+  if (!addIds.length && !removeIds.length) return { error: "No hay cambios para aplicar." }
+
+  try {
+    return await db.transaction(async (tx) => {
+      const [cons] = await tx.select().from(consolidations).where(eq(consolidations.id, input.id)).limit(1)
+      if (!cons) return { error: "Solicitud no encontrada." }
+      if (cons.status !== "REQUESTED") return { error: "Solo se pueden editar solicitudes pendientes." }
+
+      const current = new Set((cons.packageIds as number[]) ?? [])
+
+      // Remove: must belong to this request.
+      const toRemove = removeIds.filter((id) => current.has(id))
+      if (toRemove.length) {
+        await releasePackages(tx, toRemove)
+        toRemove.forEach((id) => current.delete(id))
+      }
+
+      // Add: must belong to same customer, available, and unattached.
+      if (addIds.length) {
+        const rows = await tx
+          .select({ id: packages.id, userId: packages.userId, status: packages.status, consolidationId: packages.consolidationId })
+          .from(packages)
+          .where(inArray(packages.id, addIds))
+        for (const r of rows) {
+          if (r.userId !== cons.userId) return { error: "Un paquete pertenece a otro cliente." }
+          if (r.consolidationId != null || !["RECEIVED", "PROCESSED"].includes(r.status))
+            return { error: "Un paquete no está disponible para sumar." }
+        }
+        await tx
+          .update(packages)
+          .set({ status: "CONSOLIDATING", consolidationId: input.id, updatedAt: new Date() })
+          .where(inArray(packages.id, addIds))
+        addIds.forEach((id) => current.add(id))
+      }
+
+      const nextIds = [...current]
+      if (nextIds.length < 1) return { error: "La solicitud debe tener al menos un paquete." }
+
+      await tx
+        .update(consolidations)
+        .set({ packageIds: nextIds, updatedAt: new Date() })
+        .where(eq(consolidations.id, input.id))
+
+      await recordAudit({
+        actorUserId: admin.id,
+        actorName: admin.name,
+        action: "CONSOLIDATION_EDITED",
+        entityType: "consolidation",
+        entityId: input.id,
+        metadata: { added: addIds, removed: toRemove, packageIds: nextIds },
+      })
+
+      revalidateRequests()
+      return { ok: true }
+    })
+  } catch {
+    return { error: "No se pudieron aplicar los cambios. Reintentá." }
+  }
+}
+
+/** Cancel an open request (admin-initiated) and free its packages. */
+export async function cancelConsolidationRequest(id: number): Promise<{ ok?: boolean; error?: string }> {
+  const admin = await requirePermission("consolidations.manage")
+  try {
+    return await db.transaction(async (tx) => {
+      const [cons] = await tx.select().from(consolidations).where(eq(consolidations.id, id)).limit(1)
+      if (!cons) return { error: "Solicitud no encontrada." }
+      if (!["REQUESTED", "UNDO_REQUESTED"].includes(cons.status))
+        return { error: "Esta solicitud ya no se puede cancelar." }
+
+      await releasePackages(tx, (cons.packageIds as number[]) ?? [])
+      await tx.update(consolidations).set({ status: "CANCELLED", updatedAt: new Date() }).where(eq(consolidations.id, id))
+
+      await recordAudit({
+        actorUserId: admin.id,
+        actorName: admin.name,
+        action: "CONSOLIDATION_CANCELLED",
+        entityType: "consolidation",
+        entityId: id,
+        metadata: { packageIds: cons.packageIds, by: "admin" },
+      })
+
+      revalidateRequests()
+      return { ok: true }
+    })
+  } catch {
+    return { error: "No se pudo cancelar la solicitud. Reintentá." }
+  }
+}
+
+/** Approve a customer's undo request: cancel the consolidation, free packages. */
+export async function approveUndoConsolidation(id: number): Promise<{ ok?: boolean; error?: string }> {
+  const admin = await requirePermission("consolidations.manage")
+  try {
+    return await db.transaction(async (tx) => {
+      const [cons] = await tx.select().from(consolidations).where(eq(consolidations.id, id)).limit(1)
+      if (!cons) return { error: "Solicitud no encontrada." }
+      if (cons.status !== "UNDO_REQUESTED") return { error: "No hay una baja pendiente para aprobar." }
+
+      await releasePackages(tx, (cons.packageIds as number[]) ?? [])
+      await tx.update(consolidations).set({ status: "CANCELLED", updatedAt: new Date() }).where(eq(consolidations.id, id))
+
+      await recordAudit({
+        actorUserId: admin.id,
+        actorName: admin.name,
+        action: "CONSOLIDATION_UNDO_APPROVED",
+        entityType: "consolidation",
+        entityId: id,
+        metadata: { packageIds: cons.packageIds },
+      })
+
+      revalidateRequests()
+      return { ok: true }
+    })
+  } catch {
+    return { error: "No se pudo aprobar la baja. Reintentá." }
+  }
+}
+
+/** Reject a customer's undo request: keep the consolidation as requested. */
+export async function rejectUndoConsolidation(id: number): Promise<{ ok?: boolean; error?: string }> {
+  const admin = await requirePermission("consolidations.manage")
+  try {
+    const [cons] = await db.select().from(consolidations).where(eq(consolidations.id, id)).limit(1)
+    if (!cons) return { error: "Solicitud no encontrada." }
+    if (cons.status !== "UNDO_REQUESTED") return { error: "No hay una baja pendiente para rechazar." }
+
+    await db.update(consolidations).set({ status: "REQUESTED", updatedAt: new Date() }).where(eq(consolidations.id, id))
+    await recordAudit({
+      actorUserId: admin.id,
+      actorName: admin.name,
+      action: "CONSOLIDATION_UNDO_REJECTED",
+      entityType: "consolidation",
+      entityId: id,
+    })
+    revalidateRequests()
+    return { ok: true }
+  } catch {
+    return { error: "No se pudo rechazar la baja. Reintentá." }
+  }
+}
+
+// ==========================================================================
 // 2. MASTER CONSOLIDATION  → MC
 // ==========================================================================
 

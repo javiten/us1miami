@@ -20,6 +20,7 @@ const NAV: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: "LayoutDashboard", permission: "dashboard.view" },
   { href: "/admin/recepcion", label: "Recepción de paquetes", icon: "PackagePlus", permission: "warehouse.receive" },
   { href: "/admin/paquetes", label: "Paquetes", icon: "Boxes", permission: "warehouse.records" },
+  { href: "/admin/solicitudes", label: "Solicitudes", icon: "Inbox", permission: "consolidations.manage" },
   { href: "/admin/consolidar-wr", label: "Consolidar WR", icon: "Combine", permission: "consolidations.manage" },
   { href: "/admin/carga-maestra", label: "Carga maestra", icon: "Container", permission: "master.manage" },
   {

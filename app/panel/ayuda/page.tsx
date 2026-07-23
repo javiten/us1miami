@@ -1,5 +1,6 @@
 import { requireCustomer } from "@/lib/session"
 import { PageHeader, Card } from "@/components/portal/ui"
+import { COMPANY } from "@/lib/constants"
 import * as Icons from "lucide-react"
 
 export const metadata = { title: "Ayuda — US1 Miami" }
@@ -67,29 +68,29 @@ export default async function HelpPage() {
             </p>
             <div className="mt-4 space-y-3">
               <a
-                href="mailto:soporte@us1miami.com"
+                href={`mailto:${COMPANY.email}`}
                 className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm transition-colors hover:border-primary/40"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Icons.Mail className="h-4 w-4" />
                 </span>
                 <span className="min-w-0">
                   <span className="block font-medium text-navy">Correo</span>
-                  <span className="block truncate text-muted-foreground">soporte@us1miami.com</span>
+                  <span className="block break-all text-muted-foreground">{COMPANY.email}</span>
                 </span>
               </a>
               <a
-                href="https://wa.me/message"
+                href={`https://wa.me/${COMPANY.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm transition-colors hover:border-primary/40"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                   <Icons.MessageCircle className="h-4 w-4" />
                 </span>
                 <span className="min-w-0">
                   <span className="block font-medium text-navy">WhatsApp</span>
-                  <span className="block truncate text-muted-foreground">Chat de soporte</span>
+                  <span className="block text-muted-foreground">{COMPANY.phone}</span>
                 </span>
               </a>
             </div>

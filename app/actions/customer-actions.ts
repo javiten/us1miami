@@ -97,6 +97,35 @@ export async function requestConsolidation(_prev: ActionState, formData: FormDat
   return { ok: true, message: "Solicitud de consolidación enviada." }
 }
 
+/** Ask an admin to undo a still-pending consolidation request. */
+export async function requestUndoConsolidation(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const user = await requireCustomer()
+  const id = Number(formData.get("consolidationId"))
+  if (!Number.isFinite(id)) return { error: "Solicitud inválida." }
+
+  const [cons] = await db
+    .select()
+    .from(consolidations)
+    .where(and(eq(consolidations.id, id), eq(consolidations.userId, user.id)))
+    .limit(1)
+  if (!cons) return { error: "No encontramos esa solicitud." }
+  if (cons.status !== "REQUESTED")
+    return { error: "Esta consolidación ya está en proceso. Escribinos a soporte para modificarla." }
+
+  await db.update(consolidations).set({ status: "UNDO_REQUESTED", updatedAt: new Date() }).where(eq(consolidations.id, id))
+
+  await recordAudit({
+    actorUserId: user.id,
+    actorName: user.name,
+    action: "CONSOLIDATION_UNDO_REQUESTED",
+    entityType: "consolidation",
+    entityId: id,
+  })
+
+  revalidatePath("/panel/consolidaciones")
+  return { ok: true, message: "Pedido de baja enviado. Un asesor lo revisará a la brevedad." }
+}
+
 // Placeholder deposit flow — simulates a completed Stripe payment.
 // Real Stripe credentials are wired later via lib/payments.ts.
 export async function simulateDeposit(_prev: ActionState, formData: FormData): Promise<ActionState> {

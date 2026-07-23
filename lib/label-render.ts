@@ -1,5 +1,5 @@
 import "server-only"
-import bwipjs from "bwip-js"
+import bwipjs from "bwip-js/node"
 import QRCode from "qrcode"
 
 const DASH = "\u2014" // em dash

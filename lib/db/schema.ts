@@ -214,6 +214,36 @@ export const masterConsolidations = pgTable("master_consolidations", {
   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 })
 
+// Shipping invoices. Exactly one active invoice per consolidation (CWR).
+// The unique constraint on consolidationId prevents duplicate invoices for the
+// same consolidation. Weights/rate/subtotal are calculated by the pricing
+// engine and are never edited by hand — only via a controlled recalculation.
+export const invoices = pgTable("invoices", {
+  id: serial("id").primaryKey(),
+  invoiceNumber: text("invoiceNumber").unique(),
+  consolidationId: integer("consolidationId").notNull().unique(),
+  userId: text("userId").notNull(),
+  status: text("status").notNull().default("OPEN"),
+  // Frozen pricing breakdown (kilograms).
+  actualWeightKg: numeric("actualWeightKg", { precision: 10, scale: 3 }),
+  volumetricWeightKg: numeric("volumetricWeightKg", { precision: 10, scale: 3 }),
+  billableWeightKg: numeric("billableWeightKg", { precision: 10, scale: 3 }),
+  ratePerKg: numeric("ratePerKg", { precision: 10, scale: 2 }),
+  subtotal: numeric("subtotal", { precision: 12, scale: 2 }),
+  currency: text("currency").notNull().default("USD"),
+  // Payment.
+  paymentMethod: text("paymentMethod"), // WALLET | CARD | CASH | MERCADO_PAGO
+  paymentReference: text("paymentReference"),
+  stripeSessionId: text("stripeSessionId"),
+  paidAt: timestamp("paidAt"),
+  confirmedByUserId: text("confirmedByUserId"),
+  confirmedByName: text("confirmedByName"),
+  dueDate: timestamp("dueDate"),
+  internalNotes: text("internalNotes"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+})
+
 // Audit log for admin logins and sensitive actions.
 export const auditLog = pgTable("audit_log", {
   id: serial("id").primaryKey(),

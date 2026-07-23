@@ -3,10 +3,12 @@
 import { revalidatePath } from "next/cache"
 import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
-import { consolidations, masterConsolidations, packages, user as userTable } from "@/lib/db/schema"
+import { consolidations, masterConsolidations, packages, user as userTable, invoices } from "@/lib/db/schema"
 import { requirePermission } from "@/lib/session"
 import { recordAudit } from "@/lib/audit"
 import { nextCounter } from "@/lib/counters"
+import { computeCwrPricing } from "@/lib/pricing"
+import { INVOICE_DUE_DAYS } from "@/lib/invoices"
 import type { ScanResolveResult, ScanUnit } from "@/components/admin/scanner/scan-console"
 
 const DASH = "\u2014"
@@ -162,12 +164,22 @@ export async function createCwr(input: {
       const seq = await nextCounter("cwr")
       const cwrNumber = `CWR-${seq}`
 
+      // Auto-price the consolidation from its final billable weight. The CWR is
+      // created PENDING_PAYMENT and stays operationally blocked until the linked
+      // invoice is PAID (or, for >20 kg, until the review invoice is resolved).
+      const pricing = computeCwrPricing({
+        weightLb: input.weightLb ?? 0,
+        lengthIn: input.lengthIn ?? null,
+        widthIn: input.widthIn ?? null,
+        heightIn: input.heightIn ?? null,
+      })
+
       const [cwr] = await tx
         .insert(consolidations)
         .values({
           userId,
           cwrNumber,
-          status: "READY_TO_SHIP",
+          status: "PENDING_PAYMENT",
           packageIds: ids,
           pieces: input.pieces ?? ids.length,
           weightLb: String(input.weightLb),
@@ -188,17 +200,51 @@ export async function createCwr(input: {
         .set({ status: "CONSOLIDATED_IN_CWR", cwrNumber, consolidationId: cwr.id, updatedAt: new Date() })
         .where(inArray(packages.id, ids))
 
+      // Exactly one invoice per consolidation (unique constraint on
+      // consolidationId backstops any duplicate attempt).
+      const invSeq = await nextCounter("inv")
+      const invoiceNumber = `INV-${invSeq}`
+      const dueDate = new Date(Date.now() + INVOICE_DUE_DAYS * 24 * 60 * 60 * 1000)
+      await tx.insert(invoices).values({
+        invoiceNumber,
+        consolidationId: cwr.id,
+        userId,
+        status: pricing.requiresReview ? "REQUIRES_REVIEW" : "OPEN",
+        actualWeightKg: String(pricing.actualWeightKg),
+        volumetricWeightKg: String(pricing.volumetricWeightKg),
+        billableWeightKg: String(pricing.billableWeightKg),
+        ratePerKg: pricing.ratePerKg != null ? String(pricing.ratePerKg) : null,
+        subtotal: pricing.subtotal != null ? String(pricing.subtotal) : null,
+        dueDate,
+      })
+
       await recordAudit({
         actorUserId: admin.id,
         actorName: admin.name,
         action: "CWR_CREATED",
         entityType: "consolidation",
         entityId: cwrNumber,
-        metadata: { cwrNumber, packageIds: ids, weightLb: input.weightLb, userId },
+        metadata: { cwrNumber, packageIds: ids, weightLb: input.weightLb, userId, invoiceNumber },
+      })
+      await recordAudit({
+        actorUserId: admin.id,
+        actorName: admin.name,
+        action: "INVOICE_CREATED",
+        entityType: "invoice",
+        entityId: invoiceNumber,
+        metadata: {
+          invoiceNumber,
+          cwrNumber,
+          billableWeightKg: pricing.billableWeightKg,
+          ratePerKg: pricing.ratePerKg,
+          subtotal: pricing.subtotal,
+          requiresReview: pricing.requiresReview,
+        },
       })
 
       revalidatePath("/admin/consolidar-wr")
       revalidatePath("/admin/paquetes")
+      revalidatePath("/admin/invoices")
       revalidatePath("/admin")
       return { ok: true, cwrNumber, cwrId: cwr.id }
     })
@@ -285,6 +331,8 @@ export async function scanUnitForMaster(
 
   if (cwr) {
     if (cwr.masterId) return { error: `${cwr.cwrNumber} ya está en una carga maestra.` }
+    if (cwr.status === "PENDING_PAYMENT")
+      return { error: `${cwr.cwrNumber} tiene el envío impago (PAYMENT_REQUIRED). El cliente debe pagar antes de cargarlo.` }
     if (cwr.status !== "READY_TO_SHIP") return { error: `${cwr.cwrNumber} no está listo para envío.` }
     return {
       ok: true,
@@ -365,6 +413,20 @@ export async function createMc(input: {
       for (const c of cwrRows) {
         if (c.masterId) return { error: `${c.cwrNumber} ya pertenece a otra carga maestra.` }
         if (c.status !== "READY_TO_SHIP") return { error: `${c.cwrNumber} no está listo.` }
+      }
+
+      // Payment guard: no CWR may enter a master consolidation unless its
+      // linked invoice is PAID. This backstops the READY_TO_SHIP status filter.
+      if (cwrIds.length) {
+        const paidRows = await tx
+          .select({ consolidationId: invoices.consolidationId, status: invoices.status })
+          .from(invoices)
+          .where(inArray(invoices.consolidationId, cwrIds))
+        const paidMap = new Map(paidRows.map((r) => [r.consolidationId, r.status]))
+        for (const c of cwrRows) {
+          if (paidMap.get(c.id) !== "PAID")
+            return { error: `${c.cwrNumber} tiene el envío impago (PAYMENT_REQUIRED) y no puede cargarse.` }
+        }
       }
       for (const w of wrRows) {
         if (w.consolidationId) return { error: `${w.wrNumber} está dentro de un CWR.` }

@@ -24,6 +24,8 @@ export type Permission =
   | "wallets.view"
   | "wallets.adjust"
   | "payments.view"
+  | "invoices.view"
+  | "invoices.manage"
   | "reports.view"
   | "reports.financial"
   | "settings.manage"
@@ -53,6 +55,8 @@ const SUPER_ADMIN_PERMS: Permission[] = [
   "wallets.view",
   "wallets.adjust",
   "payments.view",
+  "invoices.view",
+  "invoices.manage",
   "reports.view",
   "reports.financial",
   "settings.manage",
@@ -78,6 +82,8 @@ const OPERATIONS_PERMS: Permission[] = [
   "manifests.manage",
   "labels.print",
   "customers.view",
+  "invoices.view",
+  "invoices.manage",
 ]
 
 const CUSTOMER_SUPPORT_PERMS: Permission[] = [
@@ -88,6 +94,7 @@ const CUSTOMER_SUPPORT_PERMS: Permission[] = [
   "packages.notes",
   "inbound.view",
   "wallets.view",
+  "invoices.view",
 ]
 
 const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {

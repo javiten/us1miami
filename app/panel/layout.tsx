@@ -14,6 +14,7 @@ const NAV: NavGroup[] = [
   {
     title: "Mi cuenta",
     items: [
+      { href: "/panel/facturas", label: "Facturas", icon: "Receipt" },
       { href: "/panel/billetera", label: "Billetera", icon: "Wallet" },
       { href: "/panel/direccion", label: "Mi dirección", icon: "MapPin" },
       { href: "/panel/perfil", label: "Mi perfil", icon: "User" },

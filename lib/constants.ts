@@ -147,6 +147,7 @@ export function canTransition(from: string, to: string): boolean {
 export const CONSOLIDATION_STATUS = {
   REQUESTED: "Solicitada",
   IN_PROGRESS: "En proceso",
+  PENDING_PAYMENT: "Pago requerido",
   READY_TO_SHIP: "Lista para envío",
   CONSOLIDATED_IN_MC: "En carga maestra",
   IN_TRANSIT: "En tránsito",

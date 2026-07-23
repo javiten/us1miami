@@ -45,7 +45,7 @@ export function SiteHeader() {
         )}
       >
         <a href="#top" aria-label="US1 Miami home">
-          <Logo />
+          <Logo className="h-[57px]" />
         </a>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">

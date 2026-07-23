@@ -43,7 +43,7 @@ export function AdminLoginForm() {
           autoCapitalize="none"
           autoComplete="username"
           required
-          placeholder="javiten"
+          placeholder="User ID"
           className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/30"
         />
       </div>
@@ -56,7 +56,7 @@ export function AdminLoginForm() {
           name="password"
           type="password"
           required
-          placeholder="Tu contraseña"
+          placeholder="Contraseña"
           className="w-full rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder:text-slate-500 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/30"
         />
       </div>

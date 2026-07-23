@@ -1,6 +1,7 @@
 "use server"
 
 import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 import { eq } from "drizzle-orm"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
@@ -106,5 +107,14 @@ export async function registerCustomer(_prev: RegisterState, formData: FormData)
 }
 
 export async function signOutAction() {
-  await auth.api.signOut({ headers: await headers() })
+  // Destroy the server session and clear the auth cookie. The nextCookies()
+  // plugin flushes the Set-Cookie into this server-action response, so the
+  // browser drops the session immediately. Then bounce to the admin login,
+  // which the layout guard also blocks for unauthenticated users.
+  try {
+    await auth.api.signOut({ headers: await headers() })
+  } catch {
+    // Session may already be gone; proceed to redirect regardless.
+  }
+  redirect("/admin/login")
 }

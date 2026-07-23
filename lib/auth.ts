@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth'
+import { nextCookies } from 'better-auth/next-js'
 import { pool } from '@/lib/db'
 
 export const auth = betterAuth({
@@ -34,6 +35,9 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     updateAge: 60 * 60 * 24, // 1 day
   },
+  // nextCookies() must be the last plugin: it lets server actions (e.g. logout)
+  // set/clear the session cookie so sign-out takes effect without a manual refresh.
+  plugins: [nextCookies()],
   ...(process.env.NODE_ENV === 'development'
     ? {
         advanced: {

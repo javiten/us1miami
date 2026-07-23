@@ -119,6 +119,7 @@ export const packages = pgTable("packages", {
   carrier: text("carrier"),
   store: text("store"),
   description: text("description"),
+  quantity: integer("quantity"), // number of pieces; null = 1 (legacy-safe)
   declaredValue: numeric("declaredValue", { precision: 12, scale: 2 }),
   weightLb: numeric("weightLb", { precision: 10, scale: 2 }),
   lengthIn: numeric("lengthIn", { precision: 10, scale: 2 }),

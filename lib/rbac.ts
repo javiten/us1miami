@@ -9,6 +9,11 @@ export type Permission =
   | "inbound.view"
   | "warehouse.receive"
   | "warehouse.records"
+  | "packages.view"
+  | "packages.edit"
+  | "packages.transition"
+  | "packages.notes"
+  | "box.reassign"
   | "consolidations.manage"
   | "outbound.manage"
   | "airwaybills.manage"
@@ -31,6 +36,11 @@ const SUPER_ADMIN_PERMS: Permission[] = [
   "inbound.view",
   "warehouse.receive",
   "warehouse.records",
+  "packages.view",
+  "packages.edit",
+  "packages.transition",
+  "packages.notes",
+  "box.reassign",
   "consolidations.manage",
   "outbound.manage",
   "airwaybills.manage",
@@ -52,6 +62,10 @@ const OPERATIONS_PERMS: Permission[] = [
   "inbound.view",
   "warehouse.receive",
   "warehouse.records",
+  "packages.view",
+  "packages.edit",
+  "packages.transition",
+  "packages.notes",
   "consolidations.manage",
   "outbound.manage",
   "airwaybills.manage",
@@ -64,6 +78,8 @@ const CUSTOMER_SUPPORT_PERMS: Permission[] = [
   "dashboard.view",
   "customers.view",
   "customers.manage",
+  "packages.view",
+  "packages.notes",
   "inbound.view",
   "wallets.view",
 ]

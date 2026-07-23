@@ -100,7 +100,7 @@ export async function receivePackage(payload: ReceivePayload): Promise<Reception
     .values({
       userId: payload.userId,
       boxNumber,
-      status: "IN_WAREHOUSE",
+      status: "RECEIVED",
       trackingNumber: payload.trackingNumber || null,
       carrier: payload.carrier || null,
       store: payload.store || null,

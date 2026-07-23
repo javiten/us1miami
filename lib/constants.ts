@@ -27,27 +27,88 @@ export function formatCustomerAddress(fullName: string, boxNumber: string): stri
   ].join("\n")
 }
 
+// --- Canonical package lifecycle -------------------------------------------
+// One status per package. Tabs/cards are filters over this single field.
+// The main flow is linear; incidents are off-flow exception states.
 export const PACKAGE_STATUS = {
-  EXPECTED: "Pre-alertado",
+  EXPECTED: "Prealertado",
   RECEIVED: "Recibido en Miami",
-  IN_WAREHOUSE: "En depósito",
+  PROCESSED: "Procesado",
   CONSOLIDATING: "En consolidación",
   READY_TO_SHIP: "Listo para envío",
   IN_TRANSIT: "En tránsito",
+  IN_ARGENTINA: "En Argentina",
   DELIVERED: "Entregado",
 } as const
 
-export type PackageStatus = keyof typeof PACKAGE_STATUS
+export const PACKAGE_INCIDENTS = {
+  UNIDENTIFIED: "No identificado",
+  HELD: "Retenido",
+  RETURNED: "Devuelto",
+  CANCELLED: "Cancelado",
+} as const
 
+// Every valid status label, keyed by its stored value.
+export const ALL_PACKAGE_STATUS = { ...PACKAGE_STATUS, ...PACKAGE_INCIDENTS } as const
+
+export type PackageStatus = keyof typeof PACKAGE_STATUS
+export type PackageIncident = keyof typeof PACKAGE_INCIDENTS
+export type AnyPackageStatus = keyof typeof ALL_PACKAGE_STATUS
+
+// Ordered main flow — used by the timeline and the operational pipeline.
 export const STATUS_ORDER: PackageStatus[] = [
   "EXPECTED",
   "RECEIVED",
-  "IN_WAREHOUSE",
+  "PROCESSED",
   "CONSOLIDATING",
   "READY_TO_SHIP",
   "IN_TRANSIT",
+  "IN_ARGENTINA",
   "DELIVERED",
 ]
+
+export const INCIDENT_KEYS: PackageIncident[] = ["UNIDENTIFIED", "HELD", "RETURNED", "CANCELLED"]
+
+// Allowed transitions between statuses. Anything not listed is blocked.
+export const VALID_TRANSITIONS: Record<AnyPackageStatus, AnyPackageStatus[]> = {
+  EXPECTED: ["RECEIVED", "UNIDENTIFIED", "CANCELLED"],
+  RECEIVED: ["PROCESSED", "HELD", "RETURNED", "UNIDENTIFIED"],
+  PROCESSED: ["CONSOLIDATING", "READY_TO_SHIP", "HELD", "RETURNED"],
+  CONSOLIDATING: ["READY_TO_SHIP", "PROCESSED", "HELD"],
+  READY_TO_SHIP: ["IN_TRANSIT", "CONSOLIDATING", "HELD"],
+  IN_TRANSIT: ["IN_ARGENTINA", "HELD"],
+  IN_ARGENTINA: ["DELIVERED", "HELD"],
+  DELIVERED: [],
+  UNIDENTIFIED: ["RECEIVED", "RETURNED", "CANCELLED"],
+  HELD: ["PROCESSED", "READY_TO_SHIP", "RETURNED", "CANCELLED"],
+  RETURNED: [],
+  CANCELLED: [],
+}
+
+/** Normalize any stored value to a known status key (legacy-safe). */
+export function normalizeStatus(status: string): AnyPackageStatus {
+  if (status in ALL_PACKAGE_STATUS) return status as AnyPackageStatus
+  if (status === "IN_WAREHOUSE") return "PROCESSED" // legacy → canonical
+  return "EXPECTED"
+}
+
+/** Human label for any status value. */
+export function statusLabel(status: string): string {
+  return ALL_PACKAGE_STATUS[normalizeStatus(status)]
+}
+
+export function isIncident(status: string): boolean {
+  return normalizeStatus(status) in PACKAGE_INCIDENTS
+}
+
+/** Statuses an admin may move a package to from its current status. */
+export function allowedTransitions(status: string): AnyPackageStatus[] {
+  return VALID_TRANSITIONS[normalizeStatus(status)] ?? []
+}
+
+export function canTransition(from: string, to: string): boolean {
+  return allowedTransitions(from).includes(normalizeStatus(to))
+}
 
 export const CONSOLIDATION_STATUS = {
   REQUESTED: "Solicitada",

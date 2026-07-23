@@ -66,15 +66,17 @@ export async function getCustomerDashboard(userId: string): Promise<{
     getCustomerConsolidations(userId),
   ])
   const count = (s: string) => pkgs.filter((p) => p.status === s).length
+  // Received + processed packages are the ones a customer can consolidate/ship.
+  const availableForShipping = count("RECEIVED") + count("PROCESSED")
   return {
     stats: {
       expected: count("EXPECTED"),
       received: count("RECEIVED"),
-      available: count("IN_WAREHOUSE"),
-      pendingConsolidation: count("IN_WAREHOUSE"),
+      available: availableForShipping,
+      pendingConsolidation: availableForShipping,
       consolidations: cons.length,
       inTransit: count("IN_TRANSIT"),
-      inArgentina: count("DELIVERED"),
+      inArgentina: count("IN_ARGENTINA") + count("DELIVERED"),
     },
     recent: pkgs.slice(0, 5),
   }

@@ -9,7 +9,7 @@ export async function getAdminDashboard() {
       total: sql<number>`count(*)`,
       expected: sql<number>`count(*) filter (where ${packages.status} = 'EXPECTED')`,
       received: sql<number>`count(*) filter (where ${packages.status} = 'RECEIVED')`,
-      inWarehouse: sql<number>`count(*) filter (where ${packages.status} = 'IN_WAREHOUSE')`,
+      inWarehouse: sql<number>`count(*) filter (where ${packages.status} = 'PROCESSED')`,
       inTransit: sql<number>`count(*) filter (where ${packages.status} = 'IN_TRANSIT')`,
       today: sql<number>`count(*) filter (where ${packages.receivedAt} >= current_date)`,
     })
@@ -119,6 +119,23 @@ export async function getAllPackages(status?: string) {
 
 export async function getAuditLog() {
   return db.select().from(auditLog).orderBy(desc(auditLog.createdAt)).limit(150)
+}
+
+/** Audit entries for a single package (matched by numeric id and WR number). */
+export async function getPackageAuditHistory(packageId: number, wrNumber?: string | null) {
+  return db
+    .select()
+    .from(auditLog)
+    .where(
+      and(
+        eq(auditLog.entityType, "package"),
+        wrNumber
+          ? or(eq(auditLog.entityId, String(packageId)), eq(auditLog.entityId, wrNumber))
+          : eq(auditLog.entityId, String(packageId)),
+      ),
+    )
+    .orderBy(desc(auditLog.createdAt))
+    .limit(100)
 }
 
 /** Fetch a single package by its WR number, joined with customer name + profile, for the label / detail. */

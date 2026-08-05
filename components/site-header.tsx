@@ -2,24 +2,36 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { motion } from "motion/react"
 import { Menu, X, Phone } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { useI18n } from "@/components/language-provider"
+import { AUTOMOTIVE_PATH } from "@/lib/automotive"
+import { track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
 
 export function SiteHeader() {
   const { t } = useI18n()
+  const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
+  // Section links live on the homepage. When the header renders on another
+  // route (e.g. /automotive) they must be absolute, otherwise they resolve
+  // against the current path and silently do nothing.
+  const onHome = pathname === "/" || pathname === "/es" || pathname === "/en"
+  const section = (hash: string) => (onHome ? hash : `/${hash}`)
+
   const links = [
-    { label: t.nav.how, href: "#how-it-works" },
-    { label: t.nav.services, href: "#services" },
-    { label: t.nav.pricing, href: "#pricing" },
-    { label: t.nav.warehouse, href: "#warehouse" },
-    { label: t.nav.faq, href: "#faq" },
+    { label: t.nav.how, href: section("#how-it-works") },
+    { label: t.nav.services, href: section("#services") },
+    // The only real route in the nav, so it gets a prefetching <Link>.
+    { label: t.nav.automotive, href: AUTOMOTIVE_PATH, route: true },
+    { label: t.nav.pricing, href: section("#pricing") },
+    { label: t.nav.warehouse, href: section("#warehouse") },
+    { label: t.nav.faq, href: section("#faq") },
   ]
 
   useEffect(() => {
@@ -44,20 +56,35 @@ export function SiteHeader() {
             : "border border-transparent bg-transparent",
         )}
       >
-        <a href="#top" aria-label="US1 Miami home">
+        <Link href={onHome ? "#top" : "/"} aria-label="US1 Miami home">
           <Logo className="h-[57px]" />
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.route ? (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={pathname === l.href ? "page" : undefined}
+                onClick={() => track("automotive_nav_click", { source: "header" })}
+                className={cn(
+                  "rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
+                  pathname === l.href ? "text-navy" : "text-muted-foreground",
+                )}
+              >
+                {l.label}
+              </Link>
+            ) : (
+              <a
+                key={l.href}
+                href={l.href}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+              >
+                {l.label}
+              </a>
+            ),
+          )}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
@@ -103,16 +130,34 @@ export function SiteHeader() {
           className="mx-auto mt-2 max-w-6xl rounded-2xl border border-border bg-white/95 p-3 shadow-lg backdrop-blur-xl md:hidden"
         >
           <nav className="flex flex-col" aria-label="Mobile">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
-              >
-                {l.label}
-              </a>
-            ))}
+            {links.map((l) =>
+              l.route ? (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={pathname === l.href ? "page" : undefined}
+                  onClick={() => {
+                    track("automotive_nav_click", { source: "mobile_menu" })
+                    setOpen(false)
+                  }}
+                  className={cn(
+                    "rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
+                    pathname === l.href ? "text-navy" : "text-muted-foreground",
+                  )}
+                >
+                  {l.label}
+                </Link>
+              ) : (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+                >
+                  {l.label}
+                </a>
+              ),
+            )}
             <Link
               href="/ingresar"
               onClick={() => setOpen(false)}

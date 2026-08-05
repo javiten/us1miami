@@ -1,0 +1,113 @@
+"use client"
+
+import Image from "next/image"
+import Link from "next/link"
+import { motion } from "motion/react"
+import { ArrowRight, MapPin, Check } from "lucide-react"
+import { useI18n } from "@/components/language-provider"
+import { RATE_TIER_1 } from "@/lib/pricing"
+import { SlideFrame, useSlideMotion } from "@/components/hero/slide-frame"
+
+/**
+ * Slide 1 — the original US1 Miami international courier hero.
+ * Content, hierarchy, CTAs, price messaging and artwork are preserved from the
+ * previous static hero; only the entrance animation is now driven by the
+ * carousel's active state.
+ */
+export function SlideCourier({ isActive }: { isActive: boolean }) {
+  const { t } = useI18n()
+  const { item, visual } = useSlideMotion()
+
+  return (
+    <SlideFrame
+      isActive={isActive}
+      content={
+        <>
+          <motion.div
+            variants={item}
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm"
+          >
+            <span className="relative flex h-2 w-2 items-center justify-center">
+              <span className="h-2 w-2 animate-ping rounded-full bg-sky/60" />
+              <span className="absolute h-2 w-2 rounded-full bg-primary" />
+            </span>
+            <MapPin className="h-3.5 w-3.5 text-primary" />
+            {t.hero.badge}
+          </motion.div>
+
+          <motion.h2
+            variants={item}
+            className="mt-6 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-navy sm:text-6xl lg:text-[4.25rem]"
+          >
+            {t.hero.titleLead}{" "}
+            <span className="bg-gradient-to-r from-primary to-sky bg-clip-text text-transparent">
+              {t.hero.titleHighlight}
+            </span>
+          </motion.h2>
+
+          <motion.p
+            variants={item}
+            className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg"
+          >
+            {t.hero.description}
+          </motion.p>
+
+          <motion.div variants={item} className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#quote"
+              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
+            >
+              {t.hero.primaryCta}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </a>
+            <Link
+              href="/registro"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-white px-6 py-3.5 text-sm font-semibold text-navy shadow-sm transition-colors hover:bg-muted"
+            >
+              {t.hero.secondaryCta}
+            </Link>
+          </motion.div>
+
+          <motion.ul variants={item} className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+            {t.hero.freebies.map((f) => (
+              <li key={f} className="flex items-center gap-2 text-sm font-medium text-navy">
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/12">
+                  <Check className="h-3 w-3 text-primary" strokeWidth={3} />
+                </span>
+                {f}
+              </li>
+            ))}
+          </motion.ul>
+        </>
+      }
+      visual={
+        <motion.div variants={visual} className="relative">
+          <div className="relative overflow-hidden rounded-[2rem] border border-border bg-white p-2 shadow-[0_40px_80px_-40px_rgba(7,27,58,0.35)]">
+            <Image
+              src="/hero-logistics.png"
+              alt={t.hero.imageAlt}
+              width={900}
+              height={720}
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="h-auto w-full rounded-[1.6rem]"
+            />
+          </div>
+
+          <div className="absolute -bottom-5 -left-3 rounded-2xl border border-border bg-white/90 px-4 py-3 shadow-[0_18px_40px_-20px_rgba(7,27,58,0.4)] backdrop-blur-md sm:-left-6">
+            <p className="text-xs font-medium text-muted-foreground">{t.hero.startingFrom}</p>
+            <p className="text-xl font-semibold text-navy">
+              {`USD $${RATE_TIER_1}`}
+              <span className="text-sm font-medium text-muted-foreground">{t.hero.perKg}</span>
+            </p>
+          </div>
+
+          <div className="absolute -right-3 top-6 rounded-2xl border border-border bg-white/90 px-4 py-3 shadow-[0_18px_40px_-20px_rgba(7,27,58,0.4)] backdrop-blur-md sm:-right-6">
+            <p className="text-xs font-medium text-muted-foreground">{t.hero.deliveryIn}</p>
+            <p className="text-xl font-semibold text-navy">{t.hero.deliveryValue}</p>
+          </div>
+        </motion.div>
+      }
+    />
+  )
+}

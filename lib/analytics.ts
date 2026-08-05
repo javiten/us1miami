@@ -18,6 +18,9 @@ export type AnalyticsEvent =
   | "automotive_quote_submit"
   | "automotive_assisted_purchase_click"
   | "automotive_create_address_click"
+  | "automotive_option_cta_click"
+  | "automotive_pricing_cta_click"
+  | "automotive_final_cta_click"
   | "homepage_slider_change"
   | "homepage_automotive_slide_click"
 

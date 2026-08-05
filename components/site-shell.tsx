@@ -3,7 +3,7 @@
 import type { Locale } from "@/lib/i18n"
 import { LanguageProvider } from "@/components/language-provider"
 import { SiteHeader } from "@/components/site-header"
-import { Hero } from "@/components/hero"
+import { HeroCarousel } from "@/components/hero/hero-carousel"
 import { Destinations } from "@/components/destinations"
 import { HowItWorks } from "@/components/how-it-works"
 import { Consolidate } from "@/components/consolidate"
@@ -19,7 +19,7 @@ export function SiteShell({ initialLocale, forced = false }: { initialLocale: Lo
     <LanguageProvider initialLocale={initialLocale} forced={forced}>
       <main className="relative min-h-screen overflow-x-hidden">
         <SiteHeader />
-        <Hero />
+        <HeroCarousel />
         <Destinations />
         <HowItWorks />
         <Consolidate />

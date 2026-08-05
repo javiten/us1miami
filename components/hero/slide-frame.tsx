@@ -65,10 +65,14 @@ export function SlideFrame({
       variants={container}
       initial="hide"
       animate={isActive ? "show" : "hide"}
-      className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-8"
+      // Top padding clears the fixed site header; the deeper bottom padding
+      // (vs. the old standalone hero) leaves room for the carousel controls.
+      className="pt-32 pb-32 sm:pt-40 sm:pb-36"
     >
-      <div className="min-w-0">{content}</div>
-      <div className="relative min-w-0">{visual}</div>
+      <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-8">
+        <div className="min-w-0">{content}</div>
+        <div className="relative min-w-0">{visual}</div>
+      </div>
     </motion.div>
   )
 }

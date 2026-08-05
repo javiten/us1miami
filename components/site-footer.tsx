@@ -1,8 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { Phone, Mail, MapPin } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { useI18n } from "@/components/language-provider"
+import { AUTOMOTIVE_PATH } from "@/lib/automotive"
+import { track } from "@/lib/analytics"
 
 export function SiteFooter() {
   const { t } = useI18n()
@@ -19,7 +22,7 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-12">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-12">
             <div className="flex flex-col gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-sky">{t.footer.contact}</p>
               <a
@@ -44,6 +47,20 @@ export function SiteFooter() {
                 <MapPin className="h-4 w-4 text-sky" />
                 {t.footer.locationValue}
               </span>
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-sky">{t.footer.services}</p>
+              <Link href="/" className="text-sm text-white/80 transition-colors hover:text-white">
+                {t.footer.courierLink}
+              </Link>
+              <Link
+                href={AUTOMOTIVE_PATH}
+                onClick={() => track("automotive_nav_click", { source: "footer" })}
+                className="text-sm text-white/80 transition-colors hover:text-white"
+              >
+                {t.footer.automotiveLink}
+              </Link>
             </div>
           </div>
         </div>

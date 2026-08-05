@@ -262,3 +262,44 @@ export const counters = pgTable("counters", {
   name: text("name").primaryKey(),
   value: integer("value").notNull().default(0),
 })
+
+// Public quote requests from the /automotive landing page.
+// `userId` is nullable on purpose: the form is open to visitors who do not yet
+// have an account, and is only populated when a logged-in customer submits it.
+export const automotiveQuotes = pgTable("automotive_quotes", {
+  id: serial("id").primaryKey(),
+  userId: text("userId"),
+
+  // Contact
+  firstName: text("firstName").notNull(),
+  lastName: text("lastName").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  boxNumber: text("boxNumber"),
+
+  // Vehicle
+  vehicleYear: integer("vehicleYear"),
+  make: text("make"),
+  model: text("model"),
+  trim: text("trim"),
+  engine: text("engine"),
+  vin: text("vin"),
+
+  // Part
+  partNumber: text("partNumber"),
+  productUrl: text("productUrl"),
+  description: text("description").notNull(),
+  quantity: integer("quantity").notNull().default(1),
+
+  // Commercial
+  purchaseMethod: text("purchaseMethod").notNull(), // SELF | ASSISTED | UNDECIDED
+  estimatedPrice: numeric("estimatedPrice", { precision: 12, scale: 2 }),
+  notes: text("notes"),
+
+  // Blob URLs of the customer's photos/screenshots/PDFs.
+  attachments: jsonb("attachments").$type<{ url: string; name: string; contentType: string }[]>().notNull().default([]),
+
+  locale: text("locale").notNull().default("es"),
+  status: text("status").notNull().default("NEW"), // NEW | IN_REVIEW | QUOTED | CLOSED
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+})

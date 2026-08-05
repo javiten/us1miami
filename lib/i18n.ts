@@ -1,3 +1,6 @@
+import { AUTOMOTIVE_RATE_PER_KG } from "@/lib/automotive"
+import { automotiveEn, automotiveEs } from "@/lib/i18n-automotive"
+
 export type Locale = "es" | "en"
 
 export const LOCALES: Locale[] = ["es", "en"]
@@ -16,6 +19,7 @@ const en = {
   nav: {
     how: "How it works",
     services: "Services",
+    automotive: "Automotive",
     pricing: "Pricing",
     warehouse: "Warehouse",
     faq: "FAQ",
@@ -42,6 +46,45 @@ const en = {
     deliveryIn: "Delivery in",
     deliveryValue: "≈ 7 Days",
     imageAlt: "Illustration of a Miami warehouse consolidating packages onto a cargo airplane bound for Argentina",
+  },
+  heroCarousel: {
+    region: "US1 Miami services",
+    prev: "Previous slide",
+    next: "Next slide",
+    goTo: "Show slide {n}: {label}",
+    status: "Slide {n} of {total}",
+    courierTab: "International Courier",
+    automotive: {
+      tab: "Automotive",
+      eyebrow: `Automotive parts · USA → Argentina`,
+      title: "Parts from the United States, delivered in Argentina.",
+      description: `Buy automotive parts, accessories and components in the United States. We receive them in Miami and coordinate shipping to Argentina from USD ${AUTOMOTIVE_RATE_PER_KG} per kg.`,
+      primaryCta: "Explore Automotive",
+      secondaryCta: "Request a Quote",
+      highlights: [
+        `Shipping from USD ${AUTOMOTIVE_RATE_PER_KG}/kg`,
+        "Optional assisted purchasing",
+        "Access to specialized suppliers",
+      ],
+      imageAlt:
+        "Organized automotive parts boxes on Miami warehouse shelving beside a cargo aircraft and a route line toward South America",
+    },
+    soonNetwork: {
+      tab: "Coming soon",
+      eyebrow: "Coming soon",
+      title: "A new way to connect Miami with Argentina.",
+      description: "We are preparing a new solution within the US1 Miami ecosystem.",
+      badge: "Coming soon",
+      imageAlt: "Abstract illustration of glowing connected nodes representing new logistics routes",
+    },
+    soonLayers: {
+      tab: "New service",
+      eyebrow: "New service",
+      title: "More solutions. The same connection.",
+      description: "Another US1 Miami service vertical is coming soon.",
+      badge: "Coming soon",
+      imageAlt: "Abstract illustration of layered translucent glass panels representing modular services",
+    },
   },
   destinations: {
     eyebrow: "Trusted shopping destinations",
@@ -153,7 +196,11 @@ const en = {
     location: "Location",
     locationValue: "Miami Warehouse, Florida",
     rights: "US1 Miami — International Courier. All rights reserved.",
+    services: "Services",
+    courierLink: "International Courier",
+    automotiveLink: "Automotive",
   },
+  automotive: automotiveEn,
 }
 
 export type Dictionary = typeof en
@@ -162,6 +209,7 @@ const es: Dictionary = {
   nav: {
     how: "Cómo funciona",
     services: "Servicios",
+    automotive: "Automotive",
     pricing: "Precios",
     warehouse: "Depósito",
     faq: "Preguntas",
@@ -188,6 +236,45 @@ const es: Dictionary = {
     deliveryIn: "Entrega en",
     deliveryValue: "≈ 7 días",
     imageAlt: "Ilustración de un depósito en Miami consolidando paquetes en un avión de carga rumbo a Argentina",
+  },
+  heroCarousel: {
+    region: "Servicios de US1 Miami",
+    prev: "Diapositiva anterior",
+    next: "Diapositiva siguiente",
+    goTo: "Mostrar diapositiva {n}: {label}",
+    status: "Diapositiva {n} de {total}",
+    courierTab: "Courier internacional",
+    automotive: {
+      tab: "Automotive",
+      eyebrow: `Repuestos automotrices · USA → Argentina`,
+      title: "Repuestos de Estados Unidos, entregados en Argentina.",
+      description: `Comprá repuestos, accesorios y componentes automotrices en Estados Unidos. Los recibimos en Miami y coordinamos su envío a Argentina desde USD ${AUTOMOTIVE_RATE_PER_KG} por kg.`,
+      primaryCta: "Explorar Automotive",
+      secondaryCta: "Solicitar cotización",
+      highlights: [
+        `Envíos desde USD ${AUTOMOTIVE_RATE_PER_KG}/kg`,
+        "Compra asistida opcional",
+        "Acceso a proveedores especializados",
+      ],
+      imageAlt:
+        "Cajas de repuestos automotrices organizadas en estanterías del warehouse de Miami junto a un avión de carga y una ruta hacia Sudamérica",
+    },
+    soonNetwork: {
+      tab: "Próximamente",
+      eyebrow: "Próximamente",
+      title: "Una nueva forma de conectar Miami con Argentina.",
+      description: "Estamos preparando una nueva solución dentro del ecosistema US1 Miami.",
+      badge: "Muy pronto",
+      imageAlt: "Ilustración abstracta de nodos conectados que representan nuevas rutas logísticas",
+    },
+    soonLayers: {
+      tab: "Nuevo servicio",
+      eyebrow: "Nuevo servicio",
+      title: "Más soluciones. La misma conexión.",
+      description: "Otra nueva vertical de US1 Miami llegará próximamente.",
+      badge: "Próximamente",
+      imageAlt: "Ilustración abstracta de paneles de vidrio translúcido en capas que representan servicios modulares",
+    },
   },
   destinations: {
     eyebrow: "Tiendas de confianza",
@@ -299,7 +386,11 @@ const es: Dictionary = {
     location: "Ubicación",
     locationValue: "Depósito en Miami, Florida",
     rights: "US1 Miami — Courier Internacional. Todos los derechos reservados.",
+    services: "Servicios",
+    courierLink: "Courier internacional",
+    automotiveLink: "Automotive",
   },
+  automotive: automotiveEs,
 }
 
 export const translations: Record<Locale, Dictionary> = { es, en }

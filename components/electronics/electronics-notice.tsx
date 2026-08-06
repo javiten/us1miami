@@ -38,7 +38,12 @@ export function ElectronicsNotice() {
   const n = t.electronics.notice
 
   return (
-    <section id={ELECTRONICS_NOTICE_ANCHOR} className="border-y border-border bg-navy py-20 sm:py-24">
+    <section
+      id={ELECTRONICS_NOTICE_ANCHOR}
+      // scroll-mt keeps the heading clear of the fixed header when the page's
+      // "quote" CTAs jump here.
+      className="scroll-mt-24 border-y border-border bg-navy py-20 sm:py-24"
+    >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

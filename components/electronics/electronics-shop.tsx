@@ -20,7 +20,7 @@ export function ElectronicsShop() {
   const icons = [ShoppingBag, Building2, Store]
 
   return (
-    <section className="py-20 sm:py-24">
+    <section id="electronics-shop" className="py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <motion.div

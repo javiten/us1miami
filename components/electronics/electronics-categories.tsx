@@ -43,7 +43,7 @@ export function ElectronicsCategories() {
   const c = t.electronics.categories
 
   return (
-    <section id="categories" className="border-y border-border bg-muted/40 py-20 sm:py-24">
+    <section id="electronics-categories" className="border-y border-border bg-muted/40 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

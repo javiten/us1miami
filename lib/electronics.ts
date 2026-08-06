@@ -12,6 +12,15 @@
 
 export const ELECTRONICS_PATH = "/electronics"
 
+/**
+ * Anchor for the handling-notices section.
+ *
+ * Electronics has no volume-pricing block to deep-link to, so the "quote" CTAs
+ * point here instead: it is where the weight rules, battery review and
+ * individual-quote conditions are disclosed.
+ */
+export const ELECTRONICS_NOTICE_ANCHOR = "electronics-notice"
+
 /** Starting shipping rate in USD per kilogram. Always phrased as "from". */
 export const ELECTRONICS_RATE_PER_KG = 55
 

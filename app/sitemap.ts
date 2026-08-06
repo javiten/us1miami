@@ -19,5 +19,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/clothing`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/es/clothing`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/en/clothing`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/electronics`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/es/electronics`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/en/electronics`, lastModified, changeFrequency: "weekly", priority: 0.8 },
   ]
 }

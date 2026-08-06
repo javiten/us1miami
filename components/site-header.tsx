@@ -28,25 +28,27 @@ export function SiteHeader() {
   const section = (hash: string) => (onHome ? hash : `/${hash}`)
 
   // The vertical landing pages are grouped into a dropdown on desktop. A flat
-  // nav no longer fits the header bar once there are three of them.
-  const verticals: ServiceItem[] = [
+  // nav no longer fits the header bar once there are three of them. The same
+  // list drives the mobile panel, so the analytics source is a parameter
+  // rather than being baked in.
+  const buildVerticals = (source: "header" | "mobile_menu"): ServiceItem[] => [
     {
       label: t.nav.automotive,
       desc: t.nav.automotiveDesc,
       href: AUTOMOTIVE_PATH,
-      onSelect: () => track("automotive_nav_click", { source: "header" }),
+      onSelect: () => track("automotive_nav_click", { source }),
     },
     {
       label: t.nav.clothing,
       desc: t.nav.clothingDesc,
       href: CLOTHING_PATH,
-      onSelect: () => track("clothing_nav_click", { source: "header" }),
+      onSelect: () => track("clothing_nav_click", { source }),
     },
     {
       label: t.nav.electronics,
       desc: t.nav.electronicsDesc,
       href: ELECTRONICS_PATH,
-      onSelect: () => track("electronics_nav_click", { source: "header" }),
+      onSelect: () => track("electronics_nav_click", { source }),
     },
   ]
 
@@ -92,7 +94,7 @@ export function SiteHeader() {
             {anchorLinks[0].label}
           </a>
 
-          <ServicesMenu label={t.nav.services} srLabel={t.nav.servicesMenu} items={verticals} />
+          <ServicesMenu label={t.nav.services} srLabel={t.nav.servicesMenu} items={buildVerticals("header")} />
 
           {anchorLinks.slice(1).map((l) => (
             <a
@@ -105,7 +107,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <a
             href="tel:+13059679756"
             className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-navy transition-colors hover:bg-muted"
@@ -128,7 +130,7 @@ export function SiteHeader() {
           </a>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <LanguageSwitcher />
           <button
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-white text-navy"
@@ -145,39 +147,52 @@ export function SiteHeader() {
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mx-auto mt-2 max-w-6xl rounded-2xl border border-border bg-white/95 p-3 shadow-lg backdrop-blur-xl md:hidden"
+          className="mx-auto mt-2 max-w-6xl rounded-2xl border border-border bg-white/95 p-3 shadow-lg backdrop-blur-xl lg:hidden"
         >
           <nav className="flex flex-col" aria-label="Mobile">
-            {links.map((l) =>
-              l.route ? (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  aria-current={pathname === l.href ? "page" : undefined}
-                  onClick={() => {
-                    track(l.href === CLOTHING_PATH ? "clothing_nav_click" : "automotive_nav_click", {
-                      source: "mobile_menu",
-                    })
-                    setOpen(false)
-                  }}
-                  className={cn(
-                    "rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
-                    pathname === l.href ? "text-navy" : "text-muted-foreground",
-                  )}
-                >
-                  {l.label}
-                </Link>
-              ) : (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
-                >
-                  {l.label}
-                </a>
-              ),
-            )}
+            <a
+              href={anchorLinks[0].href}
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+            >
+              {anchorLinks[0].label}
+            </a>
+
+            {/* The verticals are listed inline here rather than nested behind a
+                second tap, since vertical space is not constrained on mobile. */}
+            <p className="mt-2 px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
+              {t.nav.services}
+            </p>
+            {buildVerticals("mobile_menu").map((v) => (
+              <Link
+                key={v.href}
+                href={v.href}
+                aria-current={pathname === v.href ? "page" : undefined}
+                onClick={() => {
+                  v.onSelect?.()
+                  setOpen(false)
+                }}
+                className={cn(
+                  "rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
+                  pathname === v.href ? "text-navy" : "text-muted-foreground",
+                )}
+              >
+                {v.label}
+              </Link>
+            ))}
+
+            <div className="my-2 h-px bg-border" />
+
+            {anchorLinks.slice(1).map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+              >
+                {l.label}
+              </a>
+            ))}
             <Link
               href="/ingresar"
               onClick={() => setOpen(false)}

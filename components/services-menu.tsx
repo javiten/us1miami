@@ -41,6 +41,10 @@ export function ServicesMenu({
   const wrapRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Tracks whether the panel was opened by hover rather than an explicit
+  // click. Without this, a pointer user's click would toggle off the menu that
+  // their own hover had just opened, so the menu could never be clicked open.
+  const openedByHover = useRef(false)
 
   // Highlight the trigger whenever one of its destinations is the active route.
   const containsActive = items.some((i) => i.href === pathname)
@@ -89,7 +93,10 @@ export function ServicesMenu({
       className="relative"
       onMouseEnter={() => {
         cancelClose()
-        setOpen(true)
+        setOpen((wasOpen) => {
+          if (!wasOpen) openedByHover.current = true
+          return true
+        })
       }}
       onMouseLeave={scheduleClose}
       onFocus={cancelClose}
@@ -103,7 +110,18 @@ export function ServicesMenu({
         aria-expanded={open}
         aria-haspopup="true"
         aria-label={srLabel}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() =>
+          setOpen((wasOpen) => {
+            // Clicking a menu that hover already opened should keep it open and
+            // hand control to the click, not dismiss it immediately.
+            if (wasOpen && openedByHover.current) {
+              openedByHover.current = false
+              return true
+            }
+            openedByHover.current = false
+            return !wasOpen
+          })
+        }
         className={cn(
           "flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
           open || containsActive ? "text-navy" : "text-muted-foreground",

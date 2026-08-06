@@ -1,5 +1,6 @@
 import { AUTOMOTIVE_RATE_PER_KG } from "@/lib/automotive"
 import { automotiveEn, automotiveEs } from "@/lib/i18n-automotive"
+import { clothingEn, clothingEs } from "@/lib/i18n-clothing"
 
 export type Locale = "es" | "en"
 
@@ -20,6 +21,7 @@ const en = {
     how: "How it works",
     services: "Services",
     automotive: "Automotive",
+    clothing: "Clothing",
     pricing: "Pricing",
     warehouse: "Warehouse",
     faq: "FAQ",
@@ -201,8 +203,10 @@ const en = {
     services: "Services",
     courierLink: "International Courier",
     automotiveLink: "Automotive",
+    clothingLink: "Clothing",
   },
   automotive: automotiveEn,
+  clothing: clothingEn,
 }
 
 export type Dictionary = typeof en
@@ -212,6 +216,7 @@ const es: Dictionary = {
     how: "Cómo funciona",
     services: "Servicios",
     automotive: "Automotive",
+    clothing: "Clothing",
     pricing: "Precios",
     warehouse: "Depósito",
     faq: "Preguntas",
@@ -393,8 +398,10 @@ const es: Dictionary = {
     services: "Servicios",
     courierLink: "Courier internacional",
     automotiveLink: "Automotive",
+    clothingLink: "Clothing",
   },
   automotive: automotiveEs,
+  clothing: clothingEs,
 }
 
 export const translations: Record<Locale, Dictionary> = { es, en }

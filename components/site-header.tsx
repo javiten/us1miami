@@ -9,6 +9,7 @@ import { Logo } from "@/components/logo"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { useI18n } from "@/components/language-provider"
 import { AUTOMOTIVE_PATH } from "@/lib/automotive"
+import { CLOTHING_PATH } from "@/lib/clothing"
 import { track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
 
@@ -27,8 +28,9 @@ export function SiteHeader() {
   const links = [
     { label: t.nav.how, href: section("#how-it-works") },
     { label: t.nav.services, href: section("#services") },
-    // The only real route in the nav, so it gets a prefetching <Link>.
+    // Real routes get prefetching <Link>s; the rest are homepage anchors.
     { label: t.nav.automotive, href: AUTOMOTIVE_PATH, route: true },
+    { label: t.nav.clothing, href: CLOTHING_PATH, route: true },
     { label: t.nav.pricing, href: section("#pricing") },
     { label: t.nav.warehouse, href: section("#warehouse") },
     { label: t.nav.faq, href: section("#faq") },
@@ -67,7 +69,9 @@ export function SiteHeader() {
                 key={l.href}
                 href={l.href}
                 aria-current={pathname === l.href ? "page" : undefined}
-                onClick={() => track("automotive_nav_click", { source: "header" })}
+                onClick={() =>
+                  track(l.href === CLOTHING_PATH ? "clothing_nav_click" : "automotive_nav_click", { source: "header" })
+                }
                 className={cn(
                   "rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
                   pathname === l.href ? "text-navy" : "text-muted-foreground",
@@ -103,7 +107,7 @@ export function SiteHeader() {
             {t.nav.login}
           </Link>
           <a
-            href="#quote"
+            href={section("#quote")}
             className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-[0_8px_20px_-8px_rgba(15,125,255,0.8)] transition-transform hover:-translate-y-0.5"
           >
             {t.nav.quote}
@@ -137,7 +141,9 @@ export function SiteHeader() {
                   href={l.href}
                   aria-current={pathname === l.href ? "page" : undefined}
                   onClick={() => {
-                    track("automotive_nav_click", { source: "mobile_menu" })
+                    track(l.href === CLOTHING_PATH ? "clothing_nav_click" : "automotive_nav_click", {
+                      source: "mobile_menu",
+                    })
                     setOpen(false)
                   }}
                   className={cn(
@@ -166,7 +172,7 @@ export function SiteHeader() {
               {t.nav.login}
             </Link>
             <a
-              href="#quote"
+              href={section("#quote")}
               onClick={() => setOpen(false)}
               className="mt-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
             >

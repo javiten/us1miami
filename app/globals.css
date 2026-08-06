@@ -45,3 +45,38 @@ body {
   background-color: color-mix(in srgb, var(--color-primary) 22%, transparent);
   color: var(--color-navy);
 }
+
+/* ------------------------------------------------------------------ */
+/* Infinite brand marquee                                             */
+/*                                                                    */
+/* The track renders its item list exactly twice and travels -50%, so */
+/* the second copy lands precisely where the first began when the     */
+/* animation loops — there is no visual jump at the seam.             */
+/* ------------------------------------------------------------------ */
+
+@keyframes us1-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.us1-marquee-track {
+  animation: us1-marquee var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+}
+
+/* Paused on hover, on keyboard focus, and while a touch drag is active. */
+.us1-marquee-track[data-paused="true"] {
+  animation-play-state: paused;
+}
+
+/* Visitors who prefer reduced motion get a static, manually scrollable row. */
+@media (prefers-reduced-motion: reduce) {
+  .us1-marquee-track {
+    animation: none;
+    transform: none;
+  }
+}

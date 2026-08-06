@@ -12,6 +12,7 @@ import { ServicesMenu, type ServiceItem } from "@/components/services-menu"
 import { AUTOMOTIVE_PATH } from "@/lib/automotive"
 import { CLOTHING_PATH } from "@/lib/clothing"
 import { ELECTRONICS_PATH } from "@/lib/electronics"
+import { JAPAN_PATH } from "@/lib/japan"
 import { track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
 
@@ -49,6 +50,12 @@ export function SiteHeader() {
       desc: t.nav.electronicsDesc,
       href: ELECTRONICS_PATH,
       onSelect: () => track("electronics_nav_click", { source }),
+    },
+    {
+      label: t.nav.japan,
+      desc: t.nav.japanDesc,
+      href: JAPAN_PATH,
+      onSelect: () => track("japan_nav_click", { source }),
     },
   ]
 

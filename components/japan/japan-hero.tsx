@@ -55,13 +55,13 @@ export function JapanHero() {
               transition={{ duration: 0.6, ease }}
               className="inline-flex items-center gap-2.5 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-japan-red shadow-sm"
             >
-              {/* The 日本 mark is the page's one piece of Japanese typography.
-                  It is labelled for screen readers because the surrounding
-                  eyebrow text already carries the meaning visually. */}
-              <span aria-hidden="true" className="text-sm leading-none">
-                日本
-              </span>
-              <span className="h-3 w-px bg-border" aria-hidden="true" />
+              {/* A hinomaru-style red disc stands in for Japanese lettering
+                  here. Real kanji would render as missing-glyph boxes: the
+                  site's Latin webfonts carry no CJK coverage, and pulling in a
+                  CJK face for two decorative characters is not a trade worth
+                  making. Decorative, so it stays out of the accessibility
+                  tree — the eyebrow text carries the meaning. */}
+              <span className="h-2.5 w-2.5 rounded-full bg-japan-red" aria-hidden="true" />
               {j.hero.eyebrow}
             </motion.div>
 

@@ -22,5 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/electronics`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/es/electronics`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/en/electronics`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/japan`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/es/japan`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/en/japan`, lastModified, changeFrequency: "weekly", priority: 0.8 },
   ]
 }

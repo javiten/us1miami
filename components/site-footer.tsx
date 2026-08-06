@@ -7,6 +7,7 @@ import { useI18n } from "@/components/language-provider"
 import { AUTOMOTIVE_PATH } from "@/lib/automotive"
 import { CLOTHING_PATH } from "@/lib/clothing"
 import { ELECTRONICS_PATH } from "@/lib/electronics"
+import { JAPAN_PATH } from "@/lib/japan"
 import { track } from "@/lib/analytics"
 
 export function SiteFooter() {
@@ -76,6 +77,13 @@ export function SiteFooter() {
                 className="text-sm text-white/80 transition-colors hover:text-white"
               >
                 {t.footer.electronicsLink}
+              </Link>
+              <Link
+                href={JAPAN_PATH}
+                onClick={() => track("japan_nav_click", { source: "footer" })}
+                className="text-sm text-white/80 transition-colors hover:text-white"
+              >
+                {t.footer.japanLink}
               </Link>
             </div>
           </div>

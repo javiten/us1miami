@@ -2,18 +2,18 @@
 
 import { motion } from "motion/react"
 import {
+  Blocks,
   Camera,
   CassetteTape,
   Diamond,
   Gamepad,
   Gamepad2,
   Joystick,
-  Layers,
+  Rabbit,
   Radio,
   Shirt,
   Sparkles,
-  Spade,
-  ToyBrick,
+  WalletCards,
   type LucideIcon,
 } from "lucide-react"
 
@@ -32,9 +32,11 @@ const ICONS: Record<JapanCategoryId, LucideIcon> = {
   videoGames: Gamepad2,
   controllers: Joystick,
   figures: Sparkles,
-  plush: ToyBrick,
-  tradingCards: Spade,
-  modelKits: Layers,
+  // Rabbit over a generic toy block: at 20px the block reads as a gift box.
+  plush: Rabbit,
+  // WalletCards over Spade, whose silhouette reads as a droplet at this size.
+  tradingCards: WalletCards,
+  modelKits: Blocks,
   animeMerch: Shirt,
   vintageAudio: CassetteTape,
   retroElectronics: Radio,

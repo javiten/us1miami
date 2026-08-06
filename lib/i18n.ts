@@ -1,6 +1,7 @@
 import { AUTOMOTIVE_RATE_PER_KG } from "@/lib/automotive"
 import { automotiveEn, automotiveEs } from "@/lib/i18n-automotive"
 import { clothingEn, clothingEs } from "@/lib/i18n-clothing"
+import { electronicsEn, electronicsEs } from "@/lib/i18n-electronics"
 
 export type Locale = "es" | "en"
 
@@ -22,6 +23,7 @@ const en = {
     services: "Services",
     automotive: "Automotive",
     clothing: "Clothing",
+    electronics: "Electronics",
     pricing: "Pricing",
     warehouse: "Warehouse",
     faq: "FAQ",
@@ -30,6 +32,13 @@ const en = {
     openMenu: "Open menu",
     closeMenu: "Close menu",
     language: "Language",
+    // Copy for the Services dropdown that groups the vertical landing pages.
+    servicesMenu: "Open services menu",
+    automotiveDesc: "Parts, components and accessories",
+    clothingDesc: "Apparel, footwear and accessories",
+    electronicsDesc: "Devices, audio and computing",
+    allServices: "All services",
+    allServicesDesc: "Receiving, storage and consolidation",
   },
   logo: {
     subtitle: "International Courier",
@@ -204,9 +213,11 @@ const en = {
     courierLink: "International Courier",
     automotiveLink: "Automotive",
     clothingLink: "Clothing",
+    electronicsLink: "Electronics",
   },
   automotive: automotiveEn,
   clothing: clothingEn,
+  electronics: electronicsEn,
 }
 
 export type Dictionary = typeof en
@@ -217,6 +228,7 @@ const es: Dictionary = {
     services: "Servicios",
     automotive: "Automotive",
     clothing: "Clothing",
+    electronics: "Electronics",
     pricing: "Precios",
     warehouse: "Depósito",
     faq: "Preguntas",
@@ -225,6 +237,12 @@ const es: Dictionary = {
     openMenu: "Abrir menú",
     closeMenu: "Cerrar menú",
     language: "Idioma",
+    servicesMenu: "Abrir menú de servicios",
+    automotiveDesc: "Repuestos, componentes y accesorios",
+    clothingDesc: "Indumentaria, calzado y accesorios",
+    electronicsDesc: "Dispositivos, audio y computación",
+    allServices: "Todos los servicios",
+    allServicesDesc: "Recepción, almacenamiento y consolidación",
   },
   logo: {
     subtitle: "Courier Internacional",
@@ -399,9 +417,11 @@ const es: Dictionary = {
     courierLink: "Courier internacional",
     automotiveLink: "Automotive",
     clothingLink: "Clothing",
+    electronicsLink: "Electronics",
   },
   automotive: automotiveEs,
   clothing: clothingEs,
+  electronics: electronicsEs,
 }
 
 export const translations: Record<Locale, Dictionary> = { es, en }

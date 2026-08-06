@@ -70,3 +70,27 @@ export const CLOTHING_BRANDS: readonly Brand[] = [
   { name: "H&M" },
   { name: "Zara" },
 ]
+
+/** Consumer-electronics manufacturers and platforms. */
+export const ELECTRONICS_BRANDS: readonly Brand[] = [
+  { name: "Apple" },
+  { name: "Samsung" },
+  { name: "Sony" },
+  { name: "LG" },
+  { name: "Microsoft", wide: true },
+  { name: "Google" },
+  { name: "Nintendo" },
+  { name: "PlayStation", wide: true },
+  { name: "Xbox" },
+  { name: "ASUS" },
+  { name: "Lenovo" },
+  { name: "Dell" },
+  { name: "HP" },
+  { name: "Logitech" },
+  { name: "JBL" },
+  { name: "Bose" },
+  { name: "GoPro" },
+  { name: "Canon" },
+  { name: "Nikon" },
+  { name: "DJI" },
+]

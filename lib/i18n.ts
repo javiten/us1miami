@@ -2,6 +2,7 @@ import { AUTOMOTIVE_RATE_PER_KG } from "@/lib/automotive"
 import { automotiveEn, automotiveEs } from "@/lib/i18n-automotive"
 import { clothingEn, clothingEs } from "@/lib/i18n-clothing"
 import { electronicsEn, electronicsEs } from "@/lib/i18n-electronics"
+import { japanEn, japanEs } from "@/lib/i18n-japan"
 
 export type Locale = "es" | "en"
 
@@ -24,6 +25,7 @@ const en = {
     automotive: "Automotive",
     clothing: "Clothing",
     electronics: "Electronics",
+    japan: "Japan",
     pricing: "Pricing",
     warehouse: "Warehouse",
     faq: "FAQ",
@@ -37,6 +39,7 @@ const en = {
     automotiveDesc: "Parts, components and accessories",
     clothingDesc: "Apparel, footwear and accessories",
     electronicsDesc: "Devices, audio and computing",
+    japanDesc: "Auctions, collectibles and retro gaming",
     allServices: "All services",
     allServicesDesc: "Receiving, storage and consolidation",
   },
@@ -214,10 +217,12 @@ const en = {
     automotiveLink: "Automotive",
     clothingLink: "Clothing",
     electronicsLink: "Electronics",
+    japanLink: "Japan",
   },
   automotive: automotiveEn,
   clothing: clothingEn,
   electronics: electronicsEn,
+  japan: japanEn,
 }
 
 export type Dictionary = typeof en
@@ -229,6 +234,7 @@ const es: Dictionary = {
     automotive: "Automotive",
     clothing: "Clothing",
     electronics: "Electronics",
+    japan: "Japan",
     pricing: "Precios",
     warehouse: "Depósito",
     faq: "Preguntas",
@@ -241,6 +247,7 @@ const es: Dictionary = {
     automotiveDesc: "Repuestos, componentes y accesorios",
     clothingDesc: "Indumentaria, calzado y accesorios",
     electronicsDesc: "Dispositivos, audio y computación",
+    japanDesc: "Subastas, coleccionables y gaming retro",
     allServices: "Todos los servicios",
     allServicesDesc: "Recepción, almacenamiento y consolidación",
   },
@@ -418,10 +425,12 @@ const es: Dictionary = {
     automotiveLink: "Automotive",
     clothingLink: "Clothing",
     electronicsLink: "Electronics",
+    japanLink: "Japan",
   },
   automotive: automotiveEs,
   clothing: clothingEs,
   electronics: electronicsEs,
+  japan: japanEs,
 }
 
 export const translations: Record<Locale, Dictionary> = { es, en }

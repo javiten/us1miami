@@ -1,5 +1,5 @@
 /**
- * Brand lists for the marquees on /automotive and /clothing.
+ * Brand lists for the marquees on the vertical landing pages.
  *
  * IMPORTANT — legal posture: these names are shown only as examples of
  * commonly requested products. US1 Miami is not an authorized distributor and
@@ -93,4 +93,50 @@ export const ELECTRONICS_BRANDS: readonly Brand[] = [
   { name: "Canon" },
   { name: "Nikon" },
   { name: "DJI" },
+]
+
+/**
+ * Japanese marketplaces, auction sites and second-hand chains.
+ *
+ * These are sourcing *destinations* we can search on a customer's behalf, not
+ * partners. The marquee's disclaimer states this explicitly, and no card or
+ * roller item links out to them.
+ */
+export const JAPAN_MARKETPLACES: readonly Brand[] = [
+  { name: "Yahoo! Auctions Japan", wide: true },
+  { name: "Mercari Japan", wide: true },
+  { name: "Amazon Japan", wide: true },
+  { name: "Rakuten" },
+  { name: "Suruga-ya" },
+  { name: "Mandarake" },
+  { name: "Hard Off" },
+  { name: "Hobby Off" },
+  { name: "Off House" },
+  { name: "Book Off" },
+  { name: "Geo" },
+  { name: "Animate" },
+  { name: "AmiAmi" },
+  { name: "Pokémon Center Japan", wide: true },
+]
+
+/** Japanese consumer, toy and pop-culture brands. */
+export const JAPAN_BRANDS: readonly Brand[] = [
+  { name: "Nintendo" },
+  { name: "Sony" },
+  { name: "Sega" },
+  { name: "Bandai" },
+  { name: "Bandai Spirits", wide: true },
+  { name: "Banpresto" },
+  { name: "Good Smile Company", wide: true },
+  { name: "Takara Tomy", wide: true },
+  { name: "Taito" },
+  { name: "Square Enix", wide: true },
+  { name: "Capcom" },
+  { name: "Konami" },
+  { name: "Sanrio" },
+  { name: "Pokémon" },
+  { name: "Fujifilm" },
+  { name: "Panasonic" },
+  { name: "Casio" },
+  { name: "Sharp" },
 ]

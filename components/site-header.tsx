@@ -8,8 +8,10 @@ import { Menu, X, Phone } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { useI18n } from "@/components/language-provider"
+import { ServicesMenu, type ServiceItem } from "@/components/services-menu"
 import { AUTOMOTIVE_PATH } from "@/lib/automotive"
 import { CLOTHING_PATH } from "@/lib/clothing"
+import { ELECTRONICS_PATH } from "@/lib/electronics"
 import { track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
 
@@ -25,12 +27,32 @@ export function SiteHeader() {
   const onHome = pathname === "/" || pathname === "/es" || pathname === "/en"
   const section = (hash: string) => (onHome ? hash : `/${hash}`)
 
-  const links = [
+  // The vertical landing pages are grouped into a dropdown on desktop. A flat
+  // nav no longer fits the header bar once there are three of them.
+  const verticals: ServiceItem[] = [
+    {
+      label: t.nav.automotive,
+      desc: t.nav.automotiveDesc,
+      href: AUTOMOTIVE_PATH,
+      onSelect: () => track("automotive_nav_click", { source: "header" }),
+    },
+    {
+      label: t.nav.clothing,
+      desc: t.nav.clothingDesc,
+      href: CLOTHING_PATH,
+      onSelect: () => track("clothing_nav_click", { source: "header" }),
+    },
+    {
+      label: t.nav.electronics,
+      desc: t.nav.electronicsDesc,
+      href: ELECTRONICS_PATH,
+      onSelect: () => track("electronics_nav_click", { source: "header" }),
+    },
+  ]
+
+  // Homepage anchor links, shown on either side of the Services dropdown.
+  const anchorLinks = [
     { label: t.nav.how, href: section("#how-it-works") },
-    { label: t.nav.services, href: section("#services") },
-    // Real routes get prefetching <Link>s; the rest are homepage anchors.
-    { label: t.nav.automotive, href: AUTOMOTIVE_PATH, route: true },
-    { label: t.nav.clothing, href: CLOTHING_PATH, route: true },
     { label: t.nav.pricing, href: section("#pricing") },
     { label: t.nav.warehouse, href: section("#warehouse") },
     { label: t.nav.faq, href: section("#faq") },
@@ -62,33 +84,25 @@ export function SiteHeader() {
           <Logo className="h-[57px]" />
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {links.map((l) =>
-            l.route ? (
-              <Link
-                key={l.href}
-                href={l.href}
-                aria-current={pathname === l.href ? "page" : undefined}
-                onClick={() =>
-                  track(l.href === CLOTHING_PATH ? "clothing_nav_click" : "automotive_nav_click", { source: "header" })
-                }
-                className={cn(
-                  "rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
-                  pathname === l.href ? "text-navy" : "text-muted-foreground",
-                )}
-              >
-                {l.label}
-              </Link>
-            ) : (
-              <a
-                key={l.href}
-                href={l.href}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
-              >
-                {l.label}
-              </a>
-            ),
-          )}
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+          <a
+            href={anchorLinks[0].href}
+            className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+          >
+            {anchorLinks[0].label}
+          </a>
+
+          <ServicesMenu label={t.nav.services} srLabel={t.nav.servicesMenu} items={verticals} />
+
+          {anchorLinks.slice(1).map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+            >
+              {l.label}
+            </a>
+          ))}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">

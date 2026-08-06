@@ -1,0 +1,61 @@
+/**
+ * Electronics vertical configuration.
+ *
+ * Every commercial figure shown on /electronics is defined here once and
+ * interpolated into both language dictionaries, so a rate change never has to
+ * be chased through prose in two languages plus the structured data.
+ *
+ * Unlike the clothing vertical, electronics has a SINGLE rate. There is no
+ * discounted volume tier, so the rate is always presented as a starting
+ * ("from") price whose final value depends on actual or volumetric weight.
+ */
+
+export const ELECTRONICS_PATH = "/electronics"
+
+/** Starting shipping rate in USD per kilogram. Always phrased as "from". */
+export const ELECTRONICS_RATE_PER_KG = 55
+
+/** Estimated transit time in days, counted from dispatch — not from purchase. */
+export const ELECTRONICS_TRANSIT_DAYS = 7
+
+/** Currency code used for display and for Schema.org offers. */
+export const ELECTRONICS_CURRENCY = "USD"
+
+/**
+ * The category cards rendered in the "Popular categories" grid.
+ *
+ * Order is intentional: the highest-demand categories lead. Each id maps to a
+ * copy entry in the dictionaries and to a Lucide icon in the grid component,
+ * which keeps the icon choice next to the markup that renders it.
+ */
+export const ELECTRONICS_CATEGORY_IDS = [
+  "smartphones",
+  "computers",
+  "consoles",
+  "audio",
+  "cameras",
+  "smartwatches",
+  "accessories",
+  "smartHome",
+  "smallElectronics",
+  "replacements",
+] as const
+
+export type ElectronicsCategoryId = (typeof ELECTRONICS_CATEGORY_IDS)[number]
+
+/** The six fulfilment steps, in order. */
+export const ELECTRONICS_STEP_IDS = ["purchase", "send", "receive", "verify", "prepare", "deliver"] as const
+
+export type ElectronicsStepId = (typeof ELECTRONICS_STEP_IDS)[number]
+
+/** The handling and liability points that must be disclosed before purchase. */
+export const ELECTRONICS_NOTICE_IDS = [
+  "batteries",
+  "restrictions",
+  "oversized",
+  "weight",
+  "warranty",
+  "notSeller",
+] as const
+
+export type ElectronicsNoticeId = (typeof ELECTRONICS_NOTICE_IDS)[number]

@@ -21,6 +21,10 @@ export type AnalyticsEvent =
   | "automotive_option_cta_click"
   | "automotive_pricing_cta_click"
   | "automotive_final_cta_click"
+  | "clothing_nav_click"
+  | "clothing_hero_cta_click"
+  | "clothing_pricing_cta_click"
+  | "clothing_final_cta_click"
   | "homepage_slider_change"
   | "homepage_automotive_slide_click"
 

@@ -4,6 +4,7 @@ import { LanguageProvider } from "@/components/language-provider"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 import { AutomotiveHero } from "@/components/automotive/automotive-hero"
+import { AutomotiveBrands } from "@/components/automotive/automotive-brands"
 import { AutomotiveIntro } from "@/components/automotive/automotive-intro"
 import { PurchaseOptions } from "@/components/automotive/purchase-options"
 import { AutomotiveHow } from "@/components/automotive/automotive-how"
@@ -33,6 +34,7 @@ export function AutomotiveShell({
         <SiteHeader />
         <main>
           <AutomotiveHero />
+          <AutomotiveBrands />
           <AutomotiveIntro />
           <PurchaseOptions />
           <AutomotiveHow />

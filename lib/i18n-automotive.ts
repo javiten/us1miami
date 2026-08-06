@@ -65,6 +65,12 @@ export const automotiveEn = {
     },
   ],
 
+  brands: {
+    label: "Automotive brands and suppliers",
+    disclaimer:
+      "The brands shown are examples of products our customers commonly request. US1 Miami is an independent courier and assisted-purchasing service, and is not an authorized distributor of these brands. Displaying these names does not imply any affiliation with, authorization by, or sponsorship from their respective owners. All trademarks belong to their respective owners.",
+  },
+
   intro: {
     eyebrow: "More options for your vehicle",
     title: "The U.S. automotive market, now within reach.",
@@ -440,6 +446,12 @@ export const automotiveEs: AutomotiveDictionary = {
       desc: `Envío aéreo para cargas automotrices elegibles desde ${RATE}/kg.`,
     },
   ],
+
+  brands: {
+    label: "Marcas y proveedores del sector",
+    disclaimer:
+      "Las marcas mostradas son ejemplos de productos que nuestros clientes solicitan habitualmente. US1 Miami es un servicio independiente de courier y compra asistida, y no es distribuidor autorizado de estas marcas. Su mención no implica afiliación, autorización ni patrocinio por parte de sus titulares. Todas las marcas pertenecen a sus respectivos propietarios.",
+  },
 
   intro: {
     eyebrow: "Más opciones para tu vehículo",

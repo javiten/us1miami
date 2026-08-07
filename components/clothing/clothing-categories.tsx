@@ -25,24 +25,30 @@ export function ClothingCategories() {
   return (
     <section id="clothing-categories" className="border-y border-border bg-card py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <SectionHeading eyebrow={c.eyebrow} title={c.title} subtitle={c.subtitle} />
+        {/* The intro sits beside the list from lg up rather than above it. On its
+            own it is a max-w-2xl block in a max-w-6xl container, which left a
+            wide empty column to its right. It stays sticky so the section title
+            is still in view while reading down a long list. */}
+        <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
+          <SectionHeading
+            eyebrow={c.eyebrow}
+            title={c.title}
+            subtitle={c.subtitle}
+            className="lg:sticky lg:top-28 lg:self-start"
+          />
 
-        <ul className="mt-16 grid gap-x-16 sm:grid-cols-2">
-          {CLOTHING_CATEGORY_KEYS.map((key, i) => {
-            const item = c.items[key]
-            return (
-              <Reveal
-                key={key}
-                as="li"
-                delay={i * 0.04}
-                className="flex min-w-0 flex-col border-t border-border py-7"
-              >
-                <h3 className="font-display text-2xl leading-tight text-navy md:text-3xl">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{item.desc}</p>
-              </Reveal>
-            )
-          })}
-        </ul>
+          <ul className="grid gap-x-12 sm:grid-cols-2">
+            {CLOTHING_CATEGORY_KEYS.map((key, i) => {
+              const item = c.items[key]
+              return (
+                <Reveal key={key} as="li" delay={i * 0.04} className="flex min-w-0 flex-col border-t border-border py-7">
+                  <h3 className="font-display text-2xl leading-tight text-navy">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{item.desc}</p>
+                </Reveal>
+              )
+            })}
+          </ul>
+        </div>
       </div>
     </section>
   )

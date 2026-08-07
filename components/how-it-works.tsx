@@ -31,19 +31,19 @@ export function HowItWorks() {
 
       <ol className="mt-16 grid gap-x-8 gap-y-12 md:grid-cols-3">
         {steps.map((s, i) => (
-          <Reveal key={s.title} delay={i * 0.05} className="min-w-0">
-            <li className="relative flex min-w-0 flex-col border-t border-navy/15 pt-6">
-              {/* The numeral sits on the rail, breaking the hairline. */}
-              <span
-                aria-hidden
-                className="absolute -top-px left-0 h-px w-10 bg-primary"
-              />
-              <span className="font-display text-5xl leading-none text-navy/25 tabular-nums">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-5 text-lg font-semibold text-navy">{s.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{s.desc}</p>
-            </li>
+          <Reveal
+            key={s.title}
+            as="li"
+            delay={i * 0.05}
+            className="relative flex min-w-0 flex-col border-t border-navy/15 pt-6"
+          >
+            {/* The numeral sits on the rail, breaking the hairline. */}
+            <span aria-hidden className="absolute -top-px left-0 h-px w-10 bg-primary" />
+            <span className="font-display text-5xl leading-none text-navy/25 tabular-nums">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3 className="mt-5 text-lg font-semibold text-navy">{s.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{s.desc}</p>
           </Reveal>
         ))}
       </ol>

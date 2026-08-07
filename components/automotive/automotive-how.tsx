@@ -4,26 +4,38 @@ import { Reveal } from "@/components/reveal"
 import { SectionHeading } from "@/components/automotive/section-heading"
 import { useI18n } from "@/components/language-provider"
 
+/**
+ * The automotive process, as a numbered editorial rail.
+ *
+ * Previously a 6-up grid of rounded cards, which was the third consecutive card
+ * grid on this page. It now uses the same hairline-and-numeral treatment as the
+ * homepage process section, so the two read as one system. This is a genuine
+ * sequence, so the numerals are load-bearing rather than decoration.
+ */
 export function AutomotiveHow() {
   const { t } = useI18n()
   const a = t.automotive.how
 
   return (
-    <section id="automotive-how" className="scroll-mt-28 border-t border-border bg-card py-20 sm:py-28">
+    <section id="automotive-how" className="scroll-mt-28 border-t border-border bg-muted/40 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading eyebrow={a.eyebrow} title={a.title} />
 
-        {/* A genuine sequence, so the numbered markers are load-bearing here. */}
-        <ol className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ol className="mt-16 grid gap-x-8 gap-y-12 md:grid-cols-3">
           {a.steps.map((step, i) => (
-            <Reveal key={step.title} delay={i * 0.05}>
-              <li className="relative h-full rounded-3xl border border-border bg-white p-7 shadow-[0_1px_0_rgba(7,27,58,0.04)]">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-sm font-semibold text-primary">
-                  {i + 1}
-                </span>
-                <h3 className="mt-5 text-base font-semibold text-navy">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
-              </li>
+            <Reveal
+              key={step.title}
+              as="li"
+              delay={i * 0.05}
+              className="relative flex min-w-0 flex-col border-t border-navy/15 pt-6"
+            >
+              {/* The numeral sits on the rail, breaking the hairline. */}
+              <span aria-hidden className="absolute -top-px left-0 h-px w-10 bg-primary" />
+              <span className="font-display text-5xl leading-none text-navy/25 tabular-nums">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-5 text-lg font-semibold text-navy">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{step.desc}</p>
             </Reveal>
           ))}
         </ol>

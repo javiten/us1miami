@@ -1,5 +1,6 @@
 "use client"
 
+import { useId } from "react"
 import { motion } from "motion/react"
 import { useI18n } from "@/components/language-provider"
 import { cn } from "@/lib/utils"
@@ -11,6 +12,14 @@ const OPTIONS = [
 
 export function LanguageSwitcher({ className, dark = false }: { className?: string; dark?: boolean }) {
   const { locale, setLocale, t } = useI18n()
+
+  // The header mounts this twice at once — once for desktop, once inside the
+  // mobile menu — and a `layoutId` is global to the whole tree. With a shared
+  // id, Framer Motion treats the two pills as the same element and animates the
+  // visible one toward the hidden instance, which is a 0x0 box at the document
+  // origin. The pill collapses and the active label, which is white, is left on
+  // a light background. `useId` scopes the id to this instance.
+  const instanceId = useId()
 
   return (
     <div
@@ -43,7 +52,7 @@ export function LanguageSwitcher({ className, dark = false }: { className?: stri
           >
             {active && (
               <motion.span
-                layoutId={dark ? "lang-pill-dark" : "lang-pill"}
+                layoutId={`lang-pill-${instanceId}`}
                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 className={cn(
                   "absolute inset-0 -z-10 rounded-full",

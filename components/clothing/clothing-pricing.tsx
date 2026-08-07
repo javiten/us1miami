@@ -23,7 +23,7 @@ export function ClothingPricing() {
           <Reveal className="h-full">
             <div className="flex h-full flex-col rounded-3xl border border-border bg-card p-8">
               <p className="text-sm font-medium text-muted-foreground">{p.regular.label}</p>
-              <p className="mt-3 text-4xl font-semibold tracking-tight text-navy">{p.regular.value}</p>
+              <p className="mt-3 font-display text-5xl leading-none text-navy">{p.regular.value}</p>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{p.regular.desc}</p>
             </div>
           </Reveal>
@@ -31,8 +31,6 @@ export function ClothingPricing() {
           {/* Volume rate — the signature element of the page. */}
           <Reveal delay={0.08} className="h-full">
             <div className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-primary/30 bg-navy p-8 shadow-[0_30px_60px_-30px_rgba(7,27,58,0.5)]">
-              <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,rgba(37,169,255,0.28),transparent)]" />
-
               <div className="flex items-start justify-between gap-4">
                 <p className="text-sm font-medium text-white/70">{p.volume.label}</p>
                 <span className="shrink-0 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
@@ -40,7 +38,7 @@ export function ClothingPricing() {
                 </span>
               </div>
 
-              <p className="mt-3 text-4xl font-semibold tracking-tight text-white">{p.volume.value}</p>
+              <p className="mt-3 font-display text-5xl leading-none text-white">{p.volume.value}</p>
               <p className="mt-4 text-sm leading-relaxed text-white/75">{p.volume.desc}</p>
 
               <Link

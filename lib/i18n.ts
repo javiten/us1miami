@@ -41,7 +41,7 @@ const en = {
     automotiveDesc: "Parts, components and accessories",
     clothingDesc: "Apparel, footwear and accessories",
     electronicsDesc: "Devices, audio and computing",
-    japanDesc: "Auctions, collectibles and retro gaming",
+    japanDesc: "Purchases, auctions and products from Japan",
     allServices: "All services",
     allServicesDesc: "Receiving, storage and consolidation",
   },
@@ -113,6 +113,22 @@ const en = {
       imageAlt:
         "A laptop, headphones, game controller, smartphone and compact camera arranged on a deep navy studio background",
     },
+    japan: {
+      tab: "Japan",
+      eyebrow: "Japan → Miami → Argentina",
+      title: "Buy directly in Japan. Receive it in Argentina.",
+      description:
+        "Auctions, retro gaming, figures, collectibles, electronics and exclusive products from Japan.",
+      primaryCta: "Explore Japan",
+      // No price card here: /japan deliberately publishes no per-kilogram rate,
+      // so the floating cards show the quote posture and the route instead.
+      quoteLabel: "Pricing",
+      quoteValue: "Custom quote",
+      routeLabel: "Route",
+      routeValue: "Japan → Miami → Argentina",
+      imageAlt:
+        "A retro handheld console, cartridge, collectible figure, compact camera and a sealed parcel arranged on a deep navy studio background",
+    },
   },
   destinations: {
     eyebrow: "Trusted shopping destinations",
@@ -137,8 +153,10 @@ const en = {
     description:
       "If you purchase from multiple stores, we'll combine everything into a single shipment so you save on shipping and receive everything together.",
     lowerCost: "Lower shipping cost",
+    imageAlt: "Several small parcels being combined into a single larger shipping box on a packing table",
   },
   services: {
+    featureImageAlt: "A parcel on a receiving counter beside a barcode scanner in a warehouse office",
     eyebrow: "Services",
     title: "Everything you need to shop the world",
     subtitle: "A complete logistics suite designed around a single, effortless experience.",
@@ -178,6 +196,44 @@ const en = {
     imageAlt: "Bright, organized US1 Miami logistics warehouse in Miami with neatly shelved packages",
     overlayLabel: "Miami Warehouse",
     overlayValue: "Receiving · Storage · Consolidation",
+  },
+  // Slot 8 — the route. Describes the three legs a package actually travels.
+  // Every claim here restates something already published elsewhere on the
+  // site (free intake, ~7-day air transit, door-to-door delivery).
+  route: {
+    eyebrow: "The route",
+    title: "From your Miami address to your door in Argentina",
+    description:
+      "One address in Miami, one consolidated shipment, one delivery. Here is the path your purchases follow.",
+    imageAlt: "Cargo aircraft being loaded with palletised freight on an airport apron at night",
+    stops: [
+      {
+        place: "Miami",
+        label: "We receive and consolidate",
+        detail: "Your purchases arrive at our warehouse. Receiving, storage and consolidation are free.",
+      },
+      {
+        place: "In the air",
+        label: "Air courier to Argentina",
+        detail: "Your consolidated shipment flies out of Miami and clears as a single package.",
+      },
+      {
+        place: "Argentina",
+        label: "Delivered to your door",
+        detail: "Approximately 7 days after departure, everything arrives together at your address.",
+      },
+    ],
+  },
+  // Slot 9 — factual proof. These are published figures, not testimonials.
+  proof: {
+    eyebrow: "Why US1 Miami",
+    title: "The numbers behind the service",
+    stats: [
+      { value: "~7 days", label: "Air transit from Miami to Argentina once your shipment departs." },
+      { value: "USD 55", label: "Starting price per kilogram by air courier." },
+      { value: "$0", label: "Receiving, storage and consolidation at our Miami warehouse." },
+      { value: "4", label: "Specialised verticals: automotive, apparel, electronics and Japan." },
+    ],
   },
   faq: {
     eyebrow: "FAQ",
@@ -259,7 +315,7 @@ const es: Dictionary = {
     automotiveDesc: "Repuestos, componentes y accesorios",
     clothingDesc: "Indumentaria, calzado y accesorios",
     electronicsDesc: "Dispositivos, audio y computación",
-    japanDesc: "Subastas, coleccionables y gaming retro",
+    japanDesc: "Compras, subastas y productos desde Japón",
     allServices: "Todos los servicios",
     allServicesDesc: "Recepción, almacenamiento y consolidación",
   },
@@ -330,6 +386,20 @@ const es: Dictionary = {
       imageAlt:
         "Una notebook, auriculares, un joystick, un teléfono y una cámara compacta ordenados sobre un fondo de estudio azul marino",
     },
+    japan: {
+      tab: "Japan",
+      eyebrow: "Japón → Miami → Argentina",
+      title: "Comprá directo en Japón. Recibilo en Argentina.",
+      description:
+        "Subastas, retro gaming, figuras, coleccionables, electrónica y productos exclusivos de Japón.",
+      primaryCta: "Explorar Japan",
+      quoteLabel: "Precio",
+      quoteValue: "Cotización personalizada",
+      routeLabel: "Ruta",
+      routeValue: "Japón → Miami → Argentina",
+      imageAlt:
+        "Una consola portátil retro, un cartucho, una figura coleccionable, una cámara compacta y un paquete sellado ordenados sobre un fondo de estudio azul marino",
+    },
   },
   destinations: {
     eyebrow: "Tiendas de confianza",
@@ -354,8 +424,10 @@ const es: Dictionary = {
     description:
       "Si comprás en varias tiendas, combinamos todo en un solo envío para que ahorres en el flete y recibas todo junto.",
     lowerCost: "Menor costo de envío",
+    imageAlt: "Varios paquetes pequeños combinándose en una sola caja de envío más grande sobre una mesa de embalaje",
   },
   services: {
+    featureImageAlt: "Un paquete sobre un mostrador de recepción junto a un lector de código de barras en la oficina del depósito",
     eyebrow: "Servicios",
     title: "Todo lo que necesitás para comprar en el mundo",
     subtitle: "Una suite logística completa pensada para una experiencia simple y sin vueltas.",
@@ -395,6 +467,40 @@ const es: Dictionary = {
     imageAlt: "Depósito logístico de US1 Miami en Miami, luminoso y organizado, con paquetes prolijamente ubicados",
     overlayLabel: "Depósito en Miami",
     overlayValue: "Recepción · Almacenamiento · Consolidación",
+  },
+  route: {
+    eyebrow: "La ruta",
+    title: "De tu dirección en Miami a tu puerta en Argentina",
+    description:
+      "Una dirección en Miami, un envío consolidado, una entrega. Este es el camino que recorren tus compras.",
+    imageAlt: "Avión de carga siendo cargado con mercadería paletizada en una plataforma aeroportuaria de noche",
+    stops: [
+      {
+        place: "Miami",
+        label: "Recibimos y consolidamos",
+        detail: "Tus compras llegan a nuestro depósito. La recepción, el almacenamiento y la consolidación son gratis.",
+      },
+      {
+        place: "En vuelo",
+        label: "Courier aéreo a Argentina",
+        detail: "Tu envío consolidado sale de Miami y se tramita como un solo paquete.",
+      },
+      {
+        place: "Argentina",
+        label: "Entrega en tu domicilio",
+        detail: "Aproximadamente 7 días después de la salida, todo llega junto a tu dirección.",
+      },
+    ],
+  },
+  proof: {
+    eyebrow: "Por qué US1 Miami",
+    title: "Los números detrás del servicio",
+    stats: [
+      { value: "~7 días", label: "Tránsito aéreo de Miami a Argentina una vez que sale tu envío." },
+      { value: "USD 55", label: "Precio inicial por kilogramo por courier aéreo." },
+      { value: "$0", label: "Recepción, almacenamiento y consolidación en nuestro depósito de Miami." },
+      { value: "4", label: "Verticales especializadas: automotor, indumentaria, electrónica y Japón." },
+    ],
   },
   faq: {
     eyebrow: "Preguntas",

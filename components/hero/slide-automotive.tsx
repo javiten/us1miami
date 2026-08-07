@@ -38,12 +38,12 @@ export function SlideAutomotive({ isActive }: { isActive: boolean }) {
             {copy.eyebrow}
           </motion.div>
 
-          <motion.h2
+          <motion.h1
             variants={item}
             className="mt-6 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-[3.75rem]"
           >
             {copy.title}
-          </motion.h2>
+          </motion.h1>
 
           <motion.p
             variants={item}

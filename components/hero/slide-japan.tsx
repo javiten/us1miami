@@ -3,23 +3,26 @@
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "motion/react"
-import { ArrowRight, Shirt } from "lucide-react"
+import { ArrowRight, Store } from "lucide-react"
 import { useI18n } from "@/components/language-provider"
 import { track } from "@/lib/analytics"
-import { CLOTHING_PATH, CLOTHING_RATE_PER_KG, CLOTHING_VOLUME_RATE_PER_KG } from "@/lib/clothing"
+import { JAPAN_PATH } from "@/lib/japan"
 import { SlideFrame, useSlideMotion } from "@/components/hero/slide-frame"
 
 /**
- * Slide 3 — US1 Miami Clothing.
+ * Slide 5 — US1 Miami Japan.
  *
- * Structurally identical to `slide-automotive.tsx` so the carousel keeps a
- * stable height and a single entrance choreography. The floating price card
- * shows both clothing rates because this vertical is the only one with a
- * volume discount, and quoting the USD 49 figure alone would misrepresent it.
+ * Mirrors the other vertical slides exactly so all five share one entrance
+ * choreography and the carousel height stays stable.
+ *
+ * The one structural difference: the other slides put a per-kilogram price in
+ * the floating cards, but /japan deliberately publishes no rate (see
+ * `lib/japan.ts`). Quoting a figure here would contradict that page, so the
+ * cards carry the quote posture and the shipping route instead.
  */
-export function SlideClothing({ isActive }: { isActive: boolean }) {
+export function SlideJapan({ isActive }: { isActive: boolean }) {
   const { t } = useI18n()
-  const copy = t.heroCarousel.clothing
+  const copy = t.heroCarousel.japan
   const { item, visual } = useSlideMotion()
 
   return (
@@ -31,7 +34,7 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
             variants={item}
             className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary"
           >
-            <Shirt className="h-3.5 w-3.5" strokeWidth={2.4} />
+            <Store className="h-3.5 w-3.5" strokeWidth={2.4} />
             {copy.eyebrow}
           </motion.div>
 
@@ -51,8 +54,8 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
 
           <motion.div variants={item} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
-              href={CLOTHING_PATH}
-              onClick={() => track("homepage_clothing_slide_click", { target: "explore" })}
+              href={JAPAN_PATH}
+              onClick={() => track("homepage_japan_slide_click", { target: "explore" })}
               className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
             >
               {copy.primaryCta}
@@ -65,7 +68,7 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
         <motion.div variants={visual} className="relative">
           <div className="relative overflow-hidden rounded-[2rem] border border-navy/15 bg-navy p-2 shadow-[0_40px_80px_-40px_rgba(7,27,58,0.5)]">
             <Image
-              src="/clothing-slide.png"
+              src="/japan-slide.png"
               alt={copy.imageAlt}
               width={900}
               height={720}
@@ -75,19 +78,13 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
           </div>
 
           <div className="absolute -bottom-5 -left-3 rounded-2xl border border-border bg-white/90 px-4 py-3 shadow-[0_18px_40px_-20px_rgba(7,27,58,0.4)] backdrop-blur-md sm:-left-6">
-            <p className="text-xs font-medium text-muted-foreground">{copy.volumeLabel}</p>
-            <p className="text-xl font-semibold text-navy">
-              {`USD $${CLOTHING_VOLUME_RATE_PER_KG}`}
-              <span className="text-sm font-medium text-muted-foreground">{copy.perKg}</span>
-            </p>
+            <p className="text-xs font-medium text-muted-foreground">{copy.quoteLabel}</p>
+            <p className="text-lg font-semibold text-navy">{copy.quoteValue}</p>
           </div>
 
           <div className="absolute -right-3 top-6 rounded-2xl border border-border bg-white/90 px-4 py-3 shadow-[0_18px_40px_-20px_rgba(7,27,58,0.4)] backdrop-blur-md sm:-right-6">
-            <p className="text-xs font-medium text-muted-foreground">{copy.regularLabel}</p>
-            <p className="text-xl font-semibold text-navy">
-              {`USD $${CLOTHING_RATE_PER_KG}`}
-              <span className="text-sm font-medium text-muted-foreground">{copy.perKg}</span>
-            </p>
+            <p className="text-xs font-medium text-muted-foreground">{copy.routeLabel}</p>
+            <p className="text-sm font-semibold text-navy">{copy.routeValue}</p>
           </div>
         </motion.div>
       }

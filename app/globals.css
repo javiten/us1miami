@@ -3,6 +3,10 @@
 @theme inline {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 
+  /* Editorial display face. Applied via `font-display` to section headlines,
+     large numerals and the pricing figure only — never to body copy or UI. */
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+
   --color-background: #f8fafc;
   --color-foreground: #071b3a;
 
@@ -10,6 +14,13 @@
   --color-primary: #0f7dff;
   --color-primary-foreground: #ffffff;
   --color-sky: #25a9ff;
+
+  /* Darkened primary for small text on light backgrounds. --color-primary is
+     only ~3.7:1 on --color-background and ~3.5:1 on --color-muted, which fails
+     WCAG AA (4.5:1) for the 12px uppercase eyebrows. This clears 5:1 on both
+     while staying the same hue, so the brand accent is unchanged for buttons
+     and large type — use it for small accent-coloured text only. */
+  --color-primary-strong: #0b63cc;
 
   /* Accent reserved for the /japan vertical. A deep, restrained crimson —
      close to the traditional Japanese flag red but desaturated enough to sit

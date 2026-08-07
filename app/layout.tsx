@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Geist } from "next/font/google"
+import { Geist, Instrument_Serif } from "next/font/google"
 import { cookies, headers } from "next/headers"
 import { DEFAULT_LOCALE, isLocale, localeToHtmlLang, type Locale } from "@/lib/i18n"
 import "./globals.css"
@@ -7,6 +7,18 @@ import "./globals.css"
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-geist-sans",
+})
+
+/**
+ * Display face for section headlines, large numerals and the pricing figure.
+ * Body copy and all UI stay on Geist — see `--font-display` in globals.css.
+ * Instrument Serif ships a single 400 weight, so headline emphasis comes from
+ * size and measure rather than from bolding it.
+ */
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-instrument-serif",
 })
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://us1miami.com"
@@ -64,7 +76,10 @@ export default async function RootLayout({
 }) {
   const locale = await resolveHtmlLang()
   return (
-    <html lang={localeToHtmlLang(locale)} className={`${geist.variable} bg-background`}>
+    <html
+      lang={localeToHtmlLang(locale)}
+      className={`${geist.variable} ${instrumentSerif.variable} bg-background`}
+    >
       <body className="font-sans antialiased">{children}</body>
     </html>
   )

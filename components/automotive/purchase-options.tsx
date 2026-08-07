@@ -57,7 +57,7 @@ export function PurchaseOptions() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                   <Sparkles className="h-5 w-5" strokeWidth={2.2} />
                 </div>
-                <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary">
+                <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-primary-strong">
                   {a.assisted.label}
                 </span>
               </div>
@@ -82,7 +82,7 @@ export function PurchaseOptions() {
               <a
                 href={`#${AUTOMOTIVE_QUOTE_ANCHOR}`}
                 onClick={() => track("automotive_option_cta_click", { option: "assisted" })}
-                className="mt-8 inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_-12px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
+                className="mt-8 inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-strong-foreground shadow-[0_12px_28px_-12px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
               >
                 {a.assisted.cta}
               </a>

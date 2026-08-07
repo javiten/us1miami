@@ -35,7 +35,9 @@ export function SlideCourier({ isActive }: { isActive: boolean }) {
             {t.hero.badge}
           </motion.div>
 
-          <motion.h2
+          {/* h1: only one slide is mounted at a time, so the active slide's
+              headline is the page's single top-level heading. */}
+          <motion.h1
             variants={item}
             className="mt-6 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-navy sm:text-6xl lg:text-[4.25rem]"
           >
@@ -43,7 +45,7 @@ export function SlideCourier({ isActive }: { isActive: boolean }) {
             <span className="bg-gradient-to-r from-primary to-sky bg-clip-text text-transparent">
               {t.hero.titleHighlight}
             </span>
-          </motion.h2>
+          </motion.h1>
 
           <motion.p
             variants={item}

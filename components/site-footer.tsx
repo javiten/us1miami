@@ -8,6 +8,7 @@ import { AUTOMOTIVE_PATH } from "@/lib/automotive"
 import { CLOTHING_PATH } from "@/lib/clothing"
 import { ELECTRONICS_PATH } from "@/lib/electronics"
 import { JAPAN_PATH } from "@/lib/japan"
+import { COMPANY } from "@/lib/constants"
 import { track } from "@/lib/analytics"
 
 export function SiteFooter() {

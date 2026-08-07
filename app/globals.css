@@ -15,6 +15,13 @@
   --color-primary-foreground: #ffffff;
   --color-sky: #25a9ff;
 
+  /* Darkened primary for small text on light backgrounds. --color-primary is
+     only ~3.7:1 on --color-background and ~3.5:1 on --color-muted, which fails
+     WCAG AA (4.5:1) for the 12px uppercase eyebrows. This clears 5:1 on both
+     while staying the same hue, so the brand accent is unchanged for buttons
+     and large type — use it for small accent-coloured text only. */
+  --color-primary-strong: #0b63cc;
+
   /* Accent reserved for the /japan vertical. A deep, restrained crimson —
      close to the traditional Japanese flag red but desaturated enough to sit
      beside the navy without competing with --color-primary for emphasis. */

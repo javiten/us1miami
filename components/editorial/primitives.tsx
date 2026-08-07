@@ -77,7 +77,10 @@ export function Eyebrow({
     <p
       className={cn(
         "text-xs font-semibold uppercase tracking-[0.18em]",
-        tone === "light" ? "text-sky" : "text-primary",
+        // `primary-strong`, not `primary`: at 12px this is normal-size text and
+        // needs 4.5:1, which --color-primary misses on the light section
+        // backgrounds. `light` tone sits on navy, where sky already clears it.
+        tone === "light" ? "text-sky" : "text-primary-strong",
         className,
       )}
     >

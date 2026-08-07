@@ -14,7 +14,7 @@ export function ClothingConsolidate() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <Reveal>
-            <p className="text-sm font-semibold uppercase tracking-widest text-primary">{c.eyebrow}</p>
+            <p className="text-sm font-semibold uppercase tracking-widest text-primary-strong">{c.eyebrow}</p>
             <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-navy sm:text-4xl">
               {c.title}
             </h2>

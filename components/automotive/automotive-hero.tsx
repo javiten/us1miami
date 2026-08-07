@@ -53,7 +53,7 @@ export function AutomotiveHero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease }}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary shadow-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary-strong shadow-sm"
             >
               <Wrench className="h-3.5 w-3.5" strokeWidth={2.4} />
               {a.hero.eyebrow}
@@ -86,7 +86,7 @@ export function AutomotiveHero() {
               <a
                 href={`#${AUTOMOTIVE_QUOTE_ANCHOR}`}
                 onClick={() => track("automotive_hero_cta_click", { cta: "quote" })}
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-strong-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
               >
                 {a.hero.primaryCta}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

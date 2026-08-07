@@ -158,7 +158,9 @@ export function ServicesMenu({
                     active && "bg-muted",
                   )}
                 >
-                  <span className={cn("text-sm font-semibold", active ? "text-primary" : "text-navy")}>
+                  {/* primary-strong: the active row sits on bg-muted, where
+                      --color-primary only reaches ~3.5:1 at this size. */}
+                  <span className={cn("text-sm font-semibold", active ? "text-primary-strong" : "text-navy")}>
                     {item.label}
                   </span>
                   <span className="text-xs leading-relaxed text-muted-foreground">{item.desc}</span>

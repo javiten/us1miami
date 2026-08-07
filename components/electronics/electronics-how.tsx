@@ -25,7 +25,7 @@ export function ElectronicsHow() {
           transition={{ duration: 0.6, ease }}
           className="max-w-2xl"
         >
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary">{h.eyebrow}</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary-strong">{h.eyebrow}</p>
           <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">
             {h.title}
           </h2>

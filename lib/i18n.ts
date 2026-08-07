@@ -41,7 +41,7 @@ const en = {
     automotiveDesc: "Parts, components and accessories",
     clothingDesc: "Apparel, footwear and accessories",
     electronicsDesc: "Devices, audio and computing",
-    japanDesc: "Auctions, collectibles and retro gaming",
+    japanDesc: "Purchases, auctions and products from Japan",
     allServices: "All services",
     allServicesDesc: "Receiving, storage and consolidation",
   },
@@ -112,6 +112,22 @@ const en = {
       perKg: "/kg",
       imageAlt:
         "A laptop, headphones, game controller, smartphone and compact camera arranged on a deep navy studio background",
+    },
+    japan: {
+      tab: "Japan",
+      eyebrow: "Japan → Miami → Argentina",
+      title: "Buy directly in Japan. Receive it in Argentina.",
+      description:
+        "Auctions, retro gaming, figures, collectibles, electronics and exclusive products from Japan.",
+      primaryCta: "Explore Japan",
+      // No price card here: /japan deliberately publishes no per-kilogram rate,
+      // so the floating cards show the quote posture and the route instead.
+      quoteLabel: "Pricing",
+      quoteValue: "Custom quote",
+      routeLabel: "Route",
+      routeValue: "Japan → Miami → Argentina",
+      imageAlt:
+        "A retro handheld console, cartridge, collectible figure, compact camera and a sealed parcel arranged on a deep navy studio background",
     },
   },
   destinations: {
@@ -259,7 +275,7 @@ const es: Dictionary = {
     automotiveDesc: "Repuestos, componentes y accesorios",
     clothingDesc: "Indumentaria, calzado y accesorios",
     electronicsDesc: "Dispositivos, audio y computación",
-    japanDesc: "Subastas, coleccionables y gaming retro",
+    japanDesc: "Compras, subastas y productos desde Japón",
     allServices: "Todos los servicios",
     allServicesDesc: "Recepción, almacenamiento y consolidación",
   },
@@ -329,6 +345,20 @@ const es: Dictionary = {
       perKg: "/kg",
       imageAlt:
         "Una notebook, auriculares, un joystick, un teléfono y una cámara compacta ordenados sobre un fondo de estudio azul marino",
+    },
+    japan: {
+      tab: "Japan",
+      eyebrow: "Japón → Miami → Argentina",
+      title: "Comprá directo en Japón. Recibilo en Argentina.",
+      description:
+        "Subastas, retro gaming, figuras, coleccionables, electrónica y productos exclusivos de Japón.",
+      primaryCta: "Explorar Japan",
+      quoteLabel: "Precio",
+      quoteValue: "Cotización personalizada",
+      routeLabel: "Ruta",
+      routeValue: "Japón → Miami → Argentina",
+      imageAlt:
+        "Una consola portátil retro, un cartucho, una figura coleccionable, una cámara compacta y un paquete sellado ordenados sobre un fondo de estudio azul marino",
     },
   },
   destinations: {

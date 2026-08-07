@@ -3,6 +3,7 @@ import { SlideCourier } from "@/components/hero/slide-courier"
 import { SlideAutomotive } from "@/components/hero/slide-automotive"
 import { SlideClothing } from "@/components/hero/slide-clothing"
 import { SlideElectronics } from "@/components/hero/slide-electronics"
+import { SlideJapan } from "@/components/hero/slide-japan"
 
 export type HeroSlide = {
   /** Stable identifier; also used as the React key. */
@@ -40,5 +41,10 @@ export const HERO_SLIDES: HeroSlide[] = [
     id: "electronics",
     label: (t) => t.heroCarousel.electronics.tab,
     render: (isActive) => <SlideElectronics isActive={isActive} />,
+  },
+  {
+    id: "japan",
+    label: (t) => t.heroCarousel.japan.tab,
+    render: (isActive) => <SlideJapan isActive={isActive} />,
   },
 ]

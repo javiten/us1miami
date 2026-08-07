@@ -177,11 +177,15 @@ export function Split({
   align?: "center" | "start"
   className?: string
 }) {
-  const COLS = {
-    even: "lg:grid-cols-2",
-    "wide-media": "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
-    "wide-prose": "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
-  }[ratio]
+  // Falls back to `even` rather than `undefined`: a bad `ratio` used to drop the
+  // column classes entirely and silently collapse the split into one stacked
+  // column, which is hard to spot in review.
+  const COLS =
+  {
+  even: "lg:grid-cols-2",
+  "wide-media": "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+  "wide-prose": "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
+  }[ratio] ?? "lg:grid-cols-2"
 
   return (
     <div

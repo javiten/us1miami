@@ -22,6 +22,14 @@
      and large type — use it for small accent-coloured text only. */
   --color-primary-strong: #0b63cc;
 
+  /* WhatsApp brand green, taken from WhatsApp's own darker brand value rather
+     than the familiar light #25D366. The light green measures only ~1.98:1
+     against a white glyph, failing even the 3:1 WCAG 1.4.11 bar for meaningful
+     graphics; this one measures 4.13:1. A brand mark is the one place the
+     3-5 colour limit yields to recognisability. */
+  --color-whatsapp: #128c7e;
+  --color-whatsapp-hover: #0e7568;
+
   /* Accent reserved for the /japan vertical. A deep, restrained crimson —
      close to the traditional Japanese flag red but desaturated enough to sit
      beside the navy without competing with --color-primary for emphasis. */

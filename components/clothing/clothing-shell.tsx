@@ -3,6 +3,7 @@
 import { LanguageProvider } from "@/components/language-provider"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { FloatingWhatsApp } from "@/components/floating-whatsapp"
 import { ClothingHero } from "@/components/clothing/clothing-hero"
 import { ClothingBrands } from "@/components/clothing/clothing-brands"
 import { ClothingHow } from "@/components/clothing/clothing-how"
@@ -37,6 +38,7 @@ export function ClothingShell({
           <ClothingFinalCta />
         </main>
         <SiteFooter />
+        <FloatingWhatsApp />
       </div>
     </LanguageProvider>
   )

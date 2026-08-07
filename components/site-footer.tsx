@@ -8,7 +8,8 @@ import { AUTOMOTIVE_PATH } from "@/lib/automotive"
 import { CLOTHING_PATH } from "@/lib/clothing"
 import { ELECTRONICS_PATH } from "@/lib/electronics"
 import { JAPAN_PATH } from "@/lib/japan"
-import { COMPANY } from "@/lib/constants"
+import { WhatsAppIcon, InstagramIcon } from "@/components/brand-icons"
+import { COMPANY, WHATSAPP_URL } from "@/lib/constants"
 import { track } from "@/lib/analytics"
 
 export function SiteFooter() {
@@ -43,6 +44,18 @@ export function SiteFooter() {
                 <Mail className="h-4 w-4 text-sky" />
                 {COMPANY.email}
               </a>
+              {/* WhatsApp sits with the other ways to reach us rather than in
+                  the social block, since it is a contact channel first. */}
+              <a
+                href={WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track("whatsapp_click", { source: "footer" })}
+                className="flex items-center gap-2 text-sm text-white/80 transition-colors hover:text-white"
+              >
+                <WhatsAppIcon className="h-4 w-4 text-sky" />
+                {t.social.whatsappShort}
+              </a>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -51,6 +64,19 @@ export function SiteFooter() {
                 <MapPin className="h-4 w-4 text-sky" />
                 {t.footer.locationValue}
               </span>
+
+              <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-sky">{t.footer.followUs}</p>
+              {/* Shows the handle, never the raw profile URL. */}
+              <a
+                href={COMPANY.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t.social.instagramLabel}
+                onClick={() => track("instagram_click", { source: "footer" })}
+                className="flex items-center gap-2 text-sm text-white/80 transition-colors hover:text-white"
+              >
+                <InstagramIcon className="h-4 w-4 text-sky" />@{COMPANY.instagramHandle}
+              </a>
             </div>
 
             <div className="flex flex-col gap-3">

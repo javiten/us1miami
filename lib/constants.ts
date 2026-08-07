@@ -14,7 +14,13 @@ export const COMPANY = {
   phone: "(305) 796-5477",
   /** Digits only, for wa.me and tel: links. */
   whatsapp: "13057965477",
+  /** Handle without the @, so callers can render "@handle" or build the URL. */
+  instagramHandle: "us1_miami",
+  instagramUrl: "https://www.instagram.com/us1_miami/",
 } as const
+
+/** Canonical wa.me link. Kept here so the number is never inlined in a view. */
+export const WHATSAPP_URL = `https://wa.me/${COMPANY.whatsapp}`
 
 /** Full Miami shipping address for a given customer + box. */
 export function formatCustomerAddress(fullName: string, boxNumber: string): string {

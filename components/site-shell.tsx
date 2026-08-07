@@ -15,6 +15,7 @@ import { Proof } from "@/components/proof"
 import { Faq } from "@/components/faq"
 import { FinalCta } from "@/components/final-cta"
 import { SiteFooter } from "@/components/site-footer"
+import { FloatingWhatsApp } from "@/components/floating-whatsapp"
 
 export function SiteShell({ initialLocale, forced = false }: { initialLocale: Locale; forced?: boolean }) {
   return (
@@ -38,6 +39,7 @@ export function SiteShell({ initialLocale, forced = false }: { initialLocale: Lo
         <Faq />
         <FinalCta />
         <SiteFooter />
+        <FloatingWhatsApp />
       </main>
     </LanguageProvider>
   )

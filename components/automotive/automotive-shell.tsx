@@ -3,6 +3,7 @@
 import { LanguageProvider } from "@/components/language-provider"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { FloatingWhatsApp } from "@/components/floating-whatsapp"
 import { AutomotiveHero } from "@/components/automotive/automotive-hero"
 import { AutomotiveBrands } from "@/components/automotive/automotive-brands"
 import { AutomotiveIntro } from "@/components/automotive/automotive-intro"
@@ -47,6 +48,7 @@ export function AutomotiveShell({
           <AutomotiveFinalCta />
         </main>
         <SiteFooter />
+        <FloatingWhatsApp />
       </div>
     </LanguageProvider>
   )

@@ -63,6 +63,29 @@ export function Section({
   )
 }
 
+/**
+ * The site's single button language.
+ *
+ * Returned as a class string rather than a component because call sites need to
+ * stay in control of their element — `next/link`, a plain `<a>` for hash and
+ * external targets, and `motion.a` inside the hero slides all need the same
+ * look. Exporting a component would force a wrapper at each of those.
+ *
+ * `onNavy` is the inverted pairing for dark panels: white fill, navy label.
+ */
+export function ctaClasses(variant: "primary" | "secondary" | "onNavy" = "primary", className?: string) {
+  return cn(
+    "group inline-flex items-center justify-center gap-2 rounded-md px-8 py-4 text-sm font-semibold transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2",
+    {
+      primary: "bg-primary text-primary-foreground focus-visible:ring-navy focus-visible:ring-offset-2",
+      secondary:
+        "border border-border bg-card text-navy hover:bg-muted focus-visible:ring-navy focus-visible:ring-offset-2",
+      onNavy: "bg-white text-navy focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy",
+    }[variant],
+    className,
+  )
+}
+
 /** Small uppercase kicker above a headline. */
 export function Eyebrow({
   children,

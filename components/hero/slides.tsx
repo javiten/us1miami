@@ -1,7 +1,8 @@
 import type { Dictionary } from "@/lib/i18n"
 import { SlideCourier } from "@/components/hero/slide-courier"
 import { SlideAutomotive } from "@/components/hero/slide-automotive"
-import { SlideComingSoon } from "@/components/hero/slide-coming-soon"
+import { SlideClothing } from "@/components/hero/slide-clothing"
+import { SlideElectronics } from "@/components/hero/slide-electronics"
 
 export type HeroSlide = {
   /** Stable identifier; also used as the React key. */

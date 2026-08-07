@@ -164,20 +164,22 @@ export function AutomotiveHero() {
           </motion.div>
         </div>
 
-        {/* Trust strip */}
-        <div className="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Trust strip. A real list of four peer items, so it is a <ul>. The
+            titles stay h2: they are the first headings after the hero's h1, so
+            demoting them to h3 skipped a level. */}
+        <ul className="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {trust.map((card, i) => (
-            <Reveal key={card.title} delay={i * 0.05}>
+            <Reveal key={card.title} as="li" delay={i * 0.05} className="min-w-0">
               <div className="h-full rounded-3xl border border-border bg-card p-6 shadow-[0_1px_0_rgba(7,27,58,0.04)]">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <card.icon className="h-5 w-5" strokeWidth={2.2} />
+                  <card.icon className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
                 </div>
                 <h2 className="mt-5 text-base font-semibold text-navy">{card.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.desc}</p>
               </div>
             </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )

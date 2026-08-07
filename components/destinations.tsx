@@ -46,7 +46,10 @@ function Marquee({ reverse = false, durationSeconds = 64 }: { reverse?: boolean;
       {stores.map((s) => (
         <span
           key={s}
-          className="shrink-0 whitespace-nowrap px-6 text-lg font-semibold tracking-tight text-navy/45 transition-colors duration-300 hover:text-primary sm:px-9 sm:text-xl"
+          // navy/70, not the softer navy/45 this started at: these are real
+          // content rather than a decorative wash, and at 20px they still count
+          // as normal-size text, so they need the full 4.5:1.
+          className="shrink-0 whitespace-nowrap px-6 text-lg font-semibold tracking-tight text-navy/70 transition-colors duration-300 hover:text-primary sm:px-9 sm:text-xl"
         >
           {s}
         </span>

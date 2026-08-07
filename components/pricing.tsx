@@ -31,7 +31,7 @@ export function Pricing() {
 
       <div className="mt-16 grid gap-12 border-t border-navy/15 pt-12 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-20">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-strong">{t.pricing.startingAt}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{t.pricing.startingAt}</p>
 
           {/* The signature element of the page: one very large numeral. */}
           <p className="mt-4 flex items-start gap-3">

@@ -37,7 +37,7 @@ export function PartCategories() {
               delay={i * 0.02}
               className="flex items-baseline gap-5 border-t border-border py-5 sm:gap-6"
             >
-              <span className="w-6 shrink-0 text-xs font-medium tabular-nums text-muted-foreground/60">
+              <span className="w-6 shrink-0 text-xs font-medium tabular-nums text-muted-foreground">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="text-base font-medium text-navy">{a.items[key]}</span>

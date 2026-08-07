@@ -28,7 +28,7 @@ export function SlideElectronics({ isActive }: { isActive: boolean }) {
         <>
           <motion.div
             variants={item}
-            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary-strong"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary"
           >
             <Cpu className="h-3.5 w-3.5" strokeWidth={2.4} />
             {copy.eyebrow}

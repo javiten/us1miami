@@ -29,7 +29,7 @@ export function ElectronicsShop() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, ease }}
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary-strong">{s.eyebrow}</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary">{s.eyebrow}</p>
             <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">
               {s.title}
             </h2>

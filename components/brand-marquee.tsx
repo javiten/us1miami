@@ -140,7 +140,7 @@ function BrandItem({ brand, compact = false }: { brand: Brand; compact?: boolean
       ) : (
         <span
           className={cn(
-            "whitespace-nowrap font-semibold tracking-tight text-muted-foreground/70 transition-colors duration-300 hover:text-primary",
+            "whitespace-nowrap font-semibold tracking-tight text-muted-foreground transition-colors duration-300 hover:text-primary",
             compact ? "text-base sm:text-lg" : "text-lg sm:text-xl",
           )}
         >

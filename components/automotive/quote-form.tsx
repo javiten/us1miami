@@ -126,7 +126,7 @@ export function QuoteForm() {
             >
               {state.ok ? (
                 <div className="mb-8 flex gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-4">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary-strong" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                   <div>
                     <p className="text-sm font-semibold text-navy">{c.successTitle}</p>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{c.success}</p>
@@ -158,7 +158,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary-strong">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.contact}
                 </legend>
 
@@ -248,7 +248,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary-strong">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.vehicle}
                 </legend>
 
@@ -328,7 +328,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary-strong">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.part}
                 </legend>
 
@@ -403,7 +403,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary-strong">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.purchase}
                 </legend>
 

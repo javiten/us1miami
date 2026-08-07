@@ -100,10 +100,10 @@ export function Eyebrow({
     <p
       className={cn(
         "text-xs font-semibold uppercase tracking-[0.18em]",
-        // `primary-strong`, not `primary`: at 12px this is normal-size text and
-        // needs 4.5:1, which --color-primary misses on the light section
-        // backgrounds. `light` tone sits on navy, where sky already clears it.
-        tone === "light" ? "text-sky" : "text-primary-strong",
+        // At 12px this counts as normal-size text and needs 4.5:1, which the
+        // brand blue clears on both light surfaces. On navy that blue is far too
+        // dark, so the `light` tone switches to the lifted sky accent.
+        tone === "light" ? "text-sky" : "text-primary",
         className,
       )}
     >
@@ -207,11 +207,11 @@ export function Split({
   // column classes entirely and silently collapse the split into one stacked
   // column, which is hard to spot in review.
   const COLS =
-  {
-  even: "lg:grid-cols-2",
-  "wide-media": "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
-  "wide-prose": "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
-  }[ratio] ?? "lg:grid-cols-2"
+    {
+      even: "lg:grid-cols-2",
+      "wide-media": "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+      "wide-prose": "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
+    }[ratio] ?? "lg:grid-cols-2"
 
   return (
     <div

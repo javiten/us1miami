@@ -39,7 +39,10 @@ export function HowItWorks() {
           >
             {/* The numeral sits on the rail, breaking the hairline. */}
             <span aria-hidden className="absolute -top-px left-0 h-px w-10 bg-primary" />
-            <span className="font-display text-5xl leading-none text-navy/25 tabular-nums">
+            {/* Decorative: the <ol> already conveys the step order, so this
+                would only be read out twice. Being decorative is also what
+                exempts the faint wash from the text contrast minimum. */}
+            <span aria-hidden className="font-display text-5xl leading-none text-navy/25 tabular-nums">
               {String(i + 1).padStart(2, "0")}
             </span>
             <h3 className="mt-5 text-lg font-semibold text-navy">{s.title}</h3>

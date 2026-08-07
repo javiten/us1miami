@@ -11,16 +11,19 @@
   --color-foreground: #071b3a;
 
   --color-navy: #071b3a;
-  --color-primary: #0f7dff;
-  --color-primary-foreground: #ffffff;
-  --color-sky: #25a9ff;
 
-  /* Darkened primary for small text on light backgrounds. --color-primary is
-     only ~3.7:1 on --color-background and ~3.5:1 on --color-muted, which fails
-     WCAG AA (4.5:1) for the 12px uppercase eyebrows. This clears 5:1 on both
-     while staying the same hue, so the brand accent is unchanged for buttons
-     and large type — use it for small accent-coloured text only. */
-  --color-primary-strong: #0b63cc;
+  /* Brand blue. Deliberately deeper than the original #0f7dff, which could not
+     carry small text or a white button label: it measured 3.72:1 on
+     --color-background, 3.49:1 on --color-muted and 3.89:1 under white, all
+     short of the 4.5:1 WCAG AA needs at 12-14px. This value clears 5.1:1 as
+     text on both light surfaces and 5.72:1 under a white label, so one blue is
+     safe in every role — fill, accent, small text — and there is no lighter
+     variant to reach for by mistake. */
+  --color-primary: #0b63cc;
+  --color-primary-foreground: #ffffff;
+
+  /* Lightened accent for navy panels, where the brand blue is too dark. */
+  --color-sky: #25a9ff;
 
   /* WhatsApp brand green, taken from WhatsApp's own darker brand value rather
      than the familiar light #25D366. The light green measures only ~1.98:1
@@ -42,7 +45,7 @@
   --color-card-foreground: #071b3a;
 
   --color-border: #e4ebf3;
-  --color-ring: #0f7dff;
+  --color-ring: #0b63cc;
 
   --radius-sm: 0.75rem;
   --radius-md: 1rem;

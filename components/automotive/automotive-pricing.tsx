@@ -45,7 +45,7 @@ export function AutomotivePricing() {
 
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{card.desc}</p>
 
-                <p className="mt-8 text-xs font-semibold uppercase tracking-widest text-navy/50">
+                <p className="mt-8 text-xs font-semibold uppercase tracking-widest text-navy/70">
                   {card.includesTitle}
                 </p>
                 <ul className="mt-4 flex flex-col gap-3">

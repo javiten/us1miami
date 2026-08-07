@@ -10,7 +10,8 @@ import { useI18n } from "@/components/language-provider"
  * Previously a 6-up grid of rounded cards, which was the third consecutive card
  * grid on this page. It now uses the same hairline-and-numeral treatment as the
  * homepage process section, so the two read as one system. This is a genuine
- * sequence, so the numerals are load-bearing rather than decoration.
+ * sequence, so it is marked up as an <ol> — the ordering is carried by the list
+ * itself, which leaves the large numerals free to be purely decorative.
  */
 export function AutomotiveHow() {
   const { t } = useI18n()
@@ -31,7 +32,11 @@ export function AutomotiveHow() {
             >
               {/* The numeral sits on the rail, breaking the hairline. */}
               <span aria-hidden className="absolute -top-px left-0 h-px w-10 bg-primary" />
-              <span className="font-display text-5xl leading-none text-navy/25 tabular-nums">
+              {/* aria-hidden because the <ol> already conveys the position, so
+                  reading "01" aloud would only duplicate it. Being decorative is
+                  also what exempts this deliberately faint wash from the text
+                  contrast minimum — the step title carries the real contrast. */}
+              <span aria-hidden className="font-display text-5xl leading-none text-navy/25 tabular-nums">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <h3 className="mt-5 text-lg font-semibold text-navy">{step.title}</h3>

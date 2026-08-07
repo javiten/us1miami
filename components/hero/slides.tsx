@@ -31,13 +31,13 @@ export const HERO_SLIDES: HeroSlide[] = [
     render: (isActive) => <SlideAutomotive isActive={isActive} />,
   },
   {
-    id: "coming-soon-network",
-    label: (t) => t.heroCarousel.soonNetwork.tab,
-    render: (isActive) => <SlideComingSoon isActive={isActive} variant="network" />,
+    id: "clothing",
+    label: (t) => t.heroCarousel.clothing.tab,
+    render: (isActive) => <SlideClothing isActive={isActive} />,
   },
   {
-    id: "coming-soon-layers",
-    label: (t) => t.heroCarousel.soonLayers.tab,
-    render: (isActive) => <SlideComingSoon isActive={isActive} variant="layers" />,
+    id: "electronics",
+    label: (t) => t.heroCarousel.electronics.tab,
+    render: (isActive) => <SlideElectronics isActive={isActive} />,
   },
 ]

@@ -29,18 +29,18 @@ export function SiteFooter() {
             <div className="flex flex-col gap-3">
               <p className="text-xs font-semibold uppercase tracking-widest text-sky">{t.footer.contact}</p>
               <a
-                href="tel:+13059679756"
+                href={`tel:+${COMPANY.whatsapp}`}
                 className="flex items-center gap-2 text-sm text-white/80 transition-colors hover:text-white"
               >
                 <Phone className="h-4 w-4 text-sky" />
-                {"(305) 967-9756"}
+                {COMPANY.phone}
               </a>
               <a
-                href="mailto:info@us1miami.com"
+                href={`mailto:${COMPANY.email}`}
                 className="flex items-center gap-2 text-sm text-white/80 transition-colors hover:text-white"
               >
                 <Mail className="h-4 w-4 text-sky" />
-                info@us1miami.com
+                {COMPANY.email}
               </a>
             </div>
 

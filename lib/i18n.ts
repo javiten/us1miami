@@ -1,4 +1,6 @@
 import { AUTOMOTIVE_RATE_PER_KG } from "@/lib/automotive"
+import { CLOTHING_RATE_PER_KG, CLOTHING_VOLUME_MIN_KG, CLOTHING_VOLUME_RATE_PER_KG } from "@/lib/clothing"
+import { ELECTRONICS_RATE_PER_KG } from "@/lib/electronics"
 import { automotiveEn, automotiveEs } from "@/lib/i18n-automotive"
 import { clothingEn, clothingEs } from "@/lib/i18n-clothing"
 import { electronicsEn, electronicsEs } from "@/lib/i18n-electronics"
@@ -85,21 +87,31 @@ const en = {
       imageAlt:
         "Organized automotive parts boxes on Miami warehouse shelving beside a cargo aircraft and a route line toward South America",
     },
-    soonNetwork: {
-      tab: "Coming soon",
-      eyebrow: "Coming soon",
-      title: "A new way to connect Miami with Argentina.",
-      description: "We are preparing a new solution within the US1 Miami ecosystem.",
-      badge: "Coming soon",
-      imageAlt: "Abstract illustration of glowing connected nodes representing new logistics routes",
+    clothing: {
+      tab: "Clothing",
+      eyebrow: `Clothing & footwear · USA → Argentina`,
+      title: "Your favorite United States brands, in Argentina.",
+      description: `Clothing, footwear and accessories from USD ${CLOTHING_VOLUME_RATE_PER_KG}/kg on shipments of ${CLOTHING_VOLUME_MIN_KG} kg or more. Regular price USD ${CLOTHING_RATE_PER_KG}/kg. Estimated delivery in 7 days.`,
+      primaryCta: "Explore Clothing",
+      // Labels for the two floating price cards over the artwork.
+      volumeLabel: `From ${CLOTHING_VOLUME_MIN_KG} kg`,
+      regularLabel: "Regular price",
+      perKg: "/kg",
+      imageAlt:
+        "Neatly folded apparel, sneakers and a leather accessory arranged on a deep navy studio background",
     },
-    soonLayers: {
-      tab: "New service",
-      eyebrow: "New service",
-      title: "More solutions. The same connection.",
-      description: "Another US1 Miami service vertical is coming soon.",
-      badge: "Coming soon",
-      imageAlt: "Abstract illustration of layered translucent glass panels representing modular services",
+    electronics: {
+      tab: "Electronics",
+      eyebrow: `Electronics & gaming · USA → Argentina`,
+      title: "United States technology, straight to Argentina.",
+      description: `Electronics, gaming, audio and accessories from USD ${ELECTRONICS_RATE_PER_KG}/kg with estimated delivery in 7 days.`,
+      primaryCta: "Explore Electronics",
+      shippingLabel: "Shipping from",
+      deliveryLabel: "Estimated delivery",
+      deliveryValue: "≈ 7 days",
+      perKg: "/kg",
+      imageAlt:
+        "A laptop, headphones, game controller, smartphone and compact camera arranged on a deep navy studio background",
     },
   },
   destinations: {
@@ -293,21 +305,30 @@ const es: Dictionary = {
       imageAlt:
         "Cajas de repuestos automotrices organizadas en estanterías del warehouse de Miami junto a un avión de carga y una ruta hacia Sudamérica",
     },
-    soonNetwork: {
-      tab: "Próximamente",
-      eyebrow: "Próximamente",
-      title: "Una nueva forma de conectar Miami con Argentina.",
-      description: "Estamos preparando una nueva solución dentro del ecosistema US1 Miami.",
-      badge: "Muy pronto",
-      imageAlt: "Ilustración abstracta de nodos conectados que representan nuevas rutas logísticas",
+    clothing: {
+      tab: "Clothing",
+      eyebrow: `Ropa y calzado · USA → Argentina`,
+      title: "Tus marcas favoritas de Estados Unidos, en Argentina.",
+      description: `Ropa, calzado y accesorios desde USD ${CLOTHING_VOLUME_RATE_PER_KG}/kg en envíos de ${CLOTHING_VOLUME_MIN_KG} kg o más. Precio regular USD ${CLOTHING_RATE_PER_KG}/kg. Entrega estimada en 7 días.`,
+      primaryCta: "Explorar Clothing",
+      volumeLabel: `Desde ${CLOTHING_VOLUME_MIN_KG} kg`,
+      regularLabel: "Precio regular",
+      perKg: "/kg",
+      imageAlt:
+        "Prendas dobladas, zapatillas y un accesorio de cuero ordenados sobre un fondo de estudio azul marino",
     },
-    soonLayers: {
-      tab: "Nuevo servicio",
-      eyebrow: "Nuevo servicio",
-      title: "Más soluciones. La misma conexión.",
-      description: "Otra nueva vertical de US1 Miami llegará próximamente.",
-      badge: "Próximamente",
-      imageAlt: "Ilustración abstracta de paneles de vidrio translúcido en capas que representan servicios modulares",
+    electronics: {
+      tab: "Electronics",
+      eyebrow: `Electrónica y gaming · USA → Argentina`,
+      title: "Tecnología de Estados Unidos, directo a Argentina.",
+      description: `Electrónica, gaming, audio y accesorios desde USD ${ELECTRONICS_RATE_PER_KG}/kg con entrega estimada en 7 días.`,
+      primaryCta: "Explorar Electronics",
+      shippingLabel: "Envíos desde",
+      deliveryLabel: "Entrega estimada",
+      deliveryValue: "≈ 7 días",
+      perKg: "/kg",
+      imageAlt:
+        "Una notebook, auriculares, un joystick, un teléfono y una cámara compacta ordenados sobre un fondo de estudio azul marino",
     },
   },
   destinations: {

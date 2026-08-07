@@ -5,6 +5,7 @@ import { motion } from "motion/react"
 import { ArrowRight, Phone, Mail } from "lucide-react"
 import { Reveal } from "@/components/reveal"
 import { useI18n } from "@/components/language-provider"
+import { COMPANY } from "@/lib/constants"
 
 export function FinalCta() {
   const { t } = useI18n()
@@ -34,18 +35,18 @@ export function FinalCta() {
 
           <div className="relative mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
             <a
-              href="tel:+13059679756"
+              href={`tel:+${COMPANY.whatsapp}`}
               className="flex items-center gap-2 text-sm font-medium text-white/90 transition-colors hover:text-white"
             >
               <Phone className="h-4 w-4 text-sky" />
-              {"(305) 967-9756"}
+              {COMPANY.phone}
             </a>
             <a
-              href="mailto:info@us1miami.com"
+              href={`mailto:${COMPANY.email}`}
               className="flex items-center gap-2 text-sm font-medium text-white/90 transition-colors hover:text-white"
             >
               <Mail className="h-4 w-4 text-sky" />
-              info@us1miami.com
+              {COMPANY.email}
             </a>
           </div>
         </div>

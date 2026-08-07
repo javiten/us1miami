@@ -1,18 +1,19 @@
 export const MIAMI_ADDRESS = {
-  line1: "20855 NE 16th Ave",
-  suite: "Suite C26",
+  line1: "6995 NW 82nd Ave",
+  suite: "Suite #39",
   city: "Miami",
   state: "FL",
-  zip: "33179",
+  zip: "33166",
   country: "United States",
-  phone: "(305) 967-9756",
+  phone: "(305) 796-5477",
 } as const
 
 export const COMPANY = {
   name: "US1 Miami",
   email: "info@us1miami.com",
-  phone: "(305) 967-9756",
-  whatsapp: "13059679756",
+  phone: "(305) 796-5477",
+  /** Digits only, for wa.me and tel: links. */
+  whatsapp: "13057965477",
 } as const
 
 /** Full Miami shipping address for a given customer + box. */

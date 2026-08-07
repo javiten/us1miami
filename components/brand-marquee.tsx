@@ -27,12 +27,25 @@ export function BrandMarquee({
   disclaimer,
   /** Seconds for one full cycle. Longer list -> slower, calmer scroll. */
   durationSeconds = 60,
+  /**
+   * Tightens the vertical rhythm and wordmark size. Used when a page stacks two
+   * rollers and the second must read as secondary to the first.
+   */
+  compact = false,
+  /**
+   * Travels right-to-left instead of left-to-right. Purely visual: it lets
+   * stacked rollers move in opposite directions so they read as two distinct
+   * bands rather than one tall scrolling block.
+   */
+  reverse = false,
   className,
 }: {
   label: string
   brands: readonly Brand[]
   disclaimer: string
   durationSeconds?: number
+  compact?: boolean
+  reverse?: boolean
   className?: string
 }) {
   const [paused, setPaused] = useState(false)
@@ -41,19 +54,22 @@ export function BrandMarquee({
   const items = (
     <>
       {brands.map((brand) => (
-        <BrandItem key={brand.name} brand={brand} />
+        <BrandItem key={brand.name} brand={brand} compact={compact} />
       ))}
     </>
   )
 
   return (
-    <section aria-label={label} className={cn("border-y border-border bg-card py-12 sm:py-16", className)}>
+    <section
+      aria-label={label}
+      className={cn("border-y border-border bg-card", compact ? "py-9 sm:py-12" : "py-12 sm:py-16", className)}
+    >
       <Reveal className="mx-auto max-w-6xl px-4 sm:px-6">
         <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
       </Reveal>
 
       <div
-        className="group relative mt-8"
+        className={cn("group relative", compact ? "mt-6" : "mt-8")}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onFocusCapture={() => setPaused(true)}
@@ -80,6 +96,7 @@ export function BrandMarquee({
           <div
             className="us1-marquee-track flex w-max items-center"
             data-paused={paused || undefined}
+            data-direction={reverse ? "reverse" : undefined}
             style={{ ["--marquee-duration" as string]: `${durationSeconds}s` }}
           >
             {items}
@@ -98,14 +115,15 @@ export function BrandMarquee({
   )
 }
 
-function BrandItem({ brand }: { brand: Brand }) {
+function BrandItem({ brand, compact = false }: { brand: Brand; compact?: boolean }) {
   return (
     <div
       className={cn(
         // The vertical padding is deliberate: it gives the pause-on-hover
         // target a comfortable height instead of a thin strip of text.
-        "flex shrink-0 items-center justify-center px-6 py-4 sm:px-9",
-        brand.wide ? "min-w-[190px]" : "min-w-[140px]",
+        "flex shrink-0 items-center justify-center",
+        compact ? "px-5 py-3 sm:px-7" : "px-6 py-4 sm:px-9",
+        brand.wide ? (compact ? "min-w-[165px]" : "min-w-[190px]") : compact ? "min-w-[120px]" : "min-w-[140px]",
       )}
     >
       {brand.logo ? (
@@ -114,12 +132,16 @@ function BrandItem({ brand }: { brand: Brand }) {
           alt={brand.name}
           loading="lazy"
           // Monochrome at rest, full colour on hover.
-          className="h-7 w-auto opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0 sm:h-8"
+          className={cn(
+            "w-auto opacity-60 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0",
+            compact ? "h-6 sm:h-7" : "h-7 sm:h-8",
+          )}
         />
       ) : (
         <span
           className={cn(
-            "whitespace-nowrap text-lg font-semibold tracking-tight text-muted-foreground/70 transition-colors duration-300 hover:text-primary sm:text-xl",
+            "whitespace-nowrap font-semibold tracking-tight text-muted-foreground/70 transition-colors duration-300 hover:text-primary",
+            compact ? "text-base sm:text-lg" : "text-lg sm:text-xl",
           )}
         >
           {brand.name}

@@ -12,6 +12,8 @@ import { ServicesMenu, type ServiceItem } from "@/components/services-menu"
 import { AUTOMOTIVE_PATH } from "@/lib/automotive"
 import { CLOTHING_PATH } from "@/lib/clothing"
 import { ELECTRONICS_PATH } from "@/lib/electronics"
+import { JAPAN_PATH } from "@/lib/japan"
+import { COMPANY } from "@/lib/constants"
 import { track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
 
@@ -49,6 +51,12 @@ export function SiteHeader() {
       desc: t.nav.electronicsDesc,
       href: ELECTRONICS_PATH,
       onSelect: () => track("electronics_nav_click", { source }),
+    },
+    {
+      label: t.nav.japan,
+      desc: t.nav.japanDesc,
+      href: JAPAN_PATH,
+      onSelect: () => track("japan_nav_click", { source }),
     },
   ]
 
@@ -109,11 +117,11 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <a
-            href="tel:+13059679756"
+            href={`tel:+${COMPANY.whatsapp}`}
             className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-navy transition-colors hover:bg-muted"
           >
             <Phone className="h-4 w-4 text-primary" strokeWidth={2.2} />
-            {"(305) 967-9756"}
+            {COMPANY.phone}
           </a>
           <LanguageSwitcher />
           <Link

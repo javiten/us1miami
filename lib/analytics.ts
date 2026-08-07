@@ -29,6 +29,10 @@ export type AnalyticsEvent =
   | "electronics_hero_cta_click"
   | "electronics_shipping_cta_click"
   | "electronics_final_cta_click"
+  | "japan_nav_click"
+  | "japan_hero_cta_click"
+  | "japan_source_cta_click"
+  | "japan_final_cta_click"
   | "homepage_slider_change"
   | "homepage_automotive_slide_click"
 

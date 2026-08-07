@@ -1,43 +1,24 @@
 "use client"
 
-import { motion } from "motion/react"
-import {
-  Camera,
-  Cable,
-  Gamepad2,
-  Headphones,
-  House,
-  Keyboard,
-  Laptop,
-  Smartphone,
-  Watch,
-  Zap,
-  type LucideIcon,
-} from "lucide-react"
-
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/automotive/section-heading"
 import { useI18n } from "@/components/language-provider"
-import { ELECTRONICS_CATEGORY_IDS, type ElectronicsCategoryId } from "@/lib/electronics"
-
-const ease = [0.21, 0.47, 0.32, 0.98] as const
+import { ELECTRONICS_CATEGORY_IDS } from "@/lib/electronics"
 
 /**
- * Icons live next to the markup that renders them rather than in the config,
- * so `lib/electronics.ts` stays free of React imports and the copy dictionary
- * stays free of presentation concerns.
+ * Electronics categories as a spec sheet.
+ *
+ * Was a 5-across grid of 10 icon-chip cards, which made this the third card
+ * grid in a row and reduced each category to a 12px label under a glyph. The
+ * icons were decorative — a laptop outline next to the word "Computers" adds
+ * nothing — so they are gone.
+ *
+ * Shaped as a dense two-column table with monospace index numbers, which reads
+ * as a technical parts manifest and suits consumer electronics. That keeps it
+ * distinct from /clothing (large serif names, airy) and /automotive (single
+ * dense column of short labels): all three are lists, but none of them look
+ * like the same list.
  */
-const ICONS: Record<ElectronicsCategoryId, LucideIcon> = {
-  smartphones: Smartphone,
-  computers: Laptop,
-  consoles: Gamepad2,
-  audio: Headphones,
-  cameras: Camera,
-  smartwatches: Watch,
-  accessories: Keyboard,
-  smartHome: House,
-  smallElectronics: Zap,
-  replacements: Cable,
-}
-
 export function ElectronicsCategories() {
   const { t } = useI18n()
   const c = t.electronics.categories
@@ -45,42 +26,42 @@ export function ElectronicsCategories() {
   return (
     <section id="electronics-categories" className="border-y border-border bg-muted/40 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl"
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary">{c.eyebrow}</p>
-          <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">
-            {c.title}
-          </h2>
-          <p className="mt-5 text-pretty text-base leading-relaxed text-muted-foreground">{c.subtitle}</p>
-        </motion.div>
+        {/* Intro beside the manifest from lg up, sticky while reading down it.
+            Alone it is a max-w-2xl block in a max-w-6xl container, which leaves
+            a wide dead column to its right. */}
+        <div className="grid gap-x-14 gap-y-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
+          <SectionHeading
+            eyebrow={c.eyebrow}
+            title={c.title}
+            subtitle={c.subtitle}
+            className="lg:sticky lg:top-28 lg:self-start"
+          />
 
-        <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {ELECTRONICS_CATEGORY_IDS.map((id, i) => {
-            const item = c.items[id]
-            const Icon = ICONS[id]
-            return (
-              <motion.li
-                key={id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.45, delay: Math.min(i, 5) * 0.05, ease }}
-                className="group flex flex-col gap-3 rounded-2xl border border-border bg-white p-5 shadow-sm transition-transform hover:-translate-y-0.5"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Icon className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                </span>
-                <h3 className="text-sm font-semibold text-navy">{item.title}</h3>
-                <p className="text-xs leading-relaxed text-muted-foreground">{item.desc}</p>
-              </motion.li>
-            )
-          })}
-        </ul>
+          <ul className="grid gap-x-12 sm:grid-cols-2">
+            {ELECTRONICS_CATEGORY_IDS.map((id, i) => {
+              const item = c.items[id]
+              return (
+                <Reveal
+                  key={id}
+                  as="li"
+                  delay={Math.min(i, 6) * 0.03}
+                  className="flex min-w-0 items-baseline gap-5 border-t border-border py-5"
+                >
+                  {/* Monospace tabular index: fixed-width digits keep the column
+                      edge straight, which is what makes this read as a manifest.
+                      aria-hidden because it is a visual ruler, not content. */}
+                  <span aria-hidden className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0">
+                    <h3 className="text-base font-semibold text-navy">{item.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-pretty text-muted-foreground">{item.desc}</p>
+                  </span>
+                </Reveal>
+              )
+            })}
+          </ul>
+        </div>
       </div>
     </section>
   )

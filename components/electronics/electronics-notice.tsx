@@ -1,6 +1,5 @@
 "use client"
 
-import { motion } from "motion/react"
 import {
   BatteryWarning,
   Ban,
@@ -11,10 +10,10 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/automotive/section-heading"
 import { useI18n } from "@/components/language-provider"
 import { ELECTRONICS_NOTICE_ANCHOR, ELECTRONICS_NOTICE_IDS, type ElectronicsNoticeId } from "@/lib/electronics"
-
-const ease = [0.21, 0.47, 0.32, 0.98] as const
 
 const ICONS: Record<ElectronicsNoticeId, LucideIcon> = {
   batteries: BatteryWarning,
@@ -45,39 +44,27 @@ export function ElectronicsNotice() {
       className="scroll-mt-24 border-y border-border bg-navy py-20 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl"
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-sky">{n.eyebrow}</p>
-          <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
-            {n.title}
-          </h2>
-          <p className="mt-5 text-pretty text-base leading-relaxed text-white/70">{n.subtitle}</p>
-        </motion.div>
+        <SectionHeading eyebrow={n.eyebrow} title={n.title} subtitle={n.subtitle} tone="light" />
 
-        <ul className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {/* Hairline-divided disclosures rather than six translucent cards on
+            navy. The icons stay here — unlike the decorative category glyphs,
+            these flag the *kind* of caveat (battery, prohibited, oversized) and
+            help someone scanning for the one that applies to their order. */}
+        <ul className="mt-14 grid gap-x-12 md:grid-cols-2 lg:grid-cols-3">
           {ELECTRONICS_NOTICE_IDS.map((id, i) => {
             const item = n.items[id]
             const Icon = ICONS[id]
             return (
-              <motion.li
+              <Reveal
                 key={id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: Math.min(i, 3) * 0.07, ease }}
-                className="rounded-2xl border border-white/10 bg-white/[0.04] p-5"
+                as="li"
+                delay={Math.min(i, 3) * 0.06}
+                className="flex min-w-0 flex-col border-t border-white/15 py-6"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/15 text-sky">
-                  <Icon className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                </span>
-                <h3 className="mt-4 text-sm font-semibold text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">{item.desc}</p>
-              </motion.li>
+                <Icon className="h-5 w-5 text-sky" strokeWidth={2} aria-hidden="true" />
+                <h3 className="mt-4 text-base font-semibold text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-pretty text-white/70">{item.desc}</p>
+              </Reveal>
             )
           })}
         </ul>

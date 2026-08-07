@@ -86,30 +86,35 @@ export function ctaClasses(variant: "primary" | "secondary" | "onNavy" = "primar
   )
 }
 
-/** Small uppercase kicker above a headline. */
+/**
+ * Small uppercase kicker above a headline.
+ *
+ * `accent` selects the hue — the /japan vertical uses its crimson where every
+ * other surface uses the brand blue. `tone` selects the surface, and each accent
+ * carries a lifted variant for navy: at 12px this is normal-size text needing
+ * 4.5:1, and both base colours are tuned for light backgrounds only.
+ */
 export function Eyebrow({
   children,
   tone = "primary",
+  accent = "primary",
   className,
 }: {
   children: ReactNode
   tone?: "primary" | "light"
+  accent?: "primary" | "japan"
   className?: string
 }) {
-  return (
-    <p
-      className={cn(
-        "text-xs font-semibold uppercase tracking-[0.18em]",
-        // At 12px this counts as normal-size text and needs 4.5:1, which the
-        // brand blue clears on both light surfaces. On navy that blue is far too
-        // dark, so the `light` tone switches to the lifted sky accent.
-        tone === "light" ? "text-sky" : "text-primary",
-        className,
-      )}
-    >
-      {children}
-    </p>
-  )
+  const COLOR =
+    accent === "japan"
+      ? tone === "light"
+        ? "text-japan-red-light"
+        : "text-japan-red"
+      : tone === "light"
+        ? "text-sky"
+        : "text-primary"
+
+  return <p className={cn("text-xs font-semibold uppercase tracking-[0.18em]", COLOR, className)}>{children}</p>
 }
 
 /**

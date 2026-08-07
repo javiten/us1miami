@@ -1,12 +1,11 @@
 "use client"
 
-import { motion } from "motion/react"
 import { BadgeCheck, Clock, FileText, Gavel, Landmark, ShieldAlert, Wrench, type LucideIcon } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/automotive/section-heading"
 import { JAPAN_CONDITION_IDS, type JapanConditionId } from "@/lib/japan"
-
-const ease = [0.21, 0.47, 0.32, 0.98] as const
 
 const ICONS: Record<JapanConditionId, LucideIcon> = {
   auctionsFinal: Gavel,
@@ -32,39 +31,27 @@ export function JapanConditions() {
   return (
     <section id="japan-conditions" className="border-t border-border bg-muted/40 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl"
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-japan-red">{c.eyebrow}</p>
-          <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">
-            {c.title}
-          </h2>
-          <p className="mt-5 text-pretty text-base leading-relaxed text-muted-foreground">{c.subtitle}</p>
-        </motion.div>
+        <SectionHeading eyebrow={c.eyebrow} title={c.title} subtitle={c.subtitle} accent="japan" />
 
-        <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Hairline rows rather than seven cards. These are caveats read before
+            committing, and the card styling made them look like features being
+            advertised. The icons stay because they name the kind of risk
+            (auction finality, customs, wear) someone is scanning for. */}
+        <ul className="mt-14 grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
           {JAPAN_CONDITION_IDS.map((id, i) => {
             const item = c.items[id]
             const Icon = ICONS[id]
             return (
-              <motion.li
+              <Reveal
                 key={id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.45, delay: Math.min(i, 5) * 0.05, ease }}
-                className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-5 shadow-sm"
+                as="li"
+                delay={Math.min(i, 5) * 0.04}
+                className="flex min-w-0 flex-col border-t border-border py-6"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-navy/5 text-navy">
-                  <Icon className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                </span>
-                <h3 className="text-sm font-semibold text-navy">{item.title}</h3>
-                <p className="text-xs leading-relaxed text-muted-foreground">{item.desc}</p>
-              </motion.li>
+                <Icon className="h-5 w-5 text-japan-red" strokeWidth={2} aria-hidden="true" />
+                <h3 className="mt-4 text-base font-semibold text-navy">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{item.desc}</p>
+              </Reveal>
             )
           })}
         </ul>

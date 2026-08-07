@@ -38,6 +38,12 @@
      beside the navy without competing with --color-primary for emphasis. */
   --color-japan-red: #c8102e;
 
+  /* The same crimson lifted for navy panels. --color-japan-red is tuned for
+     light surfaces (5.4-5.9:1) and only reaches 2.91:1 on --color-navy, so it
+     cannot carry the eyebrows on the dark /japan sections. This clears 5.73:1
+     there while still reading as the vertical's red rather than pink. */
+  --color-japan-red-light: #ff5c72;
+
   --color-muted: #eef3f9;
   --color-muted-foreground: #50535a;
 

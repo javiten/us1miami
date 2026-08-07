@@ -18,12 +18,12 @@ export function JapanHero() {
 
   return (
     <section id="top" className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24">
-      {/* Decorative backdrop: the precise rule grid plus a single crimson wash,
-          which is the only place the Japan accent appears at scale. */}
+      {/* Decorative backdrop: the precise rule grid, masked so it fades out
+          rather than colliding with the content below. This is the vertical's
+          signature, so it is the one texture here — the two coloured washes that
+          used to sit on top of it were filler and competed with it. */}
       <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
         <div className="us1-japan-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_72%)]" />
-        <div className="absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(200,16,46,0.10),transparent)]" />
-        <div className="absolute right-0 top-32 h-[380px] w-[380px] rounded-full bg-[radial-gradient(closest-side,rgba(15,125,255,0.10),transparent)]" />
       </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">

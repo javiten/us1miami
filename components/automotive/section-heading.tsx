@@ -22,6 +22,7 @@ export function SectionHeading({
   title,
   subtitle,
   tone = "dark",
+  accent = "primary",
   align = "start",
   className,
 }: {
@@ -29,12 +30,16 @@ export function SectionHeading({
   title: string
   subtitle?: string
   tone?: "dark" | "light"
+  /** /japan sets this to "japan" so its eyebrows keep the vertical's crimson. */
+  accent?: "primary" | "japan"
   align?: "start" | "center"
   className?: string
 }) {
   return (
     <Reveal className={cn("max-w-2xl", align === "center" && "mx-auto text-center", className)}>
-      <Eyebrow tone={tone === "light" ? "light" : "primary"}>{eyebrow}</Eyebrow>
+      <Eyebrow tone={tone === "light" ? "light" : "primary"} accent={accent}>
+        {eyebrow}
+      </Eyebrow>
       <Headline size="md" tone={tone} className="mt-4">
         {title}
       </Headline>

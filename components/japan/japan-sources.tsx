@@ -1,12 +1,11 @@
 "use client"
 
-import { motion } from "motion/react"
 import { Gavel, Store, ShoppingBag, Cpu, ToyBrick, House, BookOpen, Diamond, type LucideIcon } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/automotive/section-heading"
 import { JAPAN_SOURCE_IDS, type JapanSourceId } from "@/lib/japan"
-
-const ease = [0.21, 0.47, 0.32, 0.98] as const
 
 const ICONS: Record<JapanSourceId, LucideIcon> = {
   yahooAuctions: Gavel,
@@ -33,54 +32,43 @@ export function JapanSources() {
   const s = t.japan.sources
 
   return (
-    <section id="japan-sources" className="border-y border-border bg-muted/40 py-20 sm:py-24">
+    // bg-card, not bg-muted/40: the thin marquee band directly above this is
+    // also muted/40, so the two ran together as one undifferentiated block with
+    // no visible boundary between them.
+    <section id="japan-sources" className="border-y border-border bg-card py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl"
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-japan-red">{s.eyebrow}</p>
-          <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">
-            {s.title}
-          </h2>
-          <p className="mt-5 text-pretty text-base leading-relaxed text-muted-foreground">{s.subtitle}</p>
-        </motion.div>
+        <SectionHeading eyebrow={s.eyebrow} title={s.title} subtitle={s.subtitle} accent="japan" />
 
-        <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* The platform names are the content here, so they lead each row. The
+            icons are kept but demoted to a small mark beside the name: they
+            distinguish an auction house from a chain of physical stores, which
+            is the difference that decides where a given item gets found. */}
+        <ul className="mt-14 grid gap-x-12 sm:grid-cols-2">
           {JAPAN_SOURCE_IDS.map((id, i) => {
             const item = s.items[id]
             const Icon = ICONS[id]
             return (
-              <motion.li
+              <Reveal
                 key={id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.45, delay: Math.min(i, 4) * 0.05, ease }}
-                className="flex flex-col gap-3 rounded-2xl border border-border bg-white p-5 shadow-sm"
+                as="li"
+                delay={Math.min(i, 4) * 0.05}
+                className="flex min-w-0 gap-4 border-t border-border py-6"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-navy/5 text-navy">
-                  <Icon className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                </span>
-                <h3 className="text-sm font-semibold text-navy">{item.name}</h3>
-                <p className="text-xs leading-relaxed text-muted-foreground">{item.desc}</p>
-              </motion.li>
+                <Icon className="mt-1 h-4 w-4 shrink-0 text-japan-red" strokeWidth={2} aria-hidden="true" />
+                <div className="min-w-0">
+                  <h3 className="font-display text-xl leading-tight text-navy">{item.name}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-pretty text-muted-foreground">{item.desc}</p>
+                </div>
+              </Reveal>
             )
           })}
         </ul>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.6, ease }}
-          className="mx-auto mt-10 max-w-3xl text-pretty text-center text-xs leading-relaxed text-muted-foreground"
-        >
-          {t.japan.marketplaces.disclaimer}
-        </motion.p>
+        <Reveal className="mx-auto mt-12 max-w-3xl">
+          <p className="text-pretty text-center text-xs leading-relaxed text-muted-foreground">
+            {t.japan.marketplaces.disclaimer}
+          </p>
+        </Reveal>
       </div>
     </section>
   )

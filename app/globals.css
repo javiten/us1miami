@@ -3,6 +3,10 @@
 @theme inline {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 
+  /* Editorial display face. Applied via `font-display` to section headlines,
+     large numerals and the pricing figure only — never to body copy or UI. */
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+
   --color-background: #f8fafc;
   --color-foreground: #071b3a;
 

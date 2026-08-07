@@ -1,8 +1,10 @@
 "use client"
 
-import { motion } from "motion/react"
+import { useState } from "react"
 import { Reveal } from "@/components/reveal"
 import { useI18n } from "@/components/language-provider"
+import { CONTAINER, Eyebrow, Headline, Lede } from "@/components/editorial/primitives"
+import { cn } from "@/lib/utils"
 
 const stores = [
   "Amazon",
@@ -20,47 +22,86 @@ const stores = [
   "Temu",
 ]
 
-function Marquee({ reverse = false }: { reverse?: boolean }) {
-  const items = [...stores, ...stores]
+/**
+ * Slot 2 — store marquee.
+ *
+ * Restyled, not restructured. Two changes matter:
+ *
+ * 1. The store names were white cards with borders and shadows, which made the
+ *    very first thing after the hero look like the card grids further down.
+ *    They are now plain wordmarks on a hairline band.
+ * 2. The animation moved from a Motion `animate` loop to the existing
+ *    `.us1-marquee-track` CSS keyframes already used by BrandMarquee. That
+ *    gives us pause-on-hover/focus and `prefers-reduced-motion` support for
+ *    free, and animates on the compositor instead of per-frame in JS.
+ *
+ * Only the first copy of the list is exposed to assistive tech; the duplicate
+ * that makes the -50% loop seamless is aria-hidden.
+ */
+function Marquee({ reverse = false, durationSeconds = 64 }: { reverse?: boolean; durationSeconds?: number }) {
+  const [paused, setPaused] = useState(false)
+
+  const items = (
+    <>
+      {stores.map((s) => (
+        <span
+          key={s}
+          className="shrink-0 whitespace-nowrap px-6 text-lg font-semibold tracking-tight text-navy/45 transition-colors duration-300 hover:text-primary sm:px-9 sm:text-xl"
+        >
+          {s}
+        </span>
+      ))}
+    </>
+  )
+
   return (
-    <div className="group relative flex overflow-hidden">
-      <motion.div
-        className="flex shrink-0 items-center gap-3 pr-3"
-        animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
-        transition={{ duration: 38, ease: "linear", repeat: Number.POSITIVE_INFINITY }}
-      >
-        {items.map((s, i) => (
-          <span
-            key={`${s}-${i}`}
-            className="flex items-center whitespace-nowrap rounded-2xl border border-border bg-white px-6 py-3.5 text-lg font-semibold tracking-tight text-navy/80 shadow-sm"
-          >
-            {s}
-          </span>
-        ))}
-      </motion.div>
+    <div
+      className="group relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
+    >
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent sm:w-32" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent sm:w-32" />
+
+      <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          className={cn("us1-marquee-track flex w-max items-center py-4")}
+          data-paused={paused || undefined}
+          data-direction={reverse ? "reverse" : undefined}
+          style={{ ["--marquee-duration" as string]: `${durationSeconds}s` }}
+        >
+          {items}
+          <div className="flex items-center" aria-hidden="true">
+            {items}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
 
 export function Destinations() {
   const { t } = useI18n()
+
   return (
-    <section className="py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary">{t.destinations.eyebrow}</p>
-          <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-navy sm:text-4xl">
+    <section aria-labelledby="destinations-title" className="py-20 md:py-24">
+      <div className={CONTAINER}>
+        <Reveal className="max-w-2xl">
+          <Eyebrow>{t.destinations.eyebrow}</Eyebrow>
+          <Headline id="destinations-title" size="md" className="mt-4">
             {t.destinations.title}
-          </h2>
-          <p className="mt-4 text-pretty text-lg text-muted-foreground">{t.destinations.subtitle}</p>
+          </Headline>
+          <Lede className="mt-5">{t.destinations.subtitle}</Lede>
         </Reveal>
       </div>
 
-      <div className="relative mt-14 flex flex-col gap-4">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent sm:w-40" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent sm:w-40" />
+      <div className="mt-12 flex flex-col divide-y divide-border border-y border-border">
         <Marquee />
-        <Marquee reverse />
+        <Marquee reverse durationSeconds={78} />
       </div>
     </section>
   )

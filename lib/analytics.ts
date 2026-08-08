@@ -38,6 +38,8 @@ export type AnalyticsEvent =
   | "homepage_clothing_slide_click"
   | "homepage_electronics_slide_click"
   | "homepage_japan_slide_click"
+  | "whatsapp_click"
+  | "instagram_click"
 
 type AnalyticsPayload = Record<string, string | number | boolean | undefined>
 

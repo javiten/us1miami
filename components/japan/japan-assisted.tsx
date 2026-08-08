@@ -1,12 +1,11 @@
 "use client"
 
-import { motion } from "motion/react"
 import { CreditCard, Gavel, Info, MapPin, MessagesSquare, Truck, UserRound, type LucideIcon } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/automotive/section-heading"
 import { JAPAN_BARRIER_IDS, JAPAN_REQUEST_ANCHOR, type JapanBarrierId } from "@/lib/japan"
-
-const ease = [0.21, 0.47, 0.32, 0.98] as const
 
 const ICONS: Record<JapanBarrierId, LucideIcon> = {
   japaneseAccount: UserRound,
@@ -38,57 +37,38 @@ export function JapanAssisted() {
       </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl"
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-japan-red">{a.eyebrow}</p>
-          <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">
-            {a.title}
-          </h2>
-          <p className="mt-5 text-pretty text-base leading-relaxed text-muted-foreground">{a.subtitle}</p>
-        </motion.div>
+        <SectionHeading eyebrow={a.eyebrow} title={a.title} subtitle={a.subtitle} accent="japan" />
 
-        <ul className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* The barriers are the argument for the service, so they read as a list
+            of obstacles rather than a grid of product features. Icons name the
+            kind of obstacle (account, address, payment) at a glance. */}
+        <ul className="mt-14 grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
           {JAPAN_BARRIER_IDS.map((id, i) => {
             const item = a.barriers[id]
             const Icon = ICONS[id]
             return (
-              <motion.li
+              <Reveal
                 key={id}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.45, delay: Math.min(i, 5) * 0.05, ease }}
-                className="flex items-start gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm"
+                as="li"
+                delay={Math.min(i, 5) * 0.04}
+                className="flex min-w-0 flex-col border-t border-border py-6"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Icon className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                </span>
-                <span className="flex flex-col gap-1">
-                  <h3 className="text-sm font-semibold text-navy">{item.title}</h3>
-                  <p className="text-xs leading-relaxed text-muted-foreground">{item.desc}</p>
-                </span>
-              </motion.li>
+                <Icon className="h-5 w-5 text-japan-red" strokeWidth={2} aria-hidden="true" />
+                <h3 className="mt-4 text-base font-semibold text-navy">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{item.desc}</p>
+              </Reveal>
             )
           })}
         </ul>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55, ease }}
-          className="mt-10 flex items-start gap-4 rounded-2xl border border-japan-red/25 bg-japan-red/[0.04] p-6"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-japan-red/10 text-japan-red">
-            <Info className="h-4 w-4" strokeWidth={2.4} aria-hidden="true" />
-          </span>
-          <p className="text-pretty text-sm leading-relaxed text-navy">{a.note}</p>
-        </motion.div>
+        {/* The bounded commitment. Kept as a distinct bordered panel — it is the
+            legal core of the vertical and must not read as another list item. */}
+        <Reveal className="mt-12">
+          <div className="flex items-start gap-4 border-l-2 border-japan-red bg-japan-red/[0.04] p-6">
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-japan-red" strokeWidth={2.2} aria-hidden="true" />
+            <p className="text-pretty text-sm leading-relaxed text-navy">{a.note}</p>
+          </div>
+        </Reveal>
       </div>
     </section>
   )

@@ -35,13 +35,17 @@ export function AutomotivePricing() {
 
                 <p className="mt-6 flex items-baseline gap-2">
                   {card.from ? <span className="text-sm font-medium text-muted-foreground">{card.from}</span> : null}
-                  <span className="text-4xl font-semibold tracking-tight text-navy">{card.value}</span>
+                  {/* The figure carries the display serif so the numbers on this
+                      page match the ones the homepage sets. */}
+                  <span className="font-display text-5xl font-normal leading-none tracking-[-0.01em] text-navy">
+                    {card.value}
+                  </span>
                   <span className="text-sm font-medium text-muted-foreground">{card.unit}</span>
                 </p>
 
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{card.desc}</p>
 
-                <p className="mt-8 text-xs font-semibold uppercase tracking-widest text-navy/50">
+                <p className="mt-8 text-xs font-semibold uppercase tracking-widest text-navy/70">
                   {card.includesTitle}
                 </p>
                 <ul className="mt-4 flex flex-col gap-3">

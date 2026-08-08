@@ -1,15 +1,19 @@
 "use client"
 
-import { motion } from "motion/react"
-
+import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/automotive/section-heading"
 import { useI18n } from "@/components/language-provider"
 import { ELECTRONICS_STEP_IDS } from "@/lib/electronics"
 
-const ease = [0.21, 0.47, 0.32, 0.98] as const
-
 /**
- * The six fulfilment steps. Rendered as an ordered list because the sequence
- * is the content — the numbers are load-bearing here, not decoration.
+ * The six fulfilment steps, on the same numbered hairline rail the homepage and
+ * the other verticals use, so the process reads identically everywhere.
+ *
+ * Was six bordered cards each with a filled navy number chip, which made this
+ * the fourth consecutive card grid on the page.
+ *
+ * The sequence is carried by the <ol>, so the large numerals are decorative and
+ * marked aria-hidden — otherwise every step would be announced twice.
  */
 export function ElectronicsHow() {
   const { t } = useI18n()
@@ -18,37 +22,25 @@ export function ElectronicsHow() {
   return (
     <section id="electronics-how" className="py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl"
-        >
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary-strong">{h.eyebrow}</p>
-          <h2 className="mt-4 text-balance text-3xl font-semibold leading-tight tracking-tight text-navy sm:text-4xl">
-            {h.title}
-          </h2>
-        </motion.div>
+        <SectionHeading eyebrow={h.eyebrow} title={h.title} />
 
-        <ol className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ol className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {ELECTRONICS_STEP_IDS.map((id, i) => {
             const step = h.steps[id]
             return (
-              <motion.li
+              <Reveal
                 key={id}
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, delay: Math.min(i, 3) * 0.07, ease }}
-                className="relative rounded-2xl border border-border bg-white p-6 shadow-sm"
+                as="li"
+                delay={Math.min(i, 3) * 0.06}
+                className="relative flex min-w-0 flex-col border-t border-navy/15 pt-6"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-navy text-sm font-semibold text-white">
-                  {i + 1}
+                <span aria-hidden className="absolute -top-px left-0 h-px w-10 bg-primary" />
+                <span aria-hidden className="font-display text-5xl leading-none text-navy/25 tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-4 text-base font-semibold text-navy">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
-              </motion.li>
+                <h3 className="mt-5 text-lg font-semibold text-navy">{step.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-pretty text-muted-foreground">{step.desc}</p>
+              </Reveal>
             )
           })}
         </ol>

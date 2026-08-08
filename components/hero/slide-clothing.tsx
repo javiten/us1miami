@@ -7,6 +7,7 @@ import { ArrowRight, Shirt } from "lucide-react"
 import { useI18n } from "@/components/language-provider"
 import { track } from "@/lib/analytics"
 import { CLOTHING_PATH, CLOTHING_RATE_PER_KG, CLOTHING_VOLUME_RATE_PER_KG } from "@/lib/clothing"
+import { ctaClasses } from "@/components/editorial/primitives"
 import { SlideFrame, useSlideMotion } from "@/components/hero/slide-frame"
 
 /**
@@ -29,7 +30,7 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
         <>
           <motion.div
             variants={item}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/8 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-primary"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary"
           >
             <Shirt className="h-3.5 w-3.5" strokeWidth={2.4} />
             {copy.eyebrow}
@@ -37,7 +38,7 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
 
           <motion.h1
             variants={item}
-            className="mt-6 text-balance text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-[3.75rem]"
+            className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
           >
             {copy.title}
           </motion.h1>
@@ -53,7 +54,7 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
             <Link
               href={CLOTHING_PATH}
               onClick={() => track("homepage_clothing_slide_click", { target: "explore" })}
-              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
+              className={ctaClasses("primary")}
             >
               {copy.primaryCta}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -75,18 +76,18 @@ export function SlideClothing({ isActive }: { isActive: boolean }) {
           </div>
 
           <div className="absolute -bottom-5 -left-3 rounded-2xl border border-border bg-white/90 px-4 py-3 shadow-[0_18px_40px_-20px_rgba(7,27,58,0.4)] backdrop-blur-md sm:-left-6">
-            <p className="text-xs font-medium text-muted-foreground">{copy.volumeLabel}</p>
-            <p className="text-xl font-semibold text-navy">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{copy.volumeLabel}</p>
+            <p className="flex items-baseline gap-1 font-display text-2xl leading-tight text-navy">
               {`USD $${CLOTHING_VOLUME_RATE_PER_KG}`}
-              <span className="text-sm font-medium text-muted-foreground">{copy.perKg}</span>
+              <span className="font-sans text-sm font-medium text-muted-foreground">{copy.perKg}</span>
             </p>
           </div>
 
           <div className="absolute -right-3 top-6 rounded-2xl border border-border bg-white/90 px-4 py-3 shadow-[0_18px_40px_-20px_rgba(7,27,58,0.4)] backdrop-blur-md sm:-right-6">
-            <p className="text-xs font-medium text-muted-foreground">{copy.regularLabel}</p>
-            <p className="text-xl font-semibold text-navy">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{copy.regularLabel}</p>
+            <p className="flex items-baseline gap-1 font-display text-2xl leading-tight text-navy">
               {`USD $${CLOTHING_RATE_PER_KG}`}
-              <span className="text-sm font-medium text-muted-foreground">{copy.perKg}</span>
+              <span className="font-sans text-sm font-medium text-muted-foreground">{copy.perKg}</span>
             </p>
           </div>
         </motion.div>

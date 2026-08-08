@@ -51,13 +51,19 @@ export function RouteSection() {
       <div className={CONTAINER}>
         <ol className="mt-14 grid gap-x-8 gap-y-10 md:grid-cols-3">
           {t.route.stops.map((stop, i) => (
-            <Reveal key={stop.place} delay={i * 0.08} className="min-w-0">
-              <li className="relative min-w-0 border-t border-white/20 pt-6">
-                <span aria-hidden className="absolute -top-px left-0 h-px w-10 bg-sky" />
-                <p className="font-display text-2xl leading-tight text-white md:text-3xl">{stop.place}</p>
-                <p className="mt-3 text-sm font-semibold text-sky">{stop.label}</p>
-                <p className="mt-2 text-sm leading-relaxed text-pretty text-white/65">{stop.detail}</p>
-              </li>
+            // Reveal renders the <li> itself via `as`. Wrapping an <li> inside
+            // Reveal's default <div> put a div between the <ol> and its items,
+            // which is invalid and breaks the list semantics for screen readers.
+            <Reveal
+              key={stop.place}
+              as="li"
+              delay={i * 0.08}
+              className="relative min-w-0 border-t border-white/20 pt-6"
+            >
+              <span aria-hidden className="absolute -top-px left-0 h-px w-10 bg-sky" />
+              <p className="font-display text-2xl leading-tight text-white md:text-3xl">{stop.place}</p>
+              <p className="mt-3 text-sm font-semibold text-sky">{stop.label}</p>
+              <p className="mt-2 text-sm leading-relaxed text-pretty text-white/65">{stop.detail}</p>
             </Reveal>
           ))}
         </ol>

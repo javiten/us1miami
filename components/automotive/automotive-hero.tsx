@@ -53,7 +53,7 @@ export function AutomotiveHero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease }}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary-strong shadow-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary shadow-sm"
             >
               <Wrench className="h-3.5 w-3.5" strokeWidth={2.4} />
               {a.hero.eyebrow}
@@ -86,7 +86,7 @@ export function AutomotiveHero() {
               <a
                 href={`#${AUTOMOTIVE_QUOTE_ANCHOR}`}
                 onClick={() => track("automotive_hero_cta_click", { cta: "quote" })}
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-strong-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
               >
                 {a.hero.primaryCta}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -164,20 +164,22 @@ export function AutomotiveHero() {
           </motion.div>
         </div>
 
-        {/* Trust strip */}
-        <div className="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Trust strip. A real list of four peer items, so it is a <ul>. The
+            titles stay h2: they are the first headings after the hero's h1, so
+            demoting them to h3 skipped a level. */}
+        <ul className="mt-20 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {trust.map((card, i) => (
-            <Reveal key={card.title} delay={i * 0.05}>
+            <Reveal key={card.title} as="li" delay={i * 0.05} className="min-w-0">
               <div className="h-full rounded-3xl border border-border bg-card p-6 shadow-[0_1px_0_rgba(7,27,58,0.04)]">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <card.icon className="h-5 w-5" strokeWidth={2.2} />
+                  <card.icon className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
                 </div>
                 <h2 className="mt-5 text-base font-semibold text-navy">{card.title}</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.desc}</p>
               </div>
             </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )

@@ -286,6 +286,15 @@ const en = {
     clothingLink: "Clothing",
     electronicsLink: "Electronics",
     japanLink: "Japan",
+    followUs: "Follow us",
+  },
+  // Accessible names for the social actions. Both surfaces are icon-only, so
+  // these are what screen readers announce and what the tooltip shows.
+  social: {
+    whatsappLabel: "Chat with us on WhatsApp",
+    whatsappShort: "WhatsApp",
+    instagramLabel: "Follow US1 Miami on Instagram",
+    instagramShort: "Instagram",
   },
   automotive: automotiveEn,
   clothing: clothingEn,
@@ -553,6 +562,13 @@ const es: Dictionary = {
     clothingLink: "Clothing",
     electronicsLink: "Electronics",
     japanLink: "Japan",
+    followUs: "Seguinos",
+  },
+  social: {
+    whatsappLabel: "Escribinos por WhatsApp",
+    whatsappShort: "WhatsApp",
+    instagramLabel: "Seguí a US1 Miami en Instagram",
+    instagramShort: "Instagram",
   },
   automotive: automotiveEs,
   clothing: clothingEs,

@@ -3,51 +3,52 @@
 import { Camera, Boxes, PackageCheck, ScanSearch, Store, Wrench } from "lucide-react"
 
 import { Reveal } from "@/components/reveal"
+import { SectionHeading } from "@/components/automotive/section-heading"
 import { useI18n } from "@/components/language-provider"
 
 const icons = [ScanSearch, Wrench, Store, PackageCheck, Camera, Boxes]
 
+/**
+ * The one dark section on the page, separating the capability story from the
+ * commercial detail that follows it.
+ *
+ * Two things changed here. The two large radial-gradient circles that used to
+ * float behind the content are gone: they were decorative blobs doing no work,
+ * and on the navy field they mostly muddied the text contrast. The six frosted
+ * cards are also gone — the section now sets the six capabilities loose on the
+ * navy with no boxes and no rules at all.
+ *
+ * That absence is deliberate. This section sits immediately after a numbered
+ * rail and a ruled index, both of which lean on hairlines, so a third ruled
+ * treatment would flatten the page. Open space on a dark field reads as a
+ * distinct movement without adding another border style.
+ */
 export function SourcingAdvantage() {
   const { t } = useI18n()
   const a = t.automotive.sourcing
 
   return (
-    // The one dark section on the page, used to separate the capability story
-    // from the commercial detail that follows it.
-    <section className="relative overflow-hidden bg-navy py-20 text-white sm:py-28">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-24 top-0 h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgba(37,169,255,0.18),transparent)]" />
-        <div className="absolute -bottom-32 right-0 h-[420px] w-[520px] rounded-full bg-[radial-gradient(closest-side,rgba(15,125,255,0.16),transparent)]" />
-      </div>
+    <section className="bg-navy py-20 text-white sm:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeading eyebrow={a.eyebrow} title={a.title} subtitle={a.body} tone="light" />
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-        <Reveal className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-widest text-sky">{a.eyebrow}</p>
-          <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">{a.title}</h2>
-          <p className="mt-4 text-pretty leading-relaxed text-white/70">{a.body}</p>
-        </Reveal>
-
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {a.cards.map((card, i) => {
             const Icon = icons[i]
             return (
-              <Reveal key={card.title} delay={i * 0.05}>
-                <div className="h-full rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky/15 text-sky">
-                    <Icon className="h-5 w-5" strokeWidth={2.2} />
-                  </span>
-                  <h3 className="mt-5 text-base font-semibold">{card.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/70">{card.desc}</p>
-                </div>
+              <Reveal key={card.title} as="li" delay={i * 0.05} className="min-w-0">
+                <Icon className="h-6 w-6 text-sky" strokeWidth={1.8} aria-hidden />
+                <h3 className="mt-5 text-base font-semibold">{card.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-pretty text-white/70">{card.desc}</p>
               </Reveal>
             )
           })}
-        </div>
+        </ul>
 
         {/* Independent-provider disclosure, required so the sourcing claims above
             are not read as an official dealer relationship. */}
         <Reveal delay={0.12}>
-          <p className="mt-12 max-w-3xl border-t border-white/10 pt-6 text-xs leading-relaxed text-white/55">
+          <p className="mt-16 max-w-3xl border-t border-white/15 pt-6 text-xs leading-relaxed text-white/65">
             {a.disclosure}
           </p>
         </Reveal>

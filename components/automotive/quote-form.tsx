@@ -17,7 +17,7 @@ import { track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-navy shadow-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-brand focus:ring-2 focus:ring-brand/20"
+  "w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-navy shadow-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-primary focus:ring-2 focus:ring-primary/40"
 
 /** Shared label + error wrapper so every field stays consistent and accessible. */
 function Field({
@@ -125,8 +125,8 @@ export function QuoteForm() {
               className={cn("outline-none", !state.ok && !errors.form && "sr-only")}
             >
               {state.ok ? (
-                <div className="mb-8 flex gap-3 rounded-2xl border border-brand/25 bg-brand/5 p-4">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+                <div className="mb-8 flex gap-3 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                   <div>
                     <p className="text-sm font-semibold text-navy">{c.successTitle}</p>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{c.success}</p>
@@ -158,7 +158,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-brand">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.contact}
                 </legend>
 
@@ -248,7 +248,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-brand">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.vehicle}
                 </legend>
 
@@ -328,7 +328,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-brand">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.part}
                 </legend>
 
@@ -403,7 +403,7 @@ export function QuoteForm() {
               <fieldset className="flex flex-col gap-5">
                 {/* A legend is taken out of the flex flow, so `gap` never
                     applies to it — the bottom margin restores the rhythm. */}
-                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-brand">
+                <legend className="mb-5 text-xs font-semibold uppercase tracking-widest text-primary">
                   {c.sections.purchase}
                 </legend>
 
@@ -420,8 +420,8 @@ export function QuoteForm() {
                       className={cn(
                         "flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-colors",
                         method === value
-                          ? "border-brand bg-brand/5"
-                          : "border-border hover:border-brand/40 hover:bg-muted/50",
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/40 hover:bg-muted/50",
                       )}
                     >
                       <input
@@ -430,7 +430,7 @@ export function QuoteForm() {
                         value={value}
                         checked={method === value}
                         onChange={() => setMethod(value)}
-                        className="mt-0.5 h-4 w-4 shrink-0 accent-brand"
+                        className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
                       />
                       <span className="flex flex-col gap-0.5">
                         <span className="text-sm font-medium text-navy">{c.purchaseMethods[value]}</span>
@@ -487,7 +487,7 @@ export function QuoteForm() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-muted/30 px-4 py-4 text-sm font-medium text-muted-foreground transition-colors hover:border-brand/50 hover:bg-brand/5 hover:text-navy"
+                    className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-muted/30 px-4 py-4 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:bg-primary/5 hover:text-navy"
                   >
                     <Paperclip className="h-4 w-4" />
                     {files.length > 0 ? `${files.length} / ${QUOTE_MAX_FILES}` : c.filesEmpty}
@@ -545,7 +545,7 @@ export function QuoteForm() {
                     id={consentId}
                     type="checkbox"
                     required
-                    className="mt-0.5 h-4 w-4 shrink-0 rounded accent-brand"
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded accent-primary"
                   />
                   <span className="text-xs leading-relaxed text-muted-foreground">{c.consent}</span>
                 </label>
@@ -553,7 +553,7 @@ export function QuoteForm() {
                 <button
                   type="submit"
                   disabled={pending}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand/90 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {pending ? (
                     <>

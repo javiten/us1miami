@@ -3,6 +3,7 @@
 import { LanguageProvider } from "@/components/language-provider"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { FloatingWhatsApp } from "@/components/floating-whatsapp"
 import { ElectronicsHero } from "@/components/electronics/electronics-hero"
 import { ElectronicsBrands } from "@/components/electronics/electronics-brands"
 import { ElectronicsShop } from "@/components/electronics/electronics-shop"
@@ -42,6 +43,7 @@ export function ElectronicsShell({
           <ElectronicsFinalCta />
         </main>
         <SiteFooter />
+        <FloatingWhatsApp />
       </div>
     </LanguageProvider>
   )

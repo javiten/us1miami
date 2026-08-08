@@ -1,40 +1,23 @@
 "use client"
 
-import {
-  Armchair,
-  Cog,
-  Disc3,
-  Fan,
-  Filter,
-  Fingerprint,
-  Gauge,
-  Hash,
-  Lightbulb,
-  Settings2,
-  Sparkles,
-  Waypoints,
-} from "lucide-react"
-
 import { Reveal } from "@/components/reveal"
 import { SectionHeading } from "@/components/automotive/section-heading"
 import { useI18n } from "@/components/language-provider"
-import { PART_CATEGORY_KEYS, type PartCategoryKey } from "@/lib/automotive"
+import { PART_CATEGORY_KEYS } from "@/lib/automotive"
 
-const ICONS: Record<PartCategoryKey, typeof Cog> = {
-  engine: Cog,
-  brakes: Disc3,
-  suspension: Waypoints,
-  sensors: Gauge,
-  transmission: Settings2,
-  filters: Filter,
-  lighting: Lightbulb,
-  airConditioning: Fan,
-  accessories: Armchair,
-  specialty: Sparkles,
-  partNumber: Hash,
-  vinSpecific: Fingerprint,
-}
-
+/**
+ * What can be sourced, as a parts index rather than a card grid.
+ *
+ * This was twelve bordered cards, each with a coloured icon chip — the densest
+ * of the six consecutive card grids on this page. A parts catalogue is exactly
+ * the kind of content that reads better as an index: the twelve icons carried
+ * no information the label did not already state, and twelve different glyphs
+ * in twelve rounded squares added more colour than meaning.
+ *
+ * The numerals are an index, not a sequence, so they are deliberately quiet —
+ * they give the eye a left edge to track down the column without implying the
+ * categories are ordered or ranked.
+ */
 export function PartCategories() {
   const { t } = useI18n()
   const a = t.automotive.categories
@@ -44,20 +27,22 @@ export function PartCategories() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <SectionHeading eyebrow={a.eyebrow} title={a.title} />
 
-        <ul className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {PART_CATEGORY_KEYS.map((key, i) => {
-            const Icon = ICONS[key]
-            return (
-              <Reveal key={key} delay={i * 0.03}>
-                <li className="flex h-full items-center gap-4 rounded-2xl border border-border bg-card px-5 py-4 transition-colors hover:border-primary/30">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" strokeWidth={2.2} />
-                  </span>
-                  <span className="text-sm font-medium text-navy">{a.items[key]}</span>
-                </li>
-              </Reveal>
-            )
-          })}
+        {/* A two-column index. `border-t` on every row plus a closing rule on
+            the list gives a continuous ruled block without per-item borders. */}
+        <ul className="mt-14 grid grid-cols-1 border-b border-border sm:grid-cols-2">
+          {PART_CATEGORY_KEYS.map((key, i) => (
+            <Reveal
+              key={key}
+              as="li"
+              delay={i * 0.02}
+              className="flex items-baseline gap-5 border-t border-border py-5 sm:gap-6"
+            >
+              <span className="w-6 shrink-0 text-xs font-medium tabular-nums text-muted-foreground">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="text-base font-medium text-navy">{a.items[key]}</span>
+            </Reveal>
+          ))}
         </ul>
 
         {/* Eligibility caveat sits directly under the list it qualifies. */}

@@ -17,11 +17,6 @@ export function ElectronicsHero() {
 
   return (
     <section id="top" className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(37,169,255,0.16),transparent)]" />
-        <div className="absolute right-0 top-24 h-[380px] w-[380px] rounded-full bg-[radial-gradient(closest-side,rgba(15,125,255,0.12),transparent)]" />
-      </div>
-
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <motion.nav
           initial={{ opacity: 0, y: 12 }}
@@ -49,7 +44,7 @@ export function ElectronicsHero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease }}
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary-strong shadow-sm"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-primary shadow-sm"
             >
               <Cpu className="h-3.5 w-3.5" strokeWidth={2.4} />
               {e.hero.eyebrow}
@@ -59,7 +54,7 @@ export function ElectronicsHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-[3.5rem]"
+              className="mt-6 font-display text-balance text-4xl leading-[1.05] text-navy sm:text-5xl lg:text-[3.5rem]"
             >
               {e.hero.title}
             </motion.h1>
@@ -82,7 +77,7 @@ export function ElectronicsHero() {
               <Link
                 href="/registro"
                 onClick={() => track("electronics_hero_cta_click", { cta: "create_address" })}
-                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-strong-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_-10px_rgba(15,125,255,0.85)] transition-transform hover:-translate-y-0.5"
               >
                 {e.hero.ctaPrimary}
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -107,7 +102,7 @@ export function ElectronicsHero() {
               transition={{ duration: 0.7, delay: 0.26, ease }}
               className="mt-8 inline-flex flex-col gap-1 rounded-2xl border border-border bg-white px-5 py-4 shadow-sm"
             >
-              <p className="text-3xl font-semibold text-navy">{e.hero.priceValue}</p>
+              <p className="font-display text-3xl leading-none text-navy">{e.hero.priceValue}</p>
               <p className="text-xs text-muted-foreground">{e.hero.priceNote}</p>
             </motion.div>
 

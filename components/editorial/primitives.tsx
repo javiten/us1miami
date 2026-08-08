@@ -63,30 +63,58 @@ export function Section({
   )
 }
 
-/** Small uppercase kicker above a headline. */
+/**
+ * The site's single button language.
+ *
+ * Returned as a class string rather than a component because call sites need to
+ * stay in control of their element — `next/link`, a plain `<a>` for hash and
+ * external targets, and `motion.a` inside the hero slides all need the same
+ * look. Exporting a component would force a wrapper at each of those.
+ *
+ * `onNavy` is the inverted pairing for dark panels: white fill, navy label.
+ */
+export function ctaClasses(variant: "primary" | "secondary" | "onNavy" = "primary", className?: string) {
+  return cn(
+    "group inline-flex items-center justify-center gap-2 rounded-md px-8 py-4 text-sm font-semibold transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2",
+    {
+      primary: "bg-primary text-primary-foreground focus-visible:ring-navy focus-visible:ring-offset-2",
+      secondary:
+        "border border-border bg-card text-navy hover:bg-muted focus-visible:ring-navy focus-visible:ring-offset-2",
+      onNavy: "bg-white text-navy focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-navy",
+    }[variant],
+    className,
+  )
+}
+
+/**
+ * Small uppercase kicker above a headline.
+ *
+ * `accent` selects the hue — the /japan vertical uses its crimson where every
+ * other surface uses the brand blue. `tone` selects the surface, and each accent
+ * carries a lifted variant for navy: at 12px this is normal-size text needing
+ * 4.5:1, and both base colours are tuned for light backgrounds only.
+ */
 export function Eyebrow({
   children,
   tone = "primary",
+  accent = "primary",
   className,
 }: {
   children: ReactNode
   tone?: "primary" | "light"
+  accent?: "primary" | "japan"
   className?: string
 }) {
-  return (
-    <p
-      className={cn(
-        "text-xs font-semibold uppercase tracking-[0.18em]",
-        // `primary-strong`, not `primary`: at 12px this is normal-size text and
-        // needs 4.5:1, which --color-primary misses on the light section
-        // backgrounds. `light` tone sits on navy, where sky already clears it.
-        tone === "light" ? "text-sky" : "text-primary-strong",
-        className,
-      )}
-    >
-      {children}
-    </p>
-  )
+  const COLOR =
+    accent === "japan"
+      ? tone === "light"
+        ? "text-japan-red-light"
+        : "text-japan-red"
+      : tone === "light"
+        ? "text-sky"
+        : "text-primary"
+
+  return <p className={cn("text-xs font-semibold uppercase tracking-[0.18em]", COLOR, className)}>{children}</p>
 }
 
 /**
@@ -184,11 +212,11 @@ export function Split({
   // column classes entirely and silently collapse the split into one stacked
   // column, which is hard to spot in review.
   const COLS =
-  {
-  even: "lg:grid-cols-2",
-  "wide-media": "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
-  "wide-prose": "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
-  }[ratio] ?? "lg:grid-cols-2"
+    {
+      even: "lg:grid-cols-2",
+      "wide-media": "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+      "wide-prose": "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
+    }[ratio] ?? "lg:grid-cols-2"
 
   return (
     <div

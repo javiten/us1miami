@@ -32,7 +32,7 @@ const PROVINCES = [
 ]
 
 const inputClass =
-  "w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-navy shadow-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
+  "w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-navy shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
 const labelClass = "mb-1.5 block text-sm font-medium text-navy"
 
 export function RegisterForm() {

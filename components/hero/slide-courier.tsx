@@ -5,7 +5,7 @@ import Link from "next/link"
 import { motion } from "motion/react"
 import { ArrowRight, MapPin, Check } from "lucide-react"
 import { useI18n } from "@/components/language-provider"
-import { RATE_TIER_1 } from "@/lib/pricing"
+import { SHIPPING_RATES } from "@/lib/shipping-rates"
 import { ctaClasses } from "@/components/editorial/primitives"
 import { SlideFrame, useSlideMotion } from "@/components/hero/slide-frame"
 
@@ -98,9 +98,16 @@ export function SlideCourier({ isActive }: { isActive: boolean }) {
           </div>
 
           <div className="absolute -bottom-5 -left-3 rounded-2xl border border-border bg-white/90 px-4 py-3 shadow-[0_18px_40px_-20px_rgba(7,27,58,0.4)] backdrop-blur-md sm:-left-6">
+            {/* The "from" figure is the marketing floor in lib/shipping-rates,
+                NOT the billing engine's RATE_TIER_1. Those are different numbers
+                on purpose: this is the lowest rate reachable across the
+                verticals, while RATE_TIER_1 is what a general consolidated
+                shipment is actually invoiced at. Pointing this at the invoice
+                constant would mean a pricing edit here silently repriced real
+                invoices. */}
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{t.hero.startingFrom}</p>
             <p className="flex items-baseline gap-1 font-display text-2xl leading-tight text-navy">
-              {`USD $${RATE_TIER_1}`}
+              {`USD $${SHIPPING_RATES.homepageStartingRate}`}
               <span className="font-sans text-sm font-medium text-muted-foreground">{t.hero.perKg}</span>
             </p>
           </div>

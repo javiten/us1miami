@@ -10,6 +10,8 @@
  * ("from") price whose final value depends on actual or volumetric weight.
  */
 
+import { SHIPPING_RATES } from "@/lib/shipping-rates"
+
 export const ELECTRONICS_PATH = "/electronics"
 
 /**
@@ -21,8 +23,14 @@ export const ELECTRONICS_PATH = "/electronics"
  */
 export const ELECTRONICS_NOTICE_ANCHOR = "electronics-notice"
 
-/** Starting shipping rate in USD per kilogram. Always phrased as "from". */
-export const ELECTRONICS_RATE_PER_KG = 55
+/**
+ * Starting shipping rate in USD per kilogram. Always phrased as "from".
+ *
+ * Re-exported from the central rate config, which /calculator also reads. Note
+ * that the calculator additionally applies a commercial-value component for this
+ * vertical; this per-kg figure is only the weight side of that calculation.
+ */
+export const ELECTRONICS_RATE_PER_KG = SHIPPING_RATES.electronicsPerKg
 
 /** Estimated transit time in days, counted from dispatch — not from purchase. */
 export const ELECTRONICS_TRANSIT_DAYS = 7

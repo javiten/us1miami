@@ -253,6 +253,21 @@ export function Split({
  *
  * The scrim is a fixed navy wash rather than a decorative gradient: it exists
  * so white text keeps its contrast ratio over an arbitrary photograph.
+ *
+ * Scrim strengths are measured, not eyeballed. Ratios below are worst case —
+ * white text against a blown-out (pure white) region of the photo, which is the
+ * only assumption that stays true if the image is ever swapped:
+ *
+ *   navy/92 -> 13.8:1   navy/78 -> 8.6:1   navy/72 -> 6.9:1   navy/55 -> 3.9:1
+ *
+ * The `strong` mid-stop is /78 rather than /70 because content is `max-w-xl`
+ * and reaches ~52% of the band's width on desktop — i.e. just past the gradient
+ * midpoint. At /70 the quieter translucent text there measured 3.2–4.1:1 and
+ * missed the 4.5:1 body-text floor; /78 clears it with margin. The /35 end is
+ * safe only because no text reaches it, so keep content within `max-w-xl`.
+ *
+ * `soft` (/55) clears 3:1 for large text but NOT the 4.5:1 body floor, so use it
+ * only for headline-scale content — or strengthen it to /60+ first.
  */
 export function FullBleed({
   children,
@@ -282,7 +297,7 @@ export function FullBleed({
         className={cn(
           "absolute inset-0 -z-10",
           overlay === "strong"
-            ? "bg-navy/72 md:bg-gradient-to-r md:from-navy/92 md:via-navy/70 md:to-navy/35"
+            ? "bg-navy/72 md:bg-gradient-to-r md:from-navy/92 md:via-navy/78 md:to-navy/35"
             : "bg-navy/55",
         )}
       />

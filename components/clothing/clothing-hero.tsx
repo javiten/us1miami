@@ -6,6 +6,7 @@ import { motion } from "motion/react"
 import { ArrowRight, Plane, Shirt } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
+import { HERO_HEADLINE } from "@/components/editorial/primitives"
 import { CLOTHING_PRICING_ANCHOR } from "@/lib/clothing"
 import { track } from "@/lib/analytics"
 
@@ -59,11 +60,7 @@ export function ClothingHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              // Matches the homepage hero exactly (font-display / font-normal /
-              // text-[2.75rem] sm:text-6xl lg:text-7xl). This was bold sans at a
-              // smaller scale, so arriving here from the homepage felt like a
-              // different site.
-              className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
+              className={`mt-6 ${HERO_HEADLINE}`}
             >
               {c.hero.title}
             </motion.h1>

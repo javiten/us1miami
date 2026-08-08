@@ -12,7 +12,7 @@ import {
   AUTOMOTIVE_QUOTE_ANCHOR,
   AUTOMOTIVE_RATE_PER_KG,
 } from "@/lib/automotive"
-import { ctaClasses } from "@/components/editorial/primitives"
+import { ctaClasses, HERO_HEADLINE } from "@/components/editorial/primitives"
 import { SlideFrame, useSlideMotion } from "@/components/hero/slide-frame"
 
 /**
@@ -41,7 +41,7 @@ export function SlideAutomotive({ isActive }: { isActive: boolean }) {
 
           <motion.h1
             variants={item}
-            className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
+            className={`mt-6 ${HERO_HEADLINE}`}
           >
             {copy.title}
           </motion.h1>

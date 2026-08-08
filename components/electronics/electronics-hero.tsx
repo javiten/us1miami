@@ -6,6 +6,7 @@ import { motion } from "motion/react"
 import { ArrowRight, Cpu, Plane } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
+import { HERO_HEADLINE } from "@/components/editorial/primitives"
 import { ELECTRONICS_NOTICE_ANCHOR } from "@/lib/electronics"
 import { track } from "@/lib/analytics"
 
@@ -54,10 +55,7 @@ export function ElectronicsHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              // Matches the homepage hero exactly, as all four verticals now do.
-              // Already the display serif, but a step smaller and without the
-              // hero's tracking.
-              className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
+              className={`mt-6 ${HERO_HEADLINE}`}
             >
               {e.hero.title}
             </motion.h1>

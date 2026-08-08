@@ -6,7 +6,7 @@ import { motion } from "motion/react"
 import { ArrowRight, MapPin, Check } from "lucide-react"
 import { useI18n } from "@/components/language-provider"
 import { SHIPPING_RATES } from "@/lib/shipping-rates"
-import { ctaClasses } from "@/components/editorial/primitives"
+import { ctaClasses, HERO_HEADLINE } from "@/components/editorial/primitives"
 import { SlideFrame, useSlideMotion } from "@/components/hero/slide-frame"
 
 /**
@@ -40,7 +40,7 @@ export function SlideCourier({ isActive }: { isActive: boolean }) {
               headline is the page's single top-level heading. */}
           <motion.h1
             variants={item}
-            className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
+            className={`mt-6 ${HERO_HEADLINE}`}
           >
             {t.hero.titleLead}{" "}
             <span className="text-primary">

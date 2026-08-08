@@ -69,7 +69,9 @@ export function JapanHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-[3.4rem]"
+              // Matches the homepage hero exactly. Was bold sans at a smaller
+              // scale, which read as a different site than the one it links from.
+              className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
             >
               {j.hero.title}
             </motion.h1>

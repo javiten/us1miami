@@ -59,7 +59,11 @@ export function ClothingHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-[3.5rem]"
+              // Matches the homepage hero exactly (font-display / font-normal /
+              // text-[2.75rem] sm:text-6xl lg:text-7xl). This was bold sans at a
+              // smaller scale, so arriving here from the homepage felt like a
+              // different site.
+              className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
             >
               {c.hero.title}
             </motion.h1>

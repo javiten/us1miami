@@ -54,7 +54,10 @@ export function ElectronicsHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              className="mt-6 font-display text-balance text-4xl leading-[1.05] text-navy sm:text-5xl lg:text-[3.5rem]"
+              // Matches the homepage hero exactly, as all four verticals now do.
+              // Already the display serif, but a step smaller and without the
+              // hero's tracking.
+              className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
             >
               {e.hero.title}
             </motion.h1>

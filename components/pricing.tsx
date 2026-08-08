@@ -4,6 +4,7 @@ import { Check, ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/reveal"
 import { useI18n } from "@/components/language-provider"
 import { Eyebrow, Headline, Lede, Section } from "@/components/editorial/primitives"
+import { SHIPPING_RATES } from "@/lib/shipping-rates"
 
 /**
  * Slot 7 — typographic price statement.
@@ -13,8 +14,9 @@ import { Eyebrow, Headline, Lede, Section } from "@/components/editorial/primiti
  * Here the figure itself is the layout: it is set very large in the display
  * serif and the inclusions become a plain hairline-separated list beside it.
  *
- * The figure is intentionally still `$55` from `t.pricing` semantics: the value
- * is presentational text, and the authoritative number stays in the copy deck.
+ * The figure reads from the central rate config rather than being typed inline.
+ * It was previously hardcoded `$55` while the hero rendered its own number, so
+ * the page advertised two different starting prices at once.
  */
 export function Pricing() {
   const { t } = useI18n()
@@ -36,7 +38,7 @@ export function Pricing() {
           {/* The signature element of the page: one very large numeral. */}
           <p className="mt-4 flex items-start gap-3">
             <span className="font-display text-[5.5rem] leading-[0.85] tracking-[-0.02em] text-navy sm:text-[8rem] lg:text-[10rem]">
-              $55
+              {`$${SHIPPING_RATES.homepageStartingRate}`}
             </span>
             <span className="mt-3 text-base font-medium text-muted-foreground sm:mt-5 sm:text-lg">
               {t.pricing.unit}

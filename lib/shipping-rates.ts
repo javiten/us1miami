@@ -8,19 +8,20 @@
 // ---------------------------------------------------------------------------
 // IMPORTANT — this file is NOT the billing engine.
 //
-// `lib/pricing.ts` prices real consolidated shipments (RATE_TIER_1 = 55 up to
-// 10 kg, RATE_TIER_2 = 53 up to 20 kg, on max(actual, volumetric) weight) and is
+// `lib/pricing.ts` prices real consolidated shipments (RATE_TIER_1 = 49 up to
+// 10 kg, RATE_TIER_2 = 47 up to 20 kg, on max(actual, volumetric) weight) and is
 // consumed by invoice-actions and consolidation-actions. Those numbers appear on
-// customer invoices, so they must never be edited to change a marketing figure.
+// customer invoices, so editing them is a commercial decision, not a copy tweak.
 //
-// The two are intentionally separate:
+// The two stay separate even though the entry rate currently matches:
 //   - lib/pricing.ts      -> what a shipment is actually invoiced at
 //   - lib/shipping-rates  -> what we quote and advertise per vertical
 //
-// They also legitimately differ. The published per-vertical rates below reflect
+// They can legitimately diverge. The published per-vertical rates below reflect
 // negotiated category pricing, while the billing engine applies the general
 // consolidated-cargo tiers. Anything shown to a customer as an *estimate* comes
-// from here; anything that becomes money owed comes from lib/pricing.ts.
+// from here; anything that becomes money owed comes from lib/pricing.ts. Keeping
+// the split means a future marketing change cannot silently reprice invoices.
 // ---------------------------------------------------------------------------
 
 /**

@@ -7,7 +7,7 @@ import { ArrowRight, Cpu } from "lucide-react"
 import { useI18n } from "@/components/language-provider"
 import { track } from "@/lib/analytics"
 import { ELECTRONICS_PATH, ELECTRONICS_RATE_PER_KG } from "@/lib/electronics"
-import { ctaClasses } from "@/components/editorial/primitives"
+import { ctaClasses, HERO_HEADLINE } from "@/components/editorial/primitives"
 import { SlideFrame, useSlideMotion } from "@/components/hero/slide-frame"
 
 /**
@@ -36,7 +36,7 @@ export function SlideElectronics({ isActive }: { isActive: boolean }) {
 
           <motion.h1
             variants={item}
-            className="mt-6 text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
+            className={`mt-6 ${HERO_HEADLINE}`}
           >
             {copy.title}
           </motion.h1>

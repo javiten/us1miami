@@ -6,9 +6,19 @@
 // can never be edited by a customer or operator — every invoice runs through
 // this single function so the numbers are always reproducible.
 //
-//   Up to 10 kg .............. USD 55 / kg
-//   > 10 kg and up to 20 kg .. USD 53 / kg
+//   Up to 10 kg .............. USD 49 / kg
+//   > 10 kg and up to 20 kg .. USD 47 / kg
 //   > 20 kg .................. blocked -> manual review (no auto checkout)
+//
+// These rates were lowered from 55/53 to 49/47. Tier 2 had to move together with
+// tier 1: the tiers exist so that heavier shipments earn a better per-kg rate, so
+// dropping only tier 1 to 49 would have made 10.1 kg (at 53) cost more in total
+// than 10 kg (at 49) — a ~USD 45 cliff for 100 g, turning the volume discount
+// into a volume penalty. Keeping a 2/kg gap preserves the original intent.
+//
+// Not retroactive: invoice rows persist their own ratePerKg and subtotal at the
+// time of pricing, so shipments already priced keep the rate they were quoted.
+// Only new pricing runs and explicit recalcs pick these up.
 // ---------------------------------------------------------------------------
 
 export const LB_TO_KG = 0.45359237
@@ -20,8 +30,8 @@ export const VOLUMETRIC_DIVISOR_IN3_PER_KG = 6000 / 16.387064 // ≈ 366.14
 
 export const MAX_AUTO_KG = 20
 export const TIER_1_MAX_KG = 10
-export const RATE_TIER_1 = 55 // USD/kg, up to 10 kg
-export const RATE_TIER_2 = 53 // USD/kg, > 10 kg and <= 20 kg
+export const RATE_TIER_1 = 49 // USD/kg, up to 10 kg
+export const RATE_TIER_2 = 47 // USD/kg, > 10 kg and <= 20 kg
 
 function round2(n: number): number {
   return Math.round((n + Number.EPSILON) * 100) / 100

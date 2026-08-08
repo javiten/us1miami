@@ -56,7 +56,10 @@ export function WarehouseSection() {
             ))}
           </ul>
 
-          <p className="mt-8 text-xs uppercase tracking-[0.18em] text-white/55">
+          {/* white/75, not /55: this is the smallest text on the band (12px) and
+              it runs to ~52% of the width, where the scrim is weakest. At /55 it
+              measured 3.2:1 over a blown-out photo region, under the 4.5:1 floor. */}
+          <p className="mt-8 text-xs uppercase tracking-[0.18em] text-white/75">
             {t.warehouse.overlayLabel} — {t.warehouse.overlayValue}
           </p>
         </Reveal>

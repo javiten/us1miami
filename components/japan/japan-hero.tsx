@@ -6,6 +6,7 @@ import { motion } from "motion/react"
 import { ArrowRight, Search } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
+import { HERO_HEADLINE } from "@/components/editorial/primitives"
 import { JAPAN_HOW_ANCHOR, JAPAN_REQUEST_ANCHOR } from "@/lib/japan"
 import { JapanRoute } from "@/components/japan/japan-route"
 import { track } from "@/lib/analytics"
@@ -69,7 +70,7 @@ export function JapanHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-[3.4rem]"
+              className={`mt-6 ${HERO_HEADLINE}`}
             >
               {j.hero.title}
             </motion.h1>

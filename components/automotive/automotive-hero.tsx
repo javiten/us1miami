@@ -7,6 +7,7 @@ import { ArrowRight, Boxes, Handshake, Plane, Store, Wrench } from "lucide-react
 
 import { Reveal } from "@/components/reveal"
 import { useI18n } from "@/components/language-provider"
+import { HERO_HEADLINE } from "@/components/editorial/primitives"
 import { AUTOMOTIVE_QUOTE_ANCHOR } from "@/lib/automotive"
 import { track } from "@/lib/analytics"
 
@@ -63,7 +64,7 @@ export function AutomotiveHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight text-navy sm:text-5xl lg:text-[3.5rem]"
+              className={`mt-6 ${HERO_HEADLINE}`}
             >
               {a.hero.title}
             </motion.h1>

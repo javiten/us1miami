@@ -8,11 +8,19 @@
  * separate — Automotive is its own vertical with its own starting rate.
  */
 
-/** Starting air-freight rate for eligible automotive shipments, USD per kg. */
-export const AUTOMOTIVE_RATE_PER_KG = 49
+import { SHIPPING_RATES } from "@/lib/shipping-rates"
+
+/**
+ * Starting air-freight rate for eligible automotive shipments, USD per kg.
+ *
+ * Re-exported from the central rate config so /automotive, the homepage slide
+ * and /calculator can never quote different numbers. Change the value in
+ * `lib/shipping-rates.ts`.
+ */
+export const AUTOMOTIVE_RATE_PER_KG = SHIPPING_RATES.automotivePerKg
 
 /** Fee charged when US1 Miami buys the part on the customer's behalf, in percent. */
-export const ASSISTED_PURCHASE_FEE_PCT = 3
+export const ASSISTED_PURCHASE_FEE_PCT = SHIPPING_RATES.automotiveAssistedPurchasePercent
 
 /** Homepage hero carousel auto-advance interval, in milliseconds. */
 export const HERO_CAROUSEL_INTERVAL_MS = 7000

@@ -2,9 +2,11 @@ import { AUTOMOTIVE_RATE_PER_KG } from "@/lib/automotive"
 import { CLOTHING_RATE_PER_KG, CLOTHING_VOLUME_MIN_KG, CLOTHING_VOLUME_RATE_PER_KG } from "@/lib/clothing"
 import { ELECTRONICS_RATE_PER_KG } from "@/lib/electronics"
 import { automotiveEn, automotiveEs } from "@/lib/i18n-automotive"
+import { calculatorEn, calculatorEs } from "@/lib/i18n-calculator"
 import { clothingEn, clothingEs } from "@/lib/i18n-clothing"
 import { electronicsEn, electronicsEs } from "@/lib/i18n-electronics"
 import { japanEn, japanEs } from "@/lib/i18n-japan"
+import { SHIPPING_RATES } from "@/lib/shipping-rates"
 
 export type Locale = "es" | "en"
 
@@ -28,6 +30,7 @@ const en = {
     clothing: "Clothing",
     electronics: "Electronics",
     japan: "Japan",
+    calculator: "Calculator",
     pricing: "Pricing",
     warehouse: "Warehouse",
     faq: "FAQ",
@@ -230,7 +233,7 @@ const en = {
     title: "The numbers behind the service",
     stats: [
       { value: "~7 days", label: "Air transit from Miami to Argentina once your shipment departs." },
-      { value: "USD 55", label: "Starting price per kilogram by air courier." },
+      { value: `USD ${SHIPPING_RATES.homepageStartingRate}`, label: "Starting price per kilogram by air courier." },
       { value: "$0", label: "Receiving, storage and consolidation at our Miami warehouse." },
       { value: "4", label: "Specialised verticals: automotive, apparel, electronics and Japan." },
     ],
@@ -241,7 +244,7 @@ const en = {
     items: [
       {
         q: "How much does shipping cost?",
-        a: "Pricing starts at USD $55 per kilogram by air courier. Package receiving, storage and consolidation are always free.",
+        a: `Pricing starts at USD $${SHIPPING_RATES.homepageStartingRate} per kilogram by air courier. Package receiving, storage and consolidation are always free.`,
       },
       {
         q: "How long does delivery take?",
@@ -300,6 +303,7 @@ const en = {
   clothing: clothingEn,
   electronics: electronicsEn,
   japan: japanEn,
+  calculator: calculatorEn,
 }
 
 export type Dictionary = typeof en
@@ -312,6 +316,9 @@ const es: Dictionary = {
     clothing: "Clothing",
     electronics: "Electronics",
     japan: "Japan",
+    // Short on purpose: "Calculá tu envío" wraps to two lines in the header bar
+    // next to five other items. The page's own h1 carries the full phrase.
+    calculator: "Calculadora",
     pricing: "Precios",
     warehouse: "Depósito",
     faq: "Preguntas",
@@ -506,7 +513,7 @@ const es: Dictionary = {
     title: "Los números detrás del servicio",
     stats: [
       { value: "~7 días", label: "Tránsito aéreo de Miami a Argentina una vez que sale tu envío." },
-      { value: "USD 55", label: "Precio inicial por kilogramo por courier aéreo." },
+      { value: `USD ${SHIPPING_RATES.homepageStartingRate}`, label: "Precio inicial por kilogramo por courier aéreo." },
       { value: "$0", label: "Recepción, almacenamiento y consolidación en nuestro depósito de Miami." },
       { value: "4", label: "Verticales especializadas: automotor, indumentaria, electrónica y Japón." },
     ],
@@ -517,7 +524,7 @@ const es: Dictionary = {
     items: [
       {
         q: "¿Cuánto cuesta el envío?",
-        a: "El precio arranca en USD $55 por kilogramo por courier aéreo. La recepción, el almacenamiento y la consolidación son siempre gratis.",
+        a: `El precio arranca en USD $${SHIPPING_RATES.homepageStartingRate} por kilogramo por courier aéreo. La recepción, el almacenamiento y la consolidación son siempre gratis.`,
       },
       {
         q: "¿Cuánto tarda la entrega?",
@@ -574,6 +581,7 @@ const es: Dictionary = {
   clothing: clothingEs,
   electronics: electronicsEs,
   japan: japanEs,
+  calculator: calculatorEs,
 }
 
 export const translations: Record<Locale, Dictionary> = { es, en }

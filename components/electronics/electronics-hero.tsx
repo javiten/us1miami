@@ -6,6 +6,7 @@ import { motion } from "motion/react"
 import { ArrowRight, Cpu, Plane } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
+import { HERO_HEADLINE } from "@/components/editorial/primitives"
 import { ELECTRONICS_NOTICE_ANCHOR } from "@/lib/electronics"
 import { track } from "@/lib/analytics"
 
@@ -54,7 +55,7 @@ export function ElectronicsHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.05, ease }}
-              className="mt-6 font-display text-balance text-4xl leading-[1.05] text-navy sm:text-5xl lg:text-[3.5rem]"
+              className={`mt-6 ${HERO_HEADLINE}`}
             >
               {e.hero.title}
             </motion.h1>

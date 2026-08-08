@@ -25,5 +25,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/japan`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/es/japan`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/en/japan`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    // A tool rather than a service page, but it is linked from every page's
+    // primary nav and is a common entry point for pricing searches. Lower
+    // change frequency: it only changes when a published rate changes.
+    { url: `${siteUrl}/calculator`, lastModified, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${siteUrl}/es/calculator`, lastModified, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${siteUrl}/en/calculator`, lastModified, changeFrequency: "monthly", priority: 0.7 },
   ]
 }

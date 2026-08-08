@@ -9,6 +9,7 @@ import { ElectronicsBrands } from "@/components/electronics/electronics-brands"
 import { ElectronicsShop } from "@/components/electronics/electronics-shop"
 import { ElectronicsCategories } from "@/components/electronics/electronics-categories"
 import { ElectronicsHow } from "@/components/electronics/electronics-how"
+import { ElectronicsHandling } from "@/components/electronics/electronics-handling"
 import { ElectronicsNotice } from "@/components/electronics/electronics-notice"
 import { ElectronicsFinalCta } from "@/components/electronics/electronics-final-cta"
 import type { Locale } from "@/lib/i18n"
@@ -39,6 +40,7 @@ export function ElectronicsShell({
           <ElectronicsShop />
           <ElectronicsCategories />
           <ElectronicsHow />
+          <ElectronicsHandling />
           <ElectronicsNotice />
           <ElectronicsFinalCta />
         </main>

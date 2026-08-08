@@ -16,6 +16,21 @@ import { cn } from "@/lib/utils"
 /** Shared horizontal container. Matches the width the site already used. */
 export const CONTAINER = "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8"
 
+/**
+ * The page-hero `h1` treatment: display serif, normal weight, tight leading.
+ *
+ * Every top-level hero on the site must be typographically identical — the five
+ * homepage carousel slides, each vertical landing page and /calculator. That was
+ * previously seven independent copies of the same class string, which is exactly
+ * how /clothing and /japan drifted onto the wrong face in the first place.
+ *
+ * Deliberately NOT folded into `Headline`: that primitive is for in-page section
+ * headings and its `xl` size is a different scale. This is the hero scale only.
+ * Call sites append their own animation and margin utilities.
+ */
+export const HERO_HEADLINE =
+  "text-balance font-display text-[2.75rem] font-normal leading-[1.05] tracking-[-0.01em] text-navy sm:text-6xl lg:text-7xl"
+
 type Tone = "default" | "muted" | "card" | "navy"
 
 const TONE_CLASS: Record<Tone, string> = {

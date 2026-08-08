@@ -121,6 +121,33 @@ export const japanEn = {
     },
   },
 
+  // Full-width navy band between the process steps and the assisted-buying
+  // explainer. Restates the receiving point, in-Japan consolidation and the
+  // Japan -> Miami -> Argentina route that the `how` steps and the hero route
+  // chip already state. It introduces no new service promise.
+  handling: {
+    eyebrow: "Between the auction and your door",
+    title: "Received in Japan, consolidated, then flown out",
+    description:
+      "Won and purchased items are delivered to our receiving point in Japan, checked and packed for their international leg, then routed through Miami to Argentina.",
+    imageAlt:
+      "Small parcels from Japan being wrapped in tissue paper and grouped into a single export carton on a sorting bench",
+    points: [
+      {
+        label: "Received in Japan",
+        detail: "We take delivery at our Japanese receiving point, so sellers only ever ship domestically.",
+      },
+      {
+        label: "Checked and packed",
+        detail: "Each item is inspected, packed and documented before its international leg.",
+      },
+      {
+        label: "Routed through Miami",
+        detail: "Parcels are consolidated and travel Japan to Miami to Argentina on the same route as the rest of our cargo.",
+      },
+    ],
+  },
+
   assisted: {
     eyebrow: "Assisted buying",
     title: "Why buying from Japan usually needs help",
@@ -294,6 +321,29 @@ export const japanEs: JapanDictionary = {
         desc: "Gestionamos la ruta hasta la entrega final y te mantenemos al día.",
       },
     },
+  },
+
+  handling: {
+    eyebrow: "Entre la subasta y tu puerta",
+    title: "Recibido en Japón, consolidado y despachado",
+    description:
+      "Los artículos ganados y comprados se entregan en nuestro punto de recepción en Japón, se revisan y se embalan para su tramo internacional, y después se despachan vía Miami hacia Argentina.",
+    imageAlt:
+      "Paquetes pequeños de Japón siendo envueltos en papel de seda y agrupados en una sola caja de exportación sobre una mesa de clasificación",
+    points: [
+      {
+        label: "Recibido en Japón",
+        detail: "Recibimos el paquete en nuestro punto en Japón, así el vendedor solo envía a nivel nacional.",
+      },
+      {
+        label: "Revisado y embalado",
+        detail: "Cada artículo se inspecciona, se embala y se documenta antes de su tramo internacional.",
+      },
+      {
+        label: "Despachado vía Miami",
+        detail: "Los paquetes se consolidan y viajan de Japón a Miami y a Argentina, por la misma ruta que el resto de nuestra carga.",
+      },
+    ],
   },
 
   assisted: {

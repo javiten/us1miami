@@ -375,6 +375,30 @@ function ResultPanel({
       <div className="p-6 sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/55">{c.result.heading}</p>
 
+        {/* Spoken announcement of the outcome.
+            
+            Deliberately a separate node from the figure below rather than
+            aria-live on the figure itself: the figure sits inside an
+            AnimatePresence keyed on the total, so every change unmounts one
+            element and mounts another. A live region that is itself being torn
+            down and recreated announces unreliably, and can read out the removal
+            as well as the addition. This node is never unmounted — only its text
+            changes — which is exactly what a live region needs.
+
+            It stays mounted and empty in the initial state rather than appearing
+            with the first result, because assistive tech only announces
+            mutations to regions it was already observing.
+
+            The empty state is not announced: it is static instructional text, so
+            re-reading it on every keystroke would be noise, not feedback. */}
+        <p className="sr-only" aria-live="polite" aria-atomic="true">
+          {result.status === "priced"
+            ? c.result.announce(formatUsd(result.total))
+            : result.status === "manual"
+              ? c.result.announceQuoted
+              : ""}
+        </p>
+
         {result.status === "priced" ? (
           <>
             {/* Keyed on the total so the figure animates when it changes rather

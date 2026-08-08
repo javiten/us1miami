@@ -98,6 +98,15 @@ export const calculatorEn = {
     heading: "Your estimate",
     empty: "Fill in the details to calculate your shipping.",
     label: "Estimated cost",
+    /**
+     * Spoken-only summaries for the live region. The visual panel updates
+     * silently, so without these a screen reader user who changes the weight or
+     * category is never told the price moved — and on a calculator the output is
+     * the entire point. Kept to one short sentence because a polite region
+     * re-reads the whole string on every settled change.
+     */
+    announce: (total: string) => `Estimated cost: ${total}.`,
+    announceQuoted: "This category is quoted individually. Request a custom quote.",
     lineShipping: "Shipping",
     lineAssisted: `Assisted purchase (${automotiveAssistedPurchasePercent}%)`,
     lineTotal: "Estimated total",
@@ -208,6 +217,8 @@ export const calculatorEs: CalculatorDictionary = {
     heading: "Tu estimación",
     empty: "Completá los datos para calcular tu envío.",
     label: "Costo estimado",
+    announce: (total: string) => `Costo estimado: ${total}.`,
+    announceQuoted: "Esta categoría se cotiza de forma individual. Pedí una cotización personalizada.",
     lineShipping: "Envío",
     lineAssisted: `Compra asistida (${automotiveAssistedPurchasePercent}%)`,
     lineTotal: "Total estimado",

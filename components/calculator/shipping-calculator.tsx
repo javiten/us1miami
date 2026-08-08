@@ -313,9 +313,11 @@ function NumberField({
         {suffix ? <span className="shrink-0 text-sm font-medium text-muted-foreground">{suffix}</span> : null}
       </div>
 
-      {/* aria-live so a validation message is announced when it appears, not
-          only discovered by a screen reader user re-reading the field. */}
-      <p id={errorId} aria-live="polite" className="sr-only-empty">
+      {/* The live region is always in the DOM so a message added to it later is
+          announced. Rendering the <p> only on error would insert a new region
+          that assistive tech has not been observing, and the text would be
+          missed. Empty, it collapses to nothing. */}
+      <p id={errorId} aria-live="polite">
         {error ? <span className="mt-2 block text-sm font-medium text-destructive">{error}</span> : null}
       </p>
       <p id={helpId} className="mt-2 text-xs leading-relaxed text-muted-foreground">

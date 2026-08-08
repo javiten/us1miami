@@ -13,6 +13,7 @@ import { AUTOMOTIVE_PATH } from "@/lib/automotive"
 import { CLOTHING_PATH } from "@/lib/clothing"
 import { ELECTRONICS_PATH } from "@/lib/electronics"
 import { JAPAN_PATH } from "@/lib/japan"
+import { CALCULATOR_PATH } from "@/lib/calculator"
 import { COMPANY } from "@/lib/constants"
 import { track } from "@/lib/analytics"
 import { cn } from "@/lib/utils"
@@ -104,6 +105,20 @@ export function SiteHeader() {
 
           <ServicesMenu label={t.nav.services} srLabel={t.nav.servicesMenu} items={buildVerticals("header")} />
 
+          {/* A real route, so it uses Link and gets aria-current — unlike the
+              surrounding homepage anchor links. */}
+          <Link
+            href={CALCULATOR_PATH}
+            aria-current={pathname === CALCULATOR_PATH ? "page" : undefined}
+            onClick={() => track("calculator_nav_click", { source: "header" })}
+            className={cn(
+              "rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
+              pathname === CALCULATOR_PATH ? "text-navy" : "text-muted-foreground",
+            )}
+          >
+            {t.nav.calculator}
+          </Link>
+
           {anchorLinks.slice(1).map((l) => (
             <a
               key={l.href}
@@ -190,6 +205,21 @@ export function SiteHeader() {
             ))}
 
             <div className="my-2 h-px bg-border" />
+
+            <Link
+              href={CALCULATOR_PATH}
+              aria-current={pathname === CALCULATOR_PATH ? "page" : undefined}
+              onClick={() => {
+                track("calculator_nav_click", { source: "mobile_menu" })
+                setOpen(false)
+              }}
+              className={cn(
+                "rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
+                pathname === CALCULATOR_PATH ? "text-navy" : "text-muted-foreground",
+              )}
+            >
+              {t.nav.calculator}
+            </Link>
 
             {anchorLinks.slice(1).map((l) => (
               <a

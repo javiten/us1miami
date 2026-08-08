@@ -112,10 +112,12 @@ export const calculatorEn = {
     title: "Weighed, consolidated and flown",
     body: "Your estimate is based on the same weight we measure at our Miami warehouse. Once your package arrives we photograph it, confirm the weight and consolidate it with anything else waiting for you.",
     imageAlt: "A US1 Miami warehouse operator weighing a parcel on a digital scale before consolidation",
-    steps: [
-      { title: "Received and weighed", body: "We record the real weight and dimensions the moment your package lands." },
-      { title: "Consolidated", body: "Several purchases travel as one shipment, so you pay the weight once." },
-      { title: "Flown to Argentina", body: "Air cargo out of Miami with tracking from our warehouse to your door." },
+    // `label`/`detail` matches VerticalHandlingBand's `points` prop so this
+    // section reuses that component instead of adapting its shape in JSX.
+    points: [
+      { label: "Received and weighed", detail: "We record the real weight and dimensions the moment your package lands." },
+      { label: "Consolidated", detail: "Several purchases travel as one shipment, so you pay the weight once." },
+      { label: "Flown to Argentina", detail: "Air cargo out of Miami with tracking from our warehouse to your door." },
     ],
   },
 
@@ -125,8 +127,11 @@ export const calculatorEn = {
     primary: "Request my quote",
     secondary: "Create my Miami address",
   },
-} as const
+}
 
+// No `as const` on the object above, matching the other dictionaries. It would
+// narrow every value to its own literal type, so the Spanish copy could not
+// satisfy this type and the `points` arrays would come out readonly.
 export type CalculatorDictionary = typeof calculatorEn
 
 export const calculatorEs: CalculatorDictionary = {
@@ -217,10 +222,16 @@ export const calculatorEs: CalculatorDictionary = {
     title: "Pesado, consolidado y despachado",
     body: "Tu estimación usa el mismo peso que medimos en nuestro depósito de Miami. Cuando tu paquete llega lo fotografiamos, confirmamos el peso y lo consolidamos con todo lo que te esté esperando.",
     imageAlt: "Un operario de US1 Miami pesando un paquete en una balanza digital antes de consolidarlo",
-    steps: [
-      { title: "Recibido y pesado", body: "Registramos el peso y las dimensiones reales en el momento en que llega tu paquete." },
-      { title: "Consolidado", body: "Varias compras viajan como un solo envío, así pagás el peso una sola vez." },
-      { title: "Enviado a Argentina", body: "Carga aérea desde Miami con seguimiento desde nuestro depósito hasta tu puerta." },
+    points: [
+      {
+        label: "Recibido y pesado",
+        detail: "Registramos el peso y las dimensiones reales en el momento en que llega tu paquete.",
+      },
+      { label: "Consolidado", detail: "Varias compras viajan como un solo envío, así pagás el peso una sola vez." },
+      {
+        label: "Enviado a Argentina",
+        detail: "Carga aérea desde Miami con seguimiento desde nuestro depósito hasta tu puerta.",
+      },
     ],
   },
 

@@ -30,7 +30,7 @@ const en = {
     clothing: "Clothing",
     electronics: "Electronics",
     japan: "Japan",
-    calculator: "Calculate Shipping",
+    calculator: "Calculator",
     pricing: "Pricing",
     warehouse: "Warehouse",
     faq: "FAQ",
@@ -316,7 +316,9 @@ const es: Dictionary = {
     clothing: "Clothing",
     electronics: "Electronics",
     japan: "Japan",
-    calculator: "Calculá tu envío",
+    // Short on purpose: "Calculá tu envío" wraps to two lines in the header bar
+    // next to five other items. The page's own h1 carries the full phrase.
+    calculator: "Calculadora",
     pricing: "Precios",
     warehouse: "Depósito",
     faq: "Preguntas",

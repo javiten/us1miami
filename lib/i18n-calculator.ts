@@ -17,8 +17,14 @@ import { SHIPPING_RATES } from "@/lib/shipping-rates"
  * keeps the sentence order translatable instead of concatenated in JSX.
  */
 
-const { automotivePerKg, clothingUnder10Kg, clothing10KgOrMore, clothingVolumeThresholdKg, automotiveAssistedPurchasePercent } =
-  SHIPPING_RATES
+const {
+  automotivePerKg,
+  clothingUnder10Kg,
+  clothing10KgOrMore,
+  clothingVolumeThresholdKg,
+  automotiveAssistedPurchasePercent,
+  consumerProductsPerKg,
+} = SHIPPING_RATES
 
 export const calculatorEn = {
   meta: {
@@ -50,6 +56,13 @@ export const calculatorEn = {
         rate: `USD $${clothing10KgOrMore}/kg`,
       },
       electronics: { label: "Electronics", rate: "Based on weight and value" },
+      // The only category with a `subtitle`. It is the catch-all, so it has to
+      // show what belongs in it — the other four are self-describing.
+      consumerProducts: {
+        label: "Consumer Products",
+        subtitle: "Makeup / Toys / Cases / Other",
+        rate: `USD $${consumerProductsPerKg}/kg`,
+      },
       japan: { label: "Purchases from Japan", rate: "Custom quote" },
     },
 
@@ -75,6 +88,26 @@ export const calculatorEn = {
       valueRequired: "Enter the total purchase value.",
       valueInvalid: "Enter an amount greater than 0.",
     },
+  },
+
+  /**
+   * Escape hatch below the category grid, for anything the five categories do
+   * not cover.
+   *
+   * Deliberately not a sixth radio option: selecting it would put the form into
+   * a state that can never produce an estimate, which is a dead end dressed up
+   * as a choice. It is a link out to a human instead.
+   */
+  unlisted: {
+    heading: "Is your product not listed in these categories?",
+    body: "Send us an inquiry and we'll confirm the applicable rate and shipping conditions.",
+    cta: "Send inquiry",
+    /**
+     * Prefilled WhatsApp message. The category tag the spec asks for rides in
+     * the message body, which is the only way it actually reaches us — the site
+     * has no intake form with a category field to populate.
+     */
+    inquiryMessage: "Hello US1 Miami, I'd like a shipping quote.\n\nCategory: Unlisted product\n\nMy product is:",
   },
 
   /**
@@ -175,6 +208,11 @@ export const calculatorEs: CalculatorDictionary = {
         rate: `USD $${clothing10KgOrMore}/kg`,
       },
       electronics: { label: "Electrónica", rate: "Según peso y valor" },
+      consumerProducts: {
+        label: "Productos de consumo",
+        subtitle: "Maquillaje / Juguetes / Fundas / Otros",
+        rate: `USD $${consumerProductsPerKg}/kg`,
+      },
       japan: { label: "Compras desde Japón", rate: "Cotización personalizada" },
     },
 
@@ -200,6 +238,13 @@ export const calculatorEs: CalculatorDictionary = {
       valueRequired: "Ingresá el valor total de la compra.",
       valueInvalid: "Ingresá un monto mayor a 0.",
     },
+  },
+
+  unlisted: {
+    heading: "¿Tu producto no figura en estas categorías?",
+    body: "Envianos una consulta y te confirmamos la tarifa y condiciones aplicables.",
+    cta: "Enviar consulta",
+    inquiryMessage: "Hola US1 Miami, quiero cotizar un envío.\n\nCategoría: Producto no listado\n\nMi producto es:",
   },
 
   tierNotice: {

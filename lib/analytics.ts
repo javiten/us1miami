@@ -37,6 +37,12 @@ export type AnalyticsEvent =
   | "calculator_category_select"
   | "calculator_assisted_toggle"
   | "calculator_japan_cta_click"
+  /**
+   * "My product is not listed" callout. Worth its own event: it measures demand
+   * for categories we do not publish a rate for, which is the signal that would
+   * justify adding one.
+   */
+  | "calculator_unlisted_inquiry"
   | "calculator_quote_cta_click"
   | "calculator_register_cta_click"
   | "homepage_slider_change"

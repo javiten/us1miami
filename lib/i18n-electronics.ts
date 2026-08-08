@@ -94,6 +94,23 @@ export const electronicsEn = {
     },
   },
 
+  // Full-width navy band between the process steps and the disclosures. Every
+  // claim restates something already published elsewhere on this page (measured
+  // weight, protective packing, air dispatch) — it adds no new service promise.
+  handling: {
+    eyebrow: "In the warehouse",
+    title: "Measured, protected, and packed for the flight",
+    description:
+      "Every device is logged, weighed and measured on arrival, then packed with protective material for the flight to Argentina. Receiving, storage and consolidation stay free.",
+    imageAlt:
+      "Consumer electronics being padded and packed into a protective shipping carton on a warehouse workbench",
+    points: [
+      { label: "Logged on arrival", detail: "Each package is registered in our system the day it reaches Miami." },
+      { label: "Weighed and measured", detail: "We record actual and volumetric weight, and the higher of the two is what you are quoted." },
+      { label: "Packed for air transport", detail: "Devices are cushioned and consolidated into a single carton before dispatch." },
+    ],
+  },
+
   notice: {
     eyebrow: "Before you buy",
     title: "Special handling for electronics",
@@ -214,6 +231,20 @@ export const electronicsEs: ElectronicsDictionary = {
       prepare: { title: "Preparamos el envío internacional", desc: "Embalamos, documentamos y despachamos tu envío a Argentina." },
       deliver: { title: "Recibílo en Argentina", desc: `Entrega estimada en ${DAYS} días desde el despacho.` },
     },
+  },
+
+  handling: {
+    eyebrow: "En el depósito",
+    title: "Medido, protegido y embalado para el vuelo",
+    description:
+      "Cada dispositivo se registra, se pesa y se mide al llegar, y después se embala con material de protección para el vuelo a Argentina. La recepción, el almacenamiento y la consolidación siguen siendo gratis.",
+    imageAlt:
+      "Productos electrónicos siendo acolchados y embalados en una caja de envío protectora sobre una mesa de trabajo del depósito",
+    points: [
+      { label: "Registrado al llegar", detail: "Cada paquete se registra en nuestro sistema el mismo día que llega a Miami." },
+      { label: "Pesado y medido", detail: "Registramos el peso real y el volumétrico, y se cotiza el mayor de los dos." },
+      { label: "Embalado para el avión", detail: "Los dispositivos se acolchan y se consolidan en una sola caja antes del despacho." },
+    ],
   },
 
   notice: {

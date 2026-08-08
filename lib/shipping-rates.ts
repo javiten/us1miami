@@ -171,13 +171,17 @@ export function calculateQuote(input: {
       return { status: "priced", total: round2(shipping), lines: [{ id: "shipping", amount: round2(shipping) }] }
     }
     const fee = (value as number) * (SHIPPING_RATES.automotiveAssistedPurchasePercent / 100)
+    // Round each row first, then total the rounded rows. Rounding the raw sum
+    // instead can print a total a cent away from what the visible rows add up
+    // to, which reads as an arithmetic error on a price.
+    const lines: QuoteLine[] = [
+      { id: "shipping", amount: round2(shipping) },
+      { id: "assistedPurchase", amount: round2(fee) },
+    ]
     return {
       status: "priced",
-      total: round2(shipping + fee),
-      lines: [
-        { id: "shipping", amount: round2(shipping) },
-        { id: "assistedPurchase", amount: round2(fee) },
-      ],
+      total: round2(lines[0].amount + lines[1].amount),
+      lines,
     }
   }
 

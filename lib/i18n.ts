@@ -2,6 +2,7 @@ import { AUTOMOTIVE_RATE_PER_KG } from "@/lib/automotive"
 import { CLOTHING_RATE_PER_KG, CLOTHING_VOLUME_MIN_KG, CLOTHING_VOLUME_RATE_PER_KG } from "@/lib/clothing"
 import { ELECTRONICS_RATE_PER_KG } from "@/lib/electronics"
 import { automotiveEn, automotiveEs } from "@/lib/i18n-automotive"
+import { calculatorEn, calculatorEs } from "@/lib/i18n-calculator"
 import { clothingEn, clothingEs } from "@/lib/i18n-clothing"
 import { electronicsEn, electronicsEs } from "@/lib/i18n-electronics"
 import { japanEn, japanEs } from "@/lib/i18n-japan"
@@ -29,6 +30,7 @@ const en = {
     clothing: "Clothing",
     electronics: "Electronics",
     japan: "Japan",
+    calculator: "Calculate Shipping",
     pricing: "Pricing",
     warehouse: "Warehouse",
     faq: "FAQ",
@@ -301,6 +303,7 @@ const en = {
   clothing: clothingEn,
   electronics: electronicsEn,
   japan: japanEn,
+  calculator: calculatorEn,
 }
 
 export type Dictionary = typeof en
@@ -313,6 +316,7 @@ const es: Dictionary = {
     clothing: "Clothing",
     electronics: "Electronics",
     japan: "Japan",
+    calculator: "Calculá tu envío",
     pricing: "Precios",
     warehouse: "Depósito",
     faq: "Preguntas",
@@ -575,6 +579,7 @@ const es: Dictionary = {
   clothing: clothingEs,
   electronics: electronicsEs,
   japan: japanEs,
+  calculator: calculatorEs,
 }
 
 export const translations: Record<Locale, Dictionary> = { es, en }

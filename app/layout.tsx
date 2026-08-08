@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Geist, Instrument_Serif } from "next/font/google"
 import { cookies, headers } from "next/headers"
 import { DEFAULT_LOCALE, isLocale, localeToHtmlLang, type Locale } from "@/lib/i18n"
+import { SHIPPING_RATES } from "@/lib/shipping-rates"
 import "./globals.css"
 
 const geist = Geist({
@@ -26,8 +27,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://us1miami.com"
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "US1 Miami — Buy Anywhere, Receive in Argentina",
-  description:
-    "US1 Miami is an international courier. Shop from anywhere in the world, ship to our Miami warehouse, and we consolidate and deliver everything to Argentina by air in approximately 7 days. From USD $55/kg.",
+  // Interpolated rather than typed inline — see the note in app/es/page.tsx.
+  description: `US1 Miami is an international courier. Shop from anywhere in the world, ship to our Miami warehouse, and we consolidate and deliver everything to Argentina by air in approximately 7 days. From USD $${SHIPPING_RATES.homepageStartingRate}/kg.`,
   keywords: [
     "international courier",
     "Miami to Argentina shipping",

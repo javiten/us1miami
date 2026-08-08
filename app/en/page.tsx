@@ -1,10 +1,11 @@
 import type { Metadata } from "next"
 import { SiteShell } from "@/components/site-shell"
+import { SHIPPING_RATES } from "@/lib/shipping-rates"
 
 export const metadata: Metadata = {
   title: "US1 Miami — Buy Anywhere, Receive in Argentina",
-  description:
-    "US1 Miami is an international courier. Shop from anywhere in the world, ship to our Miami warehouse, and we consolidate and deliver everything to Argentina by air in approximately 7 days. From USD $55/kg.",
+  // Interpolated rather than typed inline — see the note in app/es/page.tsx.
+  description: `US1 Miami is an international courier. Shop from anywhere in the world, ship to our Miami warehouse, and we consolidate and deliver everything to Argentina by air in approximately 7 days. From USD $${SHIPPING_RATES.homepageStartingRate}/kg.`,
   alternates: {
     canonical: "/en",
     languages: {

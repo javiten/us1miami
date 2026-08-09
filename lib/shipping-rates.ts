@@ -47,6 +47,17 @@ export const SHIPPING_RATES = {
   electronicsCommercialValuePercent: 30,
 
   /**
+   * General consumer goods — cosmetics, toys, phone cases, small accessories.
+   * Flat per-kg, with no commercial-value component.
+   *
+   * Its own key rather than a reference to `clothingUnder10Kg` or
+   * `electronicsPerKg`, which happen to be 55 today. They are separate
+   * commercial decisions, so aliasing them would mean repricing this category
+   * by accident the next time apparel or electronics moves.
+   */
+  consumerProductsPerKg: 55,
+
+  /**
    * The "starting from" figure on the homepage hero.
    *
    * Deliberately its own key rather than a reference to the billing engine's
@@ -67,6 +78,7 @@ export const QUOTE_CATEGORIES = [
   "clothingLight",
   "clothingHeavy",
   "electronics",
+  "consumerProducts",
   "japan",
 ] as const
 
@@ -192,6 +204,17 @@ export function calculateQuote(input: {
     const byWeight = kg * SHIPPING_RATES.electronicsPerKg
     const byValue = (value as number) * (SHIPPING_RATES.electronicsCommercialValuePercent / 100)
     const total = round2(Math.max(byWeight, byValue))
+    return { status: "priced", total, lines: [{ id: "shipping", amount: total }] }
+  }
+
+  // Consumer goods — flat per-kg, no tiering and no value component.
+  //
+  // This branch must stay above the apparel fallback below. That fallback treats
+  // every remaining category as apparel, so without an explicit branch here a
+  // 10 kg+ consumer shipment would silently pick up the apparel volume discount
+  // and be quoted at 49 instead of 55.
+  if (category === "consumerProducts") {
+    const total = round2(kg * SHIPPING_RATES.consumerProductsPerKg)
     return { status: "priced", total, lines: [{ id: "shipping", amount: total }] }
   }
 

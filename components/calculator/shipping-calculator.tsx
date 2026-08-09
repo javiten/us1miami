@@ -8,6 +8,7 @@ import { ArrowRight, Info } from "lucide-react"
 import { useI18n } from "@/components/language-provider"
 import { CONTAINER, ctaClasses } from "@/components/editorial/primitives"
 import { CALCULATOR_ANCHOR } from "@/lib/calculator"
+import { WHATSAPP_URL } from "@/lib/constants"
 import { JAPAN_PATH, JAPAN_REQUEST_ANCHOR } from "@/lib/japan"
 import {
   MAX_QUOTE_VALUE_USD,
@@ -74,6 +75,18 @@ export function ShippingCalculator() {
   const weightError = fieldError("weight")
   const valueError = needsValue ? fieldError("commercialValue") : null
 
+  /**
+   * WhatsApp deep link for the "not listed" callout, with the message already
+   * written so the category tag actually arrives with the inquiry.
+   *
+   * WhatsApp rather than a form because the site has no intake form — `/#quote`
+   * is a CTA band of phone and email links — and WhatsApp is already the primary
+   * channel here (floating button on every page). A `mailto:` would carry the tag
+   * too but depends on a configured mail client, which on mobile often means
+   * nothing happens at all.
+   */
+  const unlistedInquiryUrl = `${WHATSAPP_URL}?text=${encodeURIComponent(c.unlisted.inquiryMessage)}`
+
   const selectCategory = (next: QuoteCategory) => {
     setCategory(next)
     // Automotive owns the assisted-purchase question. Leaving the flag set while
@@ -132,11 +145,43 @@ export function ShippingCalculator() {
                       </span>
                       <span className="min-w-0">
                         <span className="block text-sm font-semibold text-navy">{option.label}</span>
-                        <span className="mt-0.5 block text-xs text-muted-foreground">{option.rate}</span>
+                        {/* Only the catch-all category carries a subtitle, so this
+                            renders conditionally and the other four cards keep
+                            their existing two-line height. */}
+                        {"subtitle" in option ? (
+                          <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">
+                            {option.subtitle}
+                          </span>
+                        ) : null}
+                        <span className="mt-1 block text-xs font-medium text-navy/70">{option.rate}</span>
                       </span>
                     </label>
                   )
                 })}
+              </div>
+
+              {/* Escape hatch for anything the five categories miss.
+                  
+                  Inside the fieldset so it reads immediately after the last
+                  option, but it is a link rather than a sixth radio: choosing it
+                  could never produce an estimate, and an option that leads to a
+                  dead end is worse than no option. Stacks on mobile and goes
+                  horizontal once there is room for the CTA beside the text. */}
+              <div className="mt-4 flex flex-col gap-3 rounded-xl border border-dashed border-border bg-muted/40 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-navy">{c.unlisted.heading}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{c.unlisted.body}</p>
+                </div>
+                <a
+                  href={unlistedInquiryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => track("calculator_unlisted_inquiry", { category: "unlisted" })}
+                  className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-primary/30 bg-white px-4 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  {c.unlisted.cta}
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                </a>
               </div>
             </fieldset>
 

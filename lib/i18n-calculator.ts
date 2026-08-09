@@ -1,4 +1,5 @@
-import { SHIPPING_RATES } from "@/lib/shipping-rates"
+import { SHIPPING_RATES, formatUsd } from "@/lib/shipping-rates"
+import type { WhatsappQuoteDetails } from "@/lib/calculator"
 
 /**
  * Copy for /calculator, in English and Spanish.
@@ -145,8 +146,50 @@ export const calculatorEn = {
     lineTotal: "Estimated total",
     disclaimer:
       "This calculation is an estimate. The final price may vary depending on volumetric weight, dimensions, product restrictions, inspection and the particular conditions of the shipment.",
-    ctaPrimary: "Request my quote",
+    ctaPrimary: "Continue on WhatsApp",
+    /** Japan has no calculated price, so the action is to ask rather than to proceed. */
+    ctaPrimaryQuoted: "Ask on WhatsApp",
     ctaSecondary: "Create my Miami address",
+
+    /**
+     * WhatsApp message assembled from the live calculator state.
+     *
+     * Each line is written only when its field arrived defined, so the
+     * per-category rules live in the caller rather than here: apparel sends
+     * `rate` and no `assisted`, automotive sends `assisted` and no `rate`. A
+     * missing field does not print a blank line — it prints nothing.
+     *
+     * Electronics is the sensitive case: it sends only the total. The internal
+     * weight-vs-percentage comparison never leaves this app.
+     */
+    whatsappMessage: (d: WhatsappQuoteDetails) => {
+      // With no total there is no shipment to "move forward" with — Japan is an
+      // enquiry. The greeting follows the CTA ("Ask on WhatsApp") instead of
+      // contradicting it.
+      const lines = [
+        d.total === undefined
+          ? "Hello US1 Miami! I'd like to ask about a shipment."
+          : "Hello US1 Miami! I'd like to move forward with this shipment.",
+        "",
+        `Category: ${d.categoryLabel}`,
+      ]
+      if (d.weight) lines.push(`Total weight: ${d.weight} kg`)
+      if (d.rate) lines.push(`Applicable rate: ${d.rate}`)
+      if (d.commercialValue !== undefined) lines.push(`Total purchase value: USD ${formatUsd(d.commercialValue)}`)
+      if (d.assisted !== undefined) lines.push(`Assisted purchase: ${d.assisted ? "Yes" : "No"}`)
+      if (d.assistedFee !== undefined) {
+        lines.push(`Assisted purchase fee (${automotiveAssistedPurchasePercent}%): USD ${formatUsd(d.assistedFee)}`)
+      }
+      if (d.shipping !== undefined) lines.push(`Estimated shipping: USD ${formatUsd(d.shipping)}`)
+      if (d.total !== undefined) lines.push(`Estimated total: USD ${formatUsd(d.total)}`)
+      lines.push(
+        "",
+        d.total === undefined
+          ? "I'm sending these details from the US1 Miami calculator. I'd like to confirm the rate, availability and conditions."
+          : "This calculation was generated from the US1 Miami calculator. I'd like to confirm availability, conditions and move forward with the shipment.",
+      )
+      return lines.join("\n")
+    },
   },
 
   visual: {
@@ -269,8 +312,49 @@ export const calculatorEs: CalculatorDictionary = {
     lineTotal: "Total estimado",
     disclaimer:
       "Este cálculo es una estimación. El precio final puede variar según peso volumétrico, dimensiones, restricciones del producto, inspección y condiciones particulares del envío.",
-    ctaPrimary: "Pedir mi cotización",
+    ctaPrimary: "Continuar por WhatsApp",
+    /** Japón no tiene precio calculado, así que la acción es consultar, no continuar. */
+    ctaPrimaryQuoted: "Consultar por WhatsApp",
     ctaSecondary: "Crear mi dirección en Miami",
+
+    /**
+     * Mensaje de WhatsApp armado con los datos vivos de la calculadora.
+     *
+     * Cada línea se escribe sólo si su campo llegó definido, así que las reglas
+     * por categoría viven en quien llama, no acá: indumentaria manda `rate` y no
+     * `assisted`, automotor manda `assisted` y no `rate`. Un campo ausente no
+     * imprime una línea vacía — no imprime nada.
+     *
+     * Electrónica es el caso delicado: manda sólo el total. La comparación
+     * interna entre peso y porcentaje del valor nunca sale de acá.
+     */
+    whatsappMessage: (d: WhatsappQuoteDetails) => {
+      // Sin total no hay envío que "avanzar" — Japón se consulta. El saludo
+      // acompaña al CTA ("Consultar por WhatsApp") en lugar de contradecirlo.
+      const lines = [
+        d.total === undefined
+          ? "Hola US1 Miami! Quiero consultar por un envío."
+          : "Hola US1 Miami! Quiero avanzar con este envío.",
+        "",
+        `Categoría: ${d.categoryLabel}`,
+      ]
+      if (d.weight) lines.push(`Peso total: ${d.weight} kg`)
+      if (d.rate) lines.push(`Tarifa aplicada: ${d.rate}`)
+      if (d.commercialValue !== undefined) lines.push(`Valor total de la compra: USD ${formatUsd(d.commercialValue)}`)
+      if (d.assisted !== undefined) lines.push(`Compra asistida: ${d.assisted ? "Sí" : "No"}`)
+      if (d.assistedFee !== undefined) {
+        lines.push(`Cargo compra asistida (${automotiveAssistedPurchasePercent}%): USD ${formatUsd(d.assistedFee)}`)
+      }
+      if (d.shipping !== undefined) lines.push(`Envío estimado: USD ${formatUsd(d.shipping)}`)
+      if (d.total !== undefined) lines.push(`Total estimado: USD ${formatUsd(d.total)}`)
+      lines.push(
+        "",
+        d.total === undefined
+          ? "Envío estos datos desde la calculadora de US1 Miami. Quiero confirmar la tarifa, disponibilidad y condiciones."
+          : "Este cálculo fue generado desde la calculadora de US1 Miami. Quiero confirmar disponibilidad, condiciones y avanzar con el envío.",
+      )
+      return lines.join("\n")
+    },
   },
 
   visual: {

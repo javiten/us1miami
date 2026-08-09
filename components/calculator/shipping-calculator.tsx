@@ -7,7 +7,8 @@ import { ArrowRight, Info } from "lucide-react"
 
 import { useI18n } from "@/components/language-provider"
 import { CONTAINER, ctaClasses } from "@/components/editorial/primitives"
-import { CALCULATOR_ANCHOR } from "@/lib/calculator"
+import { WhatsAppIcon } from "@/components/brand-icons"
+import { CALCULATOR_ANCHOR, type WhatsappQuoteDetails } from "@/lib/calculator"
 import { WHATSAPP_URL } from "@/lib/constants"
 import { JAPAN_PATH, JAPAN_REQUEST_ANCHOR } from "@/lib/japan"
 import {
@@ -288,7 +289,13 @@ export function ShippingCalculator() {
           {/* Sticky on desktop so the figure stays beside the fields being
               edited; static on mobile, immediately below the inputs. */}
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <ResultPanel result={result} category={category} />
+            <ResultPanel
+              result={result}
+              category={category}
+              weight={weight}
+              commercialValue={commercialValue}
+              assistedPurchase={assistedPurchase}
+            />
           </div>
         </div>
       </div>
@@ -407,13 +414,95 @@ function JapanPanel({ heading, body, cta }: { heading: string; body: string; cta
 function ResultPanel({
   result,
   category,
+  weight,
+  commercialValue,
+  assistedPurchase,
 }: {
   result: ReturnType<typeof calculateQuote>
   category: QuoteCategory
+  weight: string
+  commercialValue: string
+  assistedPurchase: boolean
 }) {
   const { t } = useI18n()
   const c = t.calculator
   const lineLabel = { shipping: c.result.lineShipping, assistedPurchase: c.result.lineAssisted }
+
+  const isPriced = result.status === "priced"
+  const isManual = result.status === "manual"
+
+  /**
+   * Which facts belong in the handoff message, per category.
+   *
+   * The rules live here rather than in the copy because this is the only place
+   * that knows what the customer actually filled in. Values are re-parsed from
+   * the raw inputs with the same `parseAmount` the engine uses, so a comma
+   * decimal reaches WhatsApp as `2.5` and an unparseable field contributes
+   * nothing at all instead of `NaN`.
+   *
+   * `undefined` is load-bearing: the locale template omits any line whose field
+   * is undefined, which is how apparel avoids an irrelevant "Assisted purchase:
+   * No" and how electronics avoids exposing its internal comparison.
+   */
+  const details = useMemo<WhatsappQuoteDetails>(() => {
+    const label = c.form.categories[category].label
+    if (!isPriced) {
+      // Japan: no computed price, so send only what was actually entered. The
+      // weight field is not rendered for Japan, hence no weight line.
+      return { categoryLabel: label }
+    }
+
+    const kg = parseAmount(weight, MAX_QUOTE_WEIGHT_KG)
+    const value = parseAmount(commercialValue, MAX_QUOTE_VALUE_USD)
+    const shippingLine = result.lines.find((l) => l.id === "shipping")
+    const assistedLine = result.lines.find((l) => l.id === "assistedPurchase")
+
+    const base: WhatsappQuoteDetails = {
+      categoryLabel: label,
+      weight: kg === null ? undefined : String(kg),
+      total: result.total,
+    }
+
+    if (category === "automotive") {
+      return {
+        ...base,
+        commercialValue: value === null ? undefined : value,
+        assisted: assistedPurchase,
+        assistedFee: assistedLine?.amount,
+        // Only worth a line of its own when the assisted fee makes it one row of
+        // several. Unassisted, shipping and total are the same number.
+        shipping: assistedLine ? shippingLine?.amount : undefined,
+      }
+    }
+
+    if (category === "electronics") {
+      // Deliberately no rate and no shipping row: the published "rate" is the
+      // weight-vs-value comparison itself, and naming either side would expose
+      // the internal calculation. Weight, declared value and the final total only.
+      return { ...base, commercialValue: value === null ? undefined : value }
+    }
+
+    // Apparel and consumer goods — a published per-kg rate and a total.
+    //
+    // `appliedTier` overrides BOTH the label and the rate, not just the rate.
+    // Taking the label from the clicked card while taking the rate from the
+    // applied tier produces a self-contradicting message — "Apparel — 10 kg or
+    // more" priced at the under-10kg rate — which reads like a mistake to
+    // whoever answers. The tier the weight actually triggered is the truth here,
+    // and it is what the on-screen tier notice already explains.
+    const rateKey = result.appliedTier ?? category
+    const tier = c.form.categories[rateKey]
+    return { ...base, categoryLabel: tier.label, rate: tier.rate }
+  }, [c, category, weight, commercialValue, assistedPurchase, result, isPriced])
+
+  /**
+   * The CTA is a real link only once there is something to send. While the form
+   * is incomplete it renders as a disabled button instead: an anchor with no
+   * href is still focusable and clickable in some browsers, which would open
+   * WhatsApp with a half-filled message.
+   */
+  const canSend = isPriced || isManual
+  const whatsappHref = `${WHATSAPP_URL}?text=${encodeURIComponent(c.result.whatsappMessage(details))}`
 
   return (
     <div className="overflow-hidden rounded-[1.75rem] bg-navy text-white shadow-[0_30px_70px_-40px_rgba(7,27,58,0.6)]">
@@ -499,14 +588,30 @@ function ResultPanel({
         </p>
 
         <div className="mt-7 flex flex-col gap-3">
-          <Link
-            href="/#quote"
-            onClick={() => track("calculator_quote_cta_click", { category })}
-            className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-semibold text-navy transition-transform hover:-translate-y-0.5"
-          >
-            {c.result.ctaPrimary}
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
-          </Link>
+          {canSend ? (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => track("calculator_quote_cta_click", { category })}
+              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-semibold text-navy transition-transform hover:-translate-y-0.5"
+            >
+              <WhatsAppIcon className="h-4 w-4 shrink-0" />
+              {isManual ? c.result.ctaPrimaryQuoted : c.result.ctaPrimary}
+            </a>
+          ) : (
+            /* Same shape, so the panel does not reflow when the estimate
+               appears — only the affordance changes. `aria-describedby` points at
+               the empty-state text, which already says what is missing. */
+            <button
+              type="button"
+              disabled
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/40 px-6 py-3.5 text-sm font-semibold text-navy/50 cursor-not-allowed"
+            >
+              <WhatsAppIcon className="h-4 w-4 shrink-0" />
+              {c.result.ctaPrimary}
+            </button>
+          )}
           <Link
             href="/registro"
             onClick={() => track("calculator_register_cta_click", { category })}

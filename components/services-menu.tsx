@@ -123,7 +123,7 @@ export function ServicesMenu({
           })
         }
         className={cn(
-          "flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
+          "flex items-center gap-1 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
           open || containsActive ? "text-navy" : "text-muted-foreground",
         )}
       >

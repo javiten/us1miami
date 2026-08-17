@@ -98,7 +98,7 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
           <a
             href={anchorLinks[0].href}
-            className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+            className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
           >
             {anchorLinks[0].label}
           </a>
@@ -112,7 +112,7 @@ export function SiteHeader() {
             aria-current={pathname === CALCULATOR_PATH ? "page" : undefined}
             onClick={() => track("calculator_nav_click", { source: "header" })}
             className={cn(
-              "rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
+              "whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-navy",
               pathname === CALCULATOR_PATH ? "text-navy" : "text-muted-foreground",
             )}
           >
@@ -123,7 +123,7 @@ export function SiteHeader() {
             <a
               key={l.href}
               href={l.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-navy"
             >
               {l.label}
             </a>
